@@ -7,6 +7,7 @@ const games = []
 module.exports = {
   getUser,
   createGame,
+  closeGame,
   addPlayer,
 }
 
@@ -34,7 +35,7 @@ function getUser(name, ip, socketId) {
 function createGame(playerId) {
   console.log('Creating new game for ' + playerId)
   let newGame = Game(2)
-  
+
   games.push(newGame)
   addPlayer(newGame.id, playerId)
 
@@ -45,4 +46,8 @@ function addPlayer(gameId, playerId) {
   games.find( game => game.id === gameId ).join(playerId)
   // find user and assign game to it
   users.find( user => user.id === playerId ).game = gameId
+}
+function closeGame(id) {
+  games.find( game => game.id === id ).players.map( player => player.game = null)
+  games.splice(games.findIndex( game => game.id === id ), 1)
 }

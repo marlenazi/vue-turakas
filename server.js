@@ -31,8 +31,15 @@ io.on('connection', socket => {
     console.log(playerId)
 
     let gameState = turakas.createGame(playerId)
+    
+    socket.emit('updateGame', gameState)
+  })
 
-    socket.emit('gameCreated', gameState)
+  socket.on('closeGame', gameId => {
+    console.log('Closing game ' + gameId)
+    turakas.closeGame(gameId)
+
+    socket.emit('updateGame', {})
   })
 
 
