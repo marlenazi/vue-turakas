@@ -21,7 +21,7 @@ io.on('connection', socket => {
 
   socket.on('login', name => {
     let userIp = socket.request.connection.remoteAddress
-    let user = turakas.getUser(name, userIp)
+    let user = turakas.getUser(name, userIp, socket.id)
     console.log(user)
 
     socket.emit('user', user)
@@ -31,6 +31,8 @@ io.on('connection', socket => {
     console.log(playerId)
 
     turakas.createGame(playerId)
+
+
   })
 
 

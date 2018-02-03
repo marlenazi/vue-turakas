@@ -7,6 +7,7 @@ const games = []
 module.exports = {
   getUser,
   createGame: Game,
+  addPlayer,
 }
 
 function getUser(name, ip) {
@@ -29,4 +30,15 @@ function getUser(name, ip) {
 
     return newUser
   }
+}
+
+function createGame(playerId) {
+  let newGame = Game(playerId)
+
+  newGame.join(playerId)
+
+  users.find( user => user.playerId ).game = newGame.id
+  games.push(newGame)
+
+  return newGame.id
 }

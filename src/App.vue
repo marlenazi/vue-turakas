@@ -25,7 +25,6 @@ export default {
     return {
       view: 'Welcome',
       hero: {},
-      game: {}
     }
   },
   methods: {
