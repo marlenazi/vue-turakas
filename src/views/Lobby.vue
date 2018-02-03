@@ -1,30 +1,53 @@
 <template>
   <div class="lobby">
       {{ hero.name }}
-      {{ game }}
     <br>
-      <GameButton 
-        :hero="hero"
-        :game="game"/>
+    <button class="newGameBtn"
+      @click="newGame">
+      New Game
+    </button>
+    <ul v-if="games.length > 0"
+      v-for="game in games"
+      :key="game.id">
+      <li>{{ game.id }}  <button @click="joinGame(game.id)">Join</button> </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import GameButton from './GameButton'
 
 export default {
   name: 'Lobby',
   props: ['hero', 'game'],
   components: {
-    GameButton
+
   },
-  data () {
+  data() {
     return {
-      msg: 'Lobby'
+      games: []
     }
   },
   methods: {
-    
+    newGame() {
+      this.$socket.emit('newGame', this.hero.id)
+    },
+    joinGame(id) {
+      this.$socket.emit('joinGame', id, this.hero.id)
+    }
+  },
+  computed: {
+
+  },
+  created() {
+    console.log(this.games)
+    this.$socket.emit('getWaitingGames')
+  },
+  sockets: {
+    waitingGames(games) {
+      console.log('Got games')
+      console.log(games)
+      this.games = games
+    }
   }
 }
 </script>
@@ -34,5 +57,6 @@ export default {
   background: greenyellow;
   height: 25rem;
   width: 16rem;
+  overflow: auto;
 }
 </style>

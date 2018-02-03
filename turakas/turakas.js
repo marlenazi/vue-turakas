@@ -6,23 +6,23 @@ const games = []
 
 module.exports = {
   getUser,
+  getWaitingGames,
   createGame,
-  closeGame,
+  removePlayer,
   addPlayer,
 }
 
+// gets user from users or creates a new one
+// returns the instance
 function getUser(name, ip, socketId) {
 
-  function checkForUser(name, ip) {
-    return users.find( user => 
-      user.name === name && user.ip === ip
-    )
-  }
+  let user = users.find( user => user.name === name && user.ip === ip )
 
-  if (checkForUser(name, ip)) {
+  if (user) {
     console.log('User exists')
+    user.socketId = socketId
 
-    return checkForUser(name, ip)
+    return user
   } else {
     console.log('Adding new user')
     
@@ -32,22 +32,57 @@ function getUser(name, ip, socketId) {
     return newUser
   }
 }
+// makes a new game and joins the player to it. 
+// returns game state for initiating player
 function createGame(playerId) {
   console.log('Creating new game for ' + playerId)
   let newGame = Game(2)
 
   games.push(newGame)
   addPlayer(newGame.id, playerId)
+  console.log(newGame.state)
 
-  return newGame.getState(playerId)
+  return newGame.getStateFor(playerId)
 }
+// adds a player to game
+// returns game state for added player
 function addPlayer(gameId, playerId) {
   // find a game and join player into it
-  games.find( game => game.id === gameId ).join(playerId)
+  let game = games.find( game => game.id === gameId )
+  if (game) {
+    game.join(playerId)
+  } else {
+    console.log('Game does not exist in turakas.addPlayer')
+    return
+  }
   // find user and assign game to it
-  users.find( user => user.id === playerId ).game = gameId
+  let user = users.find( user => user.id === playerId )
+  if (user) {
+    user.game = gameId
+  } else {
+    console.log('User does not exist in turakas.addPlayer')
+    return
+  }
+
+  return game.getStateFor(playerId)
 }
-function closeGame(id) {
-  games.find( game => game.id === id ).players.map( player => player.game = null)
-  games.splice(games.findIndex( game => game.id === id ), 1)
+// closes game with passed id
+// removes game id from all players who were registered to removed game
+// returns empty object to pass to client
+function removePlayer(id, playerId) {
+  game = games.find( game => game.id === id )
+  if (game) {
+    console.log(game.players.filter( player => player.id === playerId))
+    // games.splice(games.indexOf(game), 1)
+  } else {
+    console.log('Game does not exist in turakas.closeGame')
+  }
+
+  return {}
+}
+// returns games that are waiting for players
+// these will be displayed in the lobby and players can join them
+function getWaitingGames() {
+  console.log(games)
+  return games.filter(game => game.state === 'Waiting')
 }

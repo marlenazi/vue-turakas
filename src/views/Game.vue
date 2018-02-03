@@ -1,8 +1,11 @@
 <template>
   <div class="game">
-      {{ hero.name }}
-      {{ game }}
-      <button @click="endGame">End Game</button>
+    <h1>{{msg}}</h1>
+      {{ hero.name }} <br>
+      Players registered: {{ game.players }} <br>
+      {{game.gameState}}
+
+      <button @click="closeGame"> X </button>
   </div>
 </template>
 
@@ -16,18 +19,21 @@ export default {
     }
   },
   methods: {
-    endGame() {
-      
-      // this.$socket.emit('endgame', this.game.id)
+    closeGame() {
+      console.log('Closing game')
+      this.$socket.emit('leaveGame', this.game.id, this.hero.id)
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .game {
   background: greenyellow;
   height: 25rem;
   width: 16rem;
+}
+h1 {
+  margin: 0;
 }
 </style>

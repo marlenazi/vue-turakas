@@ -1,29 +1,33 @@
 const shortId = require('shortid')
 
 module.exports = function Game(gameSize) {
-  const status = 'Created'
+    let state = 'Created'
   const id = shortId.generate()
   const size = gameSize
   const players = []
 
   
   function join(playerId) {
-    if (status !== 'started') {
+    if (state !== 'Playing') {
       players.push(playerId)
+      state = 'Waiting'
     } else return
 
     if (players.length === size) {
       startGame()
     }
   }
+  function leave(playerId) {
+
+  }
   function startGame() {
-    status = 'Playing'
+    state = 'Playing'
     return 'let the games begin'
   }
-  function getState(playerId) {
+  function getStateFor(playerId) {
     return {
       id,
-      status,
+      state,
       players: `${players.length}/${size}`,
       hero: playerId,
     }
@@ -31,10 +35,13 @@ module.exports = function Game(gameSize) {
   
 
   return {
-    status,
     id,
+    get state() {
+      return state
+    },
     players,
     join,
-    getState,
+    leave,
+    getStateFor,
   }
 }

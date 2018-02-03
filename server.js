@@ -33,15 +33,25 @@ io.on('connection', socket => {
     let gameState = turakas.createGame(playerId)
     
     socket.emit('updateGame', gameState)
+    io.sockets.emit('waitingGames', turakas.getWaitingGames())
   })
 
-  socket.on('closeGame', gameId => {
+  socket.on('joinGame', (gameId, playerId) => {
+    console.log(gameId, playerId)
+
+    socket.emit('updateGame', turakas.addPlayer(gameId, playerId))
+  })
+
+  socket.on('leaveGame', (gameId, playerId) => {
     console.log('Closing game ' + gameId)
-    turakas.closeGame(gameId)
-
-    socket.emit('updateGame', {})
+    
+    socket.emit('updateGame', turakas.removePlayer(gameId, playerId))
+    io.sockets.emit('waitingGames', turakas.getWaitingGames())
   })
 
+  socket.on('getWaitingGames', () => {
+    socket.emit('waitingGames', turakas.getWaitingGames())
+  })
 
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)

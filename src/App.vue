@@ -42,10 +42,11 @@ export default {
       this.hero = user
       this.view = 'Lobby'
     },
-    updateGame(gameState) {
-      console.log(gameState)
-      this.game = gameState
-    }
+    updateGame(game) {
+      console.log(game)
+      this.game = game
+      this.view = game.state ? 'Game' : 'Lobby'
+    },
   }
 }
 </script>
