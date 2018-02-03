@@ -8,7 +8,7 @@ module.exports = function Game(gameSize) {
 
   
   function join(playerId) {
-    if (game.status !== 'started') {
+    if (status !== 'started') {
       players.push(playerId)
     } else return
 
@@ -17,10 +17,16 @@ module.exports = function Game(gameSize) {
     }
   }
   function startGame() {
+    status = 'Playing'
     return 'let the games begin'
   }
   function getState(playerId) {
-    return 'state of player ' + playerId
+    return {
+      id,
+      status,
+      players: `${players.length}/${size}`,
+      hero: playerId,
+    }
   }
   
 
@@ -28,5 +34,7 @@ module.exports = function Game(gameSize) {
     status,
     id,
     players,
+    join,
+    getState,
   }
 }

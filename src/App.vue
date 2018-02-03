@@ -41,6 +41,10 @@ export default {
     user(user) {
       this.hero = user
       this.view = 'Lobby'
+    },
+    gameCreated(gameState) {
+      console.log(gameState)
+      this.game = gameState
     }
   }
 }

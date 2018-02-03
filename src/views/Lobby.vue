@@ -1,23 +1,30 @@
 <template>
   <div class="lobby">
       {{ hero.name }}
-      <button @click="newGame">New Game</button>
+      {{ game }}
+    <br>
+      <GameButton 
+        :hero="hero"
+        :game="game"/>
   </div>
 </template>
 
 <script>
+import GameButton from './GameButton'
+
 export default {
   name: 'Lobby',
-  props: ['hero'],
+  props: ['hero', 'game'],
+  components: {
+    GameButton
+  },
   data () {
     return {
       msg: 'Lobby'
     }
   },
   methods: {
-    newGame() {
-      this.$socket.emit('newGame', this.hero.id)
-    }
+    
   }
 }
 </script>

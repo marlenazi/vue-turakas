@@ -1,6 +1,7 @@
 <template>
   <div class="game">
       {{ hero.name }}
+      {{ game }}
       <button @click="endGame">End Game</button>
   </div>
 </template>

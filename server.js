@@ -30,9 +30,9 @@ io.on('connection', socket => {
   socket.on('newGame', playerId => {
     console.log(playerId)
 
-    turakas.createGame(playerId)
+    let gameState = turakas.createGame(playerId)
 
-    socket.emit('updateGame', )
+    socket.emit('gameCreated', gameState)
   })
 
 

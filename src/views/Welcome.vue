@@ -12,8 +12,11 @@
 </template>
 
 <script>
+
+
 export default {
   name: 'Welcome',
+
   data () {
     return {
       msg: 'Welcome',

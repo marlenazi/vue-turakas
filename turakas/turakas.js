@@ -6,7 +6,7 @@ const games = []
 
 module.exports = {
   getUser,
-  createGame: Game,
+  createGame,
   addPlayer,
 }
 
@@ -32,12 +32,13 @@ function getUser(name, ip, socketId) {
   }
 }
 function createGame(playerId) {
+  console.log('Creating new game for ' + playerId)
   let newGame = Game(2)
-  games.push(newGame)
-
-  addPlayer(newGame.id, playerId)
   
-  return newGame
+  games.push(newGame)
+  addPlayer(newGame.id, playerId)
+
+  return newGame.getState(playerId)
 }
 function addPlayer(gameId, playerId) {
   // find a game and join player into it
