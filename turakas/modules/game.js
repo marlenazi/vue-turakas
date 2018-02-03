@@ -1,9 +1,9 @@
 const shortId = require('shortid')
 
-module.exports = function Game(size = 2) {
+module.exports = function Game(gameSize) {
   const status = 'Created'
   const id = shortId.generate()
-  const size = size
+  const size = gameSize
   const players = []
 
   

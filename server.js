@@ -32,7 +32,7 @@ io.on('connection', socket => {
 
     turakas.createGame(playerId)
 
-
+    socket.emit('updateGame', )
   })
 
 

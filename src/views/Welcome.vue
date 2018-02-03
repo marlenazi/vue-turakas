@@ -17,7 +17,7 @@ export default {
   data () {
     return {
       msg: 'Welcome',
-      name: 'Nimega',
+      name: 'Macarena',
     }
   },
   methods: {
