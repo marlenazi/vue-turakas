@@ -20,7 +20,7 @@ export default {
   data () {
     return {
       msg: 'Welcome',
-      name: 'Macarena',
+      name: 'Macarena' + parseInt(Math.random() * 10),
     }
   },
   methods: {

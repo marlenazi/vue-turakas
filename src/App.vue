@@ -45,7 +45,15 @@ export default {
     updateGame(game) {
       console.log(game)
       this.game = game
-      this.view = game.state ? 'Game' : 'Lobby'
+      switch (game.state) {
+        case 'Waiting':
+        case 'Playing':
+          this.view = 'Game'
+        break
+        default:
+          this.view = 'Lobby'
+      }
+      console.log(this.game)
     },
   }
 }

@@ -16,12 +16,19 @@ module.exports = function Game(size) {
     }
   }
   function leave(playerId) {
-    players.splice(players.indexOf(playerId), 1)
+    if (players.indexOf(playerId) > -1) {
+      players.splice(players.indexOf(playerId), 1)
+      state = 'Waiting'
+    }
+    if (players.length === 0) {
+      state = 'Closed'
+    }
   }
   function startGame() {
     state = 'Playing'
     return 'let the games begin'
   }
+
   function getStateFor(playerId) {
     return {
       id,

@@ -1,6 +1,6 @@
 <template>
   <div class="lobby">
-      {{ hero.name }}
+      {{ hero.name }} : {{ hero.id }}
     <br>
     <button class="newGameBtn"
       @click="newGame">

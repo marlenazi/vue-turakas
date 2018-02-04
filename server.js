@@ -97,20 +97,34 @@ io.on('connection', socket => {
         game.leave(userId)
     let user = getUser(userId)
         user.game = null
-    
+    console.log(user)
+    console.log(games)
     socket.leave(game.id)
 
-    game.players.forEach(player => {
-      io.to( getUser(player).socketId )
+    if (game.state !== 'Closed') {
+      socket.emit('updateGame', {})
+      game.players.forEach(player => {
+        io.to( getUser(player).socketId )
         .emit( 'updateGame', game.getStateFor(userId) )
-    })
+      })
+    } else {
+      // remove game from collection
+      games.splice(games.indexOf(game), 1)
+      socket.emit('updateGame', {state: game.state})
+      // send lobby update to all others
+      socket.broadcast.emit('waitingGames', getWaitingGames())
+    }
   })
 
   socket.on('getWaitingGames', () => {
-    socket.emit('waitingGames', turakas.getWaitingGames())
+    socket.emit('waitingGames', getWaitingGames())
   })
 
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
+    let user = users.find(user => user.socketId === socket.id)
+    if (user) {
+      user.socketId = null
+    }
   })
 })

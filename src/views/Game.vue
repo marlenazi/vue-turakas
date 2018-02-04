@@ -1,11 +1,12 @@
 <template>
   <div class="game">
-    <h1>{{msg}}</h1>
+    <h1>{{msg}} : </h1>
+      {{game.id}} <br>
       {{ hero.name }} <br>
       Players registered: {{ game.players }} <br>
-      {{game.gameState}}
+      {{game.state}}
 
-      <button @click="closeGame"> X </button>
+      <button @click="leaveGame"> X </button>
   </div>
 </template>
 
@@ -19,8 +20,9 @@ export default {
     }
   },
   methods: {
-    closeGame() {
-      console.log('Closing game')
+    leaveGame() {
+      console.log('Leaving game')
+      console.log(this.game)
       this.$socket.emit('leaveGame', this.game.id, this.hero.id)
     }
   }
