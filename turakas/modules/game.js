@@ -1,9 +1,16 @@
 const shortId = require('shortid')
 
+const Cards = require('./cards')
+
 module.exports = function Game(size) {
   let state = 'Created'
   const id = shortId.generate()
   const players = []
+  const deck = Cards()
+  const trump = deck.slice(-1)[0]
+  const board = []
+  const muck = []
+
 
   function join(playerId) {
     if (players.length < size) {
@@ -12,7 +19,7 @@ module.exports = function Game(size) {
     } else return
 
     if (players.length === size) {
-      startGame()
+      start()
     }
   }
   function leave(playerId) {
@@ -24,11 +31,17 @@ module.exports = function Game(size) {
       state = 'Closed'
     }
   }
-  function startGame() {
+  function start() {
+    // make trump suited cards be stronger
+    deck.map(card => {
+      if (card.suit === trump.suit) {
+          card.value += 10
+      }
+    })
+
     state = 'Playing'
     return 'let the games begin'
   }
-
   function getStateFor(playerId) {
     return {
       id,
