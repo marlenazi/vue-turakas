@@ -1,14 +1,12 @@
 const shortId = require('shortid')
 
-module.exports = function Game(gameSize) {
-    let state = 'Created'
+module.exports = function Game(size) {
+  let state = 'Created'
   const id = shortId.generate()
-  const size = gameSize
   const players = []
 
-  
   function join(playerId) {
-    if (state !== 'Playing') {
+    if (players.length < size) {
       players.push(playerId)
       state = 'Waiting'
     } else return
@@ -18,7 +16,7 @@ module.exports = function Game(gameSize) {
     }
   }
   function leave(playerId) {
-
+    players.splice(players.indexOf(playerId), 1)
   }
   function startGame() {
     state = 'Playing'

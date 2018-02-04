@@ -38,7 +38,7 @@ export default {
 
   },
   sockets: {
-    user(user) {
+    userRegistered(user) {
       this.hero = user
       this.view = 'Lobby'
     },
