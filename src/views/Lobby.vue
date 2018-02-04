@@ -1,6 +1,7 @@
 <template>
   <div class="lobby">
-      {{ hero.name }} : {{ hero.id }}
+      {{ hero.name }} : {{ hero.id }}<br>
+      {{ hero.socketId }}
     <br>
     <button class="newGameBtn"
       @click="newGame">

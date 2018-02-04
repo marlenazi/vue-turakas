@@ -22,7 +22,7 @@ console.log('Listening to ' + port)
 // socket connection and events
 io.on('connection', socket => {
   console.log(`Socket ${socket.id} connected`)
-
+  console.log(users)
   function getGame(id) {
     return games.find(game => game.id === id)
   }
@@ -34,6 +34,8 @@ io.on('connection', socket => {
   }
   function createGame(userId) {
     console.log('Creating new game for ' + userId)
+    // if user does not exist, don't create a game
+    if (!getUser(userId)) return
     // create new game with max users x
     let game = Game(2)
         game.join(userId)
@@ -43,33 +45,77 @@ io.on('connection', socket => {
     socket.join(game.id)
     // assign game to user
     getUser(userId).game = game.id
-    console.log(users)
+
+    console.log(games)
     return game.getStateFor(userId)
   }
-  
+  function addPlayer(gameId, userId) {
+    let game = getGame(gameId)
+
+    if (game) {
+      // if game exists, join user and assign gameId to user
+      if (game.users.indexOf(userId) === -1) {
+        game.join(userId)
+        getUser(userId).game = gameId
+      } else {
+        console.log('User already registered')
+        console.log(users)
+      }
+
+      return game          
+    } else return false
+  }
+  function removePlayer(gameId, userId) {
+    let game = getGame(gameId)
+    game.leave(userId)
+    let user = getUser(userId)
+    user.game = null
+
+    return game
+  }
   socket.on('login', name => {
     let userIp = socket.request.connection.remoteAddress
+    // define it here for we want to use it inside and outside of newUser() 
+    let user = newUser(name, userIp, socket.id)
 
     function newUser(name, ip, socketId) {
       // cant use getUser() because we have extra conditions
       let user = users.find(user => user.name === name && user.ip === ip);
-    
+
       if (user) {
         console.log('User exists')
+        // user has disconnected, so we add this socket.id to returning user
         user.socketId = socketId
-    
+
         return user
       } else {
         console.log('Adding new user')
         
-        let newUser = User(name, ip, socketId)
+        let newUser = User(name, userIp, socketId)
         users.push(newUser)
     
         return newUser
       }
     }
 
-    socket.emit('userRegistered', newUser(name, userIp, socket.id))
+    socket.emit('userRegistered', user)
+
+    // if user has a game attached, try to connect them with that game
+    // if it does not exist any more, remove assigned game
+    if (user.game) {
+      console.log(user)
+      let game = addPlayer(user.game, user.id)
+
+      if (game) {
+        socket.join(user.id)
+        game.users.forEach(userId => {
+          io.to( getUser(userId).socketId )
+            .emit( 'updateGame', game.getStateFor(userId) )
+        })
+      } else {
+        user.game = null
+      }
+    }
   })
 
   socket.on('newGame', userId => {
@@ -78,12 +124,10 @@ io.on('connection', socket => {
   })
 
   socket.on('joinGame', (gameId, userId) => {
-    let game = getGame(gameId)
-        game.join(userId)
+    let game = addPlayer(gameId, userId)
 
     socket.join(game.id)
-    getUser(userId).game = game.id
-
+    
     game.users.forEach(user => {
       io.to( getUser(user).socketId )
         .emit( 'updateGame', game.getStateFor(userId) )
@@ -91,25 +135,29 @@ io.on('connection', socket => {
   })
 
   socket.on('leaveGame', (gameId, userId) => {
-    let game = getGame(gameId)
-        game.leave(userId)
-    let user = getUser(userId)
-        user.game = null
+    if (!getGame(gameId)) {
+      console.log('Game does not exist in leaveGame()')
+      socket.emit('updateGame', {})
+      return
+    }
+    let game = removePlayer(gameId, userId)
 
-    socket.leave(game.id)
+    socket.leave(gameId)
 
     if (game.state !== 'Closed') {
+      // emit to user who left
       socket.emit('updateGame', {})
+      // emit changes to all others
       game.users.forEach(user => {
-        io.to( getUser(user).socketId )
-          .emit( 'updateGame', game.getStateFor(userId) )
+        io.to(getUser(user).socketId)
+          .emit('updateGame', game.getStateFor(userId))
       })
     } else {
       // remove game from collection
       games.splice(games.indexOf(game), 1)
       socket.emit('updateGame', {state: game.state})
       // send lobby update to all others
-      socket.broadcast.emit('waitingGames', getWaitingGames())
+      io.emit('waitingGames', getWaitingGames())
     }
   })
 
@@ -130,8 +178,8 @@ io.on('connection', socket => {
           io.to( getUser(user).socketId )
             .emit( 'updateGame', game.getStateFor(user.Id) )
         })
-      }
-      user.game = null    
+        io.emit('waitingGames', getWaitingGames())
+      }  
       user.socketId = null
     }
   })

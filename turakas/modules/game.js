@@ -19,7 +19,10 @@ module.exports = function Game(size) {
     if (users.length < size) {
       users.push(userId)
       state = 'Waiting'
-    } else return
+    } else {
+      console.log('Game full')
+      return
+    }
 
     if (users.length === size) {
       start()
@@ -33,6 +36,8 @@ module.exports = function Game(size) {
     if (users.length === 0) {
       state = 'Closed'
     }
+
+    return state
   }
   function start() {
     // make trump suited cards be stronger
