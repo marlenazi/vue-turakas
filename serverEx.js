@@ -148,7 +148,7 @@ http.createServer( (req, res) => {
             },
             game: {
               finished: user.game.finished,
-              moves: user.game.getMoves(),
+              active: user.game.getMoves(),
               killer: user.game.getKiller(),
               deck: user.deck(),
               villain: user.villain(user.id),
@@ -167,7 +167,7 @@ http.createServer( (req, res) => {
             trump: user.trump,
           },
           game: {
-            moves: user.game.getMoves(),
+            active: user.game.getMoves(),
             killer: user.game.getKiller(),
             deck: user.deck(),
             villain: user.villain(user.id),
@@ -257,7 +257,7 @@ function Game(users) {
   const muck = []
 
   let round = 1
-  let moves = 0
+  let active = 0
   let killer = 1
   let attacker = null
 
@@ -320,11 +320,11 @@ function Game(users) {
   function nextMoves() {
     console.log("next player, plz")
     
-    console.log(`moves: ${moves}`)
-    if (moves === 1) {
-      moves = 0
+    console.log(`active: ${active}`)
+    if (active === 1) {
+      active = 0
     } else {
-      moves = 1
+      active = 1
     }
 
     return games[id]
@@ -403,7 +403,7 @@ function Game(users) {
     })
     return games[id]
   }
-  function getMoves() { return moves }
+  function getMoves() { return active }
   function getKiller() { return killer }
   function getAttacker() { return attacker }
   /*
