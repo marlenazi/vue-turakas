@@ -8,10 +8,9 @@ const index = fs.readFile('index.html', (error, file) => file)
 
 const User = require('./turakas/modules/user')
 const Game = require('./turakas/modules/game')
+// collections for users and games
 const users = []
 const games = []
-
-const turakas = require('./turakas/turakas')
 
 const io = socket(http.createServer( (req, res) => {
   //send index.html
@@ -42,20 +41,18 @@ io.on('connection', socket => {
     games.push(game)
     // create a channel for this socket
     socket.join(game.id)
-  
+    // assign game to user
+    getUser(userId).game = game.id
+    console.log(users)
     return game.getStateFor(userId)
   }
   
   socket.on('login', name => {
     let userIp = socket.request.connection.remoteAddress
 
-    function getUser(name, ip, socketId) {
+    function newUser(name, ip, socketId) {
       // cant use getUser() because we have extra conditions
-      let user = users.find( user => 
-        user.name     === name      && 
-        user.ip       === ip        && 
-        user.socketId === socket.id
-      )
+      let user = users.find(user => user.name === name && user.ip === ip);
     
       if (user) {
         console.log('User exists')
@@ -72,7 +69,7 @@ io.on('connection', socket => {
       }
     }
 
-    socket.emit('userRegistered', getUser(name, userIp, socket.id))
+    socket.emit('userRegistered', newUser(name, userIp, socket.id))
   })
 
   socket.on('newGame', userId => {
@@ -85,6 +82,7 @@ io.on('connection', socket => {
         game.join(userId)
 
     socket.join(game.id)
+    getUser(userId).game = game.id
 
     game.players.forEach(player => {
       io.to( getUser(player).socketId )
@@ -97,15 +95,14 @@ io.on('connection', socket => {
         game.leave(userId)
     let user = getUser(userId)
         user.game = null
-    console.log(user)
-    console.log(games)
+
     socket.leave(game.id)
 
     if (game.state !== 'Closed') {
       socket.emit('updateGame', {})
       game.players.forEach(player => {
         io.to( getUser(player).socketId )
-        .emit( 'updateGame', game.getStateFor(userId) )
+          .emit( 'updateGame', game.getStateFor(userId) )
       })
     } else {
       // remove game from collection
@@ -123,7 +120,18 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
     let user = users.find(user => user.socketId === socket.id)
+    
     if (user) {
+      if (user.game !== null) {
+        let game = getGame(user.game)
+        game.leave(user.id)
+
+        game.players.forEach(player => {
+          io.to( getUser(player).socketId )
+            .emit( 'updateGame', game.getStateFor(user.Id) )
+        })
+      }
+      user.game = null    
       user.socketId = null
     }
   })
