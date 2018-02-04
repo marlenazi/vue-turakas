@@ -5,29 +5,32 @@ const Cards = require('./cards')
 module.exports = function Game(size) {
   let state = 'Created'
   const id = shortId.generate()
-  const players = []
+  // array of users makes it simple to manipulate users joining and leaving etc
+  const users = []
+  // user object is created when game starts and assigns methods to each user
+  const user = {}
   const deck = Cards()
   const trump = deck.slice(-1)[0]
   const board = []
   const muck = []
 
 
-  function join(playerId) {
-    if (players.length < size) {
-      players.push(playerId)
+  function join(userId) {
+    if (users.length < size) {
+      users.push(userId)
       state = 'Waiting'
     } else return
 
-    if (players.length === size) {
+    if (users.length === size) {
       start()
     }
   }
-  function leave(playerId) {
-    if (players.indexOf(playerId) > -1) {
-      players.splice(players.indexOf(playerId), 1)
+  function leave(userId) {
+    if (users.indexOf(userId) > -1) {
+      users.splice(users.indexOf(userId), 1)
       state = 'Waiting'
     }
-    if (players.length === 0) {
+    if (users.length === 0) {
       state = 'Closed'
     }
   }
@@ -38,16 +41,19 @@ module.exports = function Game(size) {
           card.value += 10
       }
     })
+    // users.forEach(user => {
+    //   user.
+    // })
 
     state = 'Playing'
     return 'let the games begin'
   }
-  function getStateFor(playerId) {
+  function getStateFor(userId) {
     return {
       id,
       state,
-      players: `${players.length}/${size}`,
-      hero: playerId,
+      users: `${users.length}/${size}`,
+      hero: userId,
     }
   }
   
@@ -57,7 +63,7 @@ module.exports = function Game(size) {
     get state() {
       return state
     },
-    players,
+    users,
     join,
     leave,
     getStateFor,

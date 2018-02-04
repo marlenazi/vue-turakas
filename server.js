@@ -34,7 +34,7 @@ io.on('connection', socket => {
   }
   function createGame(userId) {
     console.log('Creating new game for ' + userId)
-    // create new game with max players x
+    // create new game with max users x
     let game = Game(2)
         game.join(userId)
     // add game to collection
@@ -84,8 +84,8 @@ io.on('connection', socket => {
     socket.join(game.id)
     getUser(userId).game = game.id
 
-    game.players.forEach(player => {
-      io.to( getUser(player).socketId )
+    game.users.forEach(user => {
+      io.to( getUser(user).socketId )
         .emit( 'updateGame', game.getStateFor(userId) )
     })
   })
@@ -100,8 +100,8 @@ io.on('connection', socket => {
 
     if (game.state !== 'Closed') {
       socket.emit('updateGame', {})
-      game.players.forEach(player => {
-        io.to( getUser(player).socketId )
+      game.users.forEach(user => {
+        io.to( getUser(user).socketId )
           .emit( 'updateGame', game.getStateFor(userId) )
       })
     } else {
@@ -126,8 +126,8 @@ io.on('connection', socket => {
         let game = getGame(user.game)
         game.leave(user.id)
 
-        game.players.forEach(player => {
-          io.to( getUser(player).socketId )
+        game.users.forEach(user => {
+          io.to( getUser(user).socketId )
             .emit( 'updateGame', game.getStateFor(user.Id) )
         })
       }
