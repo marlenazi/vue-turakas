@@ -16,14 +16,16 @@ export default {
   props: ['hero', 'game'],
   data () {
     return {
-      msg: 'Game'
+      msg: 'Game',
+      board: [],
+      hand: [],
+
     }
   },
   methods: {
     leaveGame() {
       console.log('Leaving game')
-      console.log(this.game)
-      this.$socket.emit('leaveGame', this.game.id, this.hero.id)
+      this.$socket.emit('leaveGame', this.hero.id)
     }
   }
 }

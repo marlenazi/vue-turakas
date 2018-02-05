@@ -42,30 +42,22 @@ export default {
       this.hero = user
       this.view = 'Lobby'
     },
-    updateGame(game) {
-      console.log(game)
-      if (!game) {
-        this.view = 'Lobby'
-        return
-      }
-      this.game = game
-      switch (game.state) {
-        case 'Waiting':
-        case 'Playing':
-          this.view = 'Game'
-        break
-        case 'Closed':
-          this.view = 'Lobby'
-        default:
-          this.view = 'Lobby'
-      }
-      console.log(this.game)
+    joinedGame() {
+      this.view = 'Game'
     },
+    leftGame() {
+      this.view = 'Lobby'
+    }
   }
 }
 </script>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

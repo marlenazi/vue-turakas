@@ -41,14 +41,14 @@ export default {
   },
   created() {
     console.log(this.games)
-    this.$socket.emit('getWaitingGames')
+    this.$socket.emit('getAvailableGames')
   },
   sockets: {
-    waitingGames(games) {
-      console.log('Got games')
+    availableGames(games) {
+      console.log('Got available games')
       console.log(games)
       this.games = games
-    }
+    },
   }
 }
 </script>
