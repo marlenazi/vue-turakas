@@ -84,7 +84,7 @@ io.on('connection', socket => {
       }
 
       return game          
-    } else return false
+    } else return
   }
   function removePlayer(gameId, userId) {
     let game = getGame(gameId)
@@ -93,6 +93,12 @@ io.on('connection', socket => {
     user.game = null
 
     return game
+  }
+  function sendStateToPlayers(game) {
+    game.users.forEach(userId => {
+      io.to( getUser(userId).socketId )
+        .emit( 'updateGame', game.getStateFor(userId) )
+    })
   }
   socket.on('login', name => {
     let ip = socket.request.connection.remoteAddress
@@ -107,12 +113,9 @@ io.on('connection', socket => {
       let game = addPlayer(user.game, user.id)
 
       if (game) {
-        socket.join(user.id)
-        
-        game.users.forEach(userId => {
-          io.to( getUser(userId).socketId )
-            .emit( 'updateGame', game.getStateFor(userId) )
-        })
+      /* because we added reconnected player, 
+         lets update state to all who are connected */
+        sendStateToPlayers(game)
       } else {
         user.game = null
       }
@@ -129,10 +132,7 @@ io.on('connection', socket => {
 
     socket.join(game.id)
     
-    game.users.forEach(user => {
-      io.to( getUser(user).socketId )
-        .emit( 'updateGame', game.getStateFor(userId) )
-    })
+    sendStateToPlayers(game)
   })
 
   socket.on('leaveGame', (gameId, userId) => {
