@@ -23,6 +23,27 @@ console.log('Listening to ' + port)
 io.on('connection', socket => {
   console.log(`Socket ${socket.id} connected`)
   console.log(users)
+
+  function login(name, ip, socketId) {
+    console.log(`Logging in ${name}`)
+    // get user from users or create a new one
+    console.log(users)
+    let user = users.find(user => user.name === name && user.ip === ip)
+             || User(name, ip)
+
+    if (user.hasOwnProperty('socketId')) {
+      console.log('User exists')
+      /* here might check if connection is still active (ie one client, two tabs)
+         and then send a message to alert or handle double connection*/
+    } else {
+      console.log('Adding new user')
+      users.push(user)
+    }
+    // assign socketId, so we can send data to specific user
+    user.socketId = socketId
+
+    return user
+  }
   function getGame(id) {
     return games.find(game => game.id === id)
   }
@@ -74,32 +95,11 @@ io.on('connection', socket => {
     return game
   }
   socket.on('login', name => {
-    let userIp = socket.request.connection.remoteAddress
+    let ip = socket.request.connection.remoteAddress
     // define it here for we want to use it inside and outside of newUser() 
-    let user = newUser(name, userIp, socket.id)
-
-    function newUser(name, ip, socketId) {
-      // cant use getUser() because we have extra conditions
-      let user = users.find(user => user.name === name && user.ip === ip);
-
-      if (user) {
-        console.log('User exists')
-        // user has disconnected, so we add this socket.id to returning user
-        user.socketId = socketId
-
-        return user
-      } else {
-        console.log('Adding new user')
-        
-        let newUser = User(name, userIp, socketId)
-        users.push(newUser)
+    let user = login(name, ip, socket.id)
     
-        return newUser
-      }
-    }
-
-    socket.emit('userRegistered', user)
-
+    socket.emit('loggedIn', user)
     // if user has a game attached, try to connect them with that game
     // if it does not exist any more, remove assigned game
     if (user.game) {
@@ -108,6 +108,7 @@ io.on('connection', socket => {
 
       if (game) {
         socket.join(user.id)
+        
         game.users.forEach(userId => {
           io.to( getUser(userId).socketId )
             .emit( 'updateGame', game.getStateFor(userId) )
@@ -167,6 +168,8 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
+
+    console.log(users)
     let user = users.find(user => user.socketId === socket.id)
     
     if (user) {

@@ -12,25 +12,21 @@ module.exports = {
   addPlayer,
 }
 
-// gets user from users or creates a new one
-// returns the instance
 function getUser(name, ip, socketId) {
-
-  let user = users.find( user => user.name === name && user.ip === ip )
-
-  if (user) {
-    console.log('User exists')
-    user.socketId = socketId
-
-    return user
-  } else {
+  // get user from users collection or create a new user
+  let user =  users.find(user => user.name === name && user.ip === ip) 
+           || User(name, ip)
+  
+  if (user.hasOwnProperty('socketId')) {
+    console.log('User exists') 
+  } else { 
     console.log('Adding new user')
-    
-    let newUser = User(name, ip, socketId)
-    users.push(newUser)
-
-    return newUser
+    users.push(user)
   }
+  // store socketId in case we want to send data to specific socket
+  user.socketId = socketId
+
+  return user
 }
 // makes a new game and joins the player to it. 
 // returns game state for initiating player

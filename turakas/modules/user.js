@@ -1,11 +1,10 @@
 const shortId = require('shortid')
 
-module.exports = function User(name, ip, socketId) {
+module.exports = function User(name, ip) {
 
   return {
     id: shortId.generate(),
     ip,
-    socketId,
     name,
     game: null
   }
