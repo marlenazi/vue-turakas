@@ -8,6 +8,7 @@ const index = fs.readFile('index.html', (error, file) => file)
 
 const User = require('./turakas/modules/user')
 const Game = require('./turakas/modules/game')
+const zzz = require('./turakas/modules/emitter')
 // collections for users and games
 const users = []
 const games = []
@@ -30,7 +31,10 @@ io.on('connection', socket => {
     return users.find(user => user.id === id) || users.find(user => user.socketId === id)
   }
   function getAvailableGames() {
-    return games.filter(game => game.status() === 'Waiting')
+    console.log(games)
+    return games.filter( game => game.status() === 'Waiting' || 
+                                 game.status() === 'Halted'    )
+      
   }
   function login(name, ip, socketId) {
     console.log(`Logging in ${name}`)
@@ -60,7 +64,6 @@ io.on('connection', socket => {
     game.join(user)
     socket.join(game.id)
 
-    console.log(games)
     return game.state()
   }
   function joinGame(gameId, userId) {
@@ -73,13 +76,14 @@ io.on('connection', socket => {
     return game.state()
   }
   function leaveGame(userId) {
+    console.log('Func leaveGame')
     let user = getUser(userId)
     let game = getGame(user.game)
     
     game.leave(user)
     
     let gameState = game.state()
-
+    console.log(gameState.status)
     if (gameState.status === 'Closed') {
       games.splice(games.indexOf(game), 1)
     }
@@ -97,7 +101,8 @@ io.on('connection', socket => {
       socket.emit('joinedGame', getGame(user.game).state())
     }
   })
-  socket.on('getAvailableGames', userId => {
+  socket.on('getAvailableGames', () => {
+
     socket.emit('availableGames', getAvailableGames())
   })
   socket.on('newGame', userId => {
@@ -169,4 +174,16 @@ io.on('connection', socket => {
     }
 
   })
+})
+
+// events that game emits
+zzz.on('refresh', (gameId, state) => {
+
+  console.log('zzzing')
+
+  io.to(gameId).emit('updateGame', state)
+})
+zzz.on('time', (gameId, timePassed) => {
+  console.log(timePassed)
+  io.to(gameId).emit('time', timePassed)
 })

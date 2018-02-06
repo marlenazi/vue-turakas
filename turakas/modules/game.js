@@ -1,5 +1,8 @@
+
+
 const shortId = require('shortid')
 const Cards = require('./cards')
+const zzz = require('./emitter')
 
 module.exports = function Game(gameSize = 2) {
   
@@ -19,29 +22,34 @@ module.exports = function Game(gameSize = 2) {
   const trump = deck.slice(-1)[0]
   const board = []
   const mucked = []
+  const timers = {}
   const players = []
-  
+
   let attacking = Math.floor(Math.random() * size)
   let defending = attacking === (size - 1) ? 0 : attacking + 1
   let active = attacking
   let attackerCard = null
 
   function join(user) {
+
     if (players.length < size) {
       players.push(user)
       user.game = id
     } else console.log('Game full')
 
-    if (players.length === size) { _start() }
+    if (players.length === size && !inited) { _start() }
+
+    return state()
   }
   function leave(user) {
     if (status() === 'Waiting') {
       players.splice(players.indexOf(user), 1)
       user.game = null
     }
-    if (status() === 'Playing' || status() === 'Halted') {
+    if (status() === 'Playing') {
       // we want to leave id, so if user reconnects, they can continue
-      players.find(player => player.id === user.id)
+      let leavingPlayer = players.find(player => player.id === user.id)
+
       console.log(`Player ${user.name} has left the game`)
     }
   }
@@ -69,7 +77,7 @@ module.exports = function Game(gameSize = 2) {
           return {
             id: player.id,
             name: player.name,
-          }}}))(),
+      }}}))(),
     }
   }
   function hand(user) {
@@ -158,6 +166,8 @@ module.exports = function Game(gameSize = 2) {
       player.hand = deck.splice(0, 6)
     })
 
+    _timer(30, players[active], move)
+
     inited = true
   }
   function _nextActive() {
@@ -166,7 +176,8 @@ module.exports = function Game(gameSize = 2) {
     } else {
       active -= 1
     }
-    console.log(active)
+    _setTimerToActive()
+    zzz.emit('refresh', id, state())
   }
   function _nextAttacking() {
     if (attacking === 0) {
@@ -189,7 +200,43 @@ module.exports = function Game(gameSize = 2) {
       }
     })
   }
-  
+  function _timer(seconds = 5, player, callback) {
+    const time = (seconds + 2) * 1000
+    let timePassed = seconds
+    
+    let ticToc = setInterval(() => {
+      zzz.emit('time', id, timePassed)
+      timePassed -= 1
+    }, 1000)
+
+    setTimeout(() => {
+      if (callback === move) {
+        callback(player.hand[Math.floor(Math.random() * player.hand.length)])
+      } else {
+        callback(player)
+      }
+      clearInterval(ticToc)
+    }, time);
+
+  }
+  function _setTimerToActive() {
+
+    if (active === attacking && board.length > 0) {
+      
+      _timer(5, players[active], muck)
+
+    } else if (active === attacking && board.length === 0) {
+
+      _timer(5, players[active], move)
+      
+    } else {
+      
+      _timer(5, players[active], pickUp)
+      
+    }
+
+  }
+
   return {
     id,
     status,

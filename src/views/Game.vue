@@ -3,11 +3,12 @@
     <nav>
       <h1>{{msg}}: {{ game.id }}</h1>
       
-      Players: {{ game.players.length }}/{{ game.size }}
+      <span v-if="game.status !== 'Playing'">Players: {{ game.players.length }}/{{ game.size }}</span>
       <button class="leaveGameBtn" @click="leaveGame"> X </button>
       
     </nav>
-      Hero: {{ hero.name }}<br>
+      {{ hero.name }} 
+      <span v-if="time < 10"> Time: {{ time }}</span>
     <hr>
       <ul>
         <li v-for="player in game.players" :key="player.id">
@@ -34,7 +35,8 @@
       <div class="board">
         <div class="card" 
           v-for="card in game.board" 
-          :key="card.rank + card.suit">
+          :key="card.rank + card.suit"
+          @click="pickUp">
           {{ card.rank }}{{ card.suit }}
         </div>
       </div>
@@ -61,7 +63,8 @@ export default {
   data () {
     return {
       msg: 'Game',
-      hand: []
+      hand: [],
+      time: 30
     }
   },
   methods: {
@@ -96,6 +99,9 @@ export default {
       if (game.status === 'Playing') {
         this.$socket.emit('getHand', this.hero.id)
       }
+    },
+    time(timePassed) {
+      this.time = timePassed
     }
   }
 }

@@ -56,7 +56,6 @@ export default {
       console.log('Updating game')
       this.game = state
     },
-
   }
 }
 </script>
