@@ -148,4 +148,11 @@ io.on('connection', socket => {
     }
 
   })
+
+  socket.on('timer', () => {
+    setInterval(() => {
+      console.log('timed')
+      io.emit('timer')
+    }, 1000)
+  })
 })
