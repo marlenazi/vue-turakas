@@ -74,7 +74,7 @@ export default {
       this.$socket.emit('pickUp', this.hero.id)
     },
     muck() {
-      return
+      this.$socket.emit('muck', this.hero.id)
     }
   },
   computed: {
@@ -129,9 +129,11 @@ h1 {
 .card {
   border: 1px solid silver;
   border-radius: 5px;
-  height: 5rem;
-  width: 4rem;
+  height: 4rem;
+  width: 3rem;
   background: peru;
+
+  flex: 0 0 auto;
 }
 .trump {
   background: palegreen;
@@ -144,8 +146,16 @@ h1 {
   background: peachpuff;
 }
 .hand {
+  width: 95%;
+  padding: .2rem;
+  align-self: center;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
+  overflow-x: auto;
+}
+.hand .card {
+  margin: 1px;
+  display: inline-block;
 }
 </style>

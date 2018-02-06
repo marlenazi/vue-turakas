@@ -18,6 +18,7 @@ module.exports = function Game(gameSize = 2) {
   const deck = Cards()
   const trump = deck.slice(-1)[0]
   const board = []
+  const mucked = []
   const players = []
   
   let attacking = Math.floor(Math.random() * size)
@@ -77,7 +78,7 @@ module.exports = function Game(gameSize = 2) {
   }
   function move(card) {
     let ix = players[active].hand
-    .findIndex(pCard => pCard.suit === card.suit && pCard.rank === card.rank)
+      .findIndex(pCard => pCard.suit === card.suit && pCard.rank === card.rank)
     
     if (ix > -1) {
       board.push(...players[active].hand.splice(ix, 1))
@@ -97,6 +98,20 @@ module.exports = function Game(gameSize = 2) {
 
     return state()
   }
+  function muck(user) {
+
+    if (players[active].id === user.id && attacking === active) {
+      mucked.push(...board.splice(0))
+
+      _replenish()
+      _nextActive()
+      _nextAttacking()
+      _nextDefending()
+    }
+
+    return state()
+  }
+
   function _start() {
     console.log('Starting game ' + id)
 
@@ -120,6 +135,20 @@ module.exports = function Game(gameSize = 2) {
     }
     console.log(active)
   }
+  function _nextAttacking() {
+    if (attacking === 0) {
+      attacking += 1
+    } else {
+      attacking -= 1
+    }
+  }
+  function _nextDefending() {
+    if (defending === 0) {
+      defending += 1
+    } else {
+      defending -= 1
+    }
+  }
   function _replenish() {
     players.forEach(player => {
       if (player.hand.length < 6) {
@@ -137,5 +166,6 @@ module.exports = function Game(gameSize = 2) {
     hand,
     move,
     pickUp,
+    muck,
   }
 }
