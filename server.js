@@ -126,7 +126,7 @@ io.on('connection', socket => {
     io.emit('availableGames', getAvailableGames())
   })
   socket.on('getHand', userId => {
-    console.log('getting a hand')
+    // console.log('getting a hand')
     let user = getUser(userId)
     let game = getGame(user.game)
 

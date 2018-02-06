@@ -19,10 +19,11 @@ module.exports = function Game(gameSize = 2) {
   const trump = deck.slice(-1)[0]
   const board = []
   const players = []
-  const attacking = Math.floor(Math.random() * size)
-  const defending = attacking === (size - 1) ? 0 : attacking + 1
-  const active = attacking
-  const attackerCard = null
+  
+  let attacking = Math.floor(Math.random() * size)
+  let defending = attacking === (size - 1) ? 0 : attacking + 1
+  let active = attacking
+  let attackerCard = null
 
   function join(user) {
     if (players.length < size) {
@@ -30,7 +31,7 @@ module.exports = function Game(gameSize = 2) {
       user.game = id
     } else console.log('Game full')
 
-    if (players.length === size) { start() }
+    if (players.length === size) { _start() }
   }
   function leave(user) {
     if (status() === 'Waiting') {
@@ -42,21 +43,6 @@ module.exports = function Game(gameSize = 2) {
       players.find(player => player.id === user.id)
       console.log(`Player ${user.name} has left the game`)
     }
-  }
-  function start() {
-    console.log('Starting game ' + id)
-
-    deck.forEach(card => {
-      if (card.suit === trump.suit) {
-        card.value += 10
-    }})
-
-    players.forEach((player, ix) => {
-      player.ix = ix
-      player.hand = deck.splice(0, 6)
-    })
-
-    inited = true
   }
   function state() {
     return {
@@ -82,7 +68,7 @@ module.exports = function Game(gameSize = 2) {
           return {
             id: player.id,
             name: player.name,
-      }}}))(),
+          }}}))(),
     }
   }
   function hand(user) {
@@ -90,15 +76,40 @@ module.exports = function Game(gameSize = 2) {
     return inited ? players.find(player => player.id === user.id).hand : []
   }
   function move(card) {
-    let ix = players[active].hand.findIndex(pCard => pCard.suit === card.suit && pCard.rank === card.rank)
-
+    let ix = players[active].hand
+    .findIndex(pCard => pCard.suit === card.suit && pCard.rank === card.rank)
+    
     if (ix > -1) {
       board.push(...players[active].hand.splice(ix, 1))
+      _nextActive()
     }
-
+    
     return state()
   }
+  function _start() {
+    console.log('Starting game ' + id)
 
+    deck.forEach(card => {
+      if (card.suit === trump.suit) {
+        card.value += 10
+    }})
+
+    players.forEach((player, ix) => {
+      player.ix = ix
+      player.hand = deck.splice(0, 6)
+    })
+
+    inited = true
+  }
+  function _nextActive() {
+    if (active === 0) {
+      active += 1
+    } else {
+      active -= 1
+    }
+    console.log(active)
+  }
+  
   return {
     id,
     status,
