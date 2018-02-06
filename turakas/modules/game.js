@@ -3,7 +3,16 @@ const Cards = require('./cards')
 
 module.exports = function Game(gameSize = 2) {
   
-  let state = 'Created'
+  let inited = false
+  let status = () => {
+    if (inited) {
+      if (players.length === size) { return 'Playing' }
+      if (players.length  <  size) { return 'Halted'  }
+    } else {
+      if (players.length  >   0  ) { return 'Waiting' }
+      else                         { return 'Closed'  }
+    }
+  }
 
   const id = shortId.generate()
   const size = gameSize
@@ -24,9 +33,25 @@ module.exports = function Game(gameSize = 2) {
     players.splice(players.indexOf(user), 1)
     user.game = null
   }
+  function state() {
+    return {
+      board,
+      attacking,
+      defending,
+      active,
+      attackerCard,
+      players: () => players.map(player => {
+        return {
+          hand: player.hand.length,
+          name: player.name,
+        }
+      }),
+    }
+  }
 
   return {
     id,
+    status,
     join,
     leave
   }

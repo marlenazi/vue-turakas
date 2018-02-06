@@ -27,8 +27,11 @@ io.on('connection', socket => {
     return games.find(game => game.id === id)
   }
   function getUser(id) {
-    return users.find(user => user.id === id)
-  }  
+    return users.find(user => user.id === id) || users.find(user => user.socketId === id)
+  }
+  function getAvailableGames() {
+    return games.filter(game => game.status() === 'Waiting')
+  }
   function login(name, ip, socketId) {
     console.log(`Logging in ${name}`)
     // get user from users or create a new one
@@ -64,25 +67,58 @@ io.on('connection', socket => {
     let game = getGame(user.game)
     
     game.leave(user)
+
+    return game.status()
   }
+  /* ROOMS
+  ==========
+    lobby
+  */
+
 
   socket.on('login', name => {
     let ip = socket.request.connection.remoteAddress
- 
     let user = login(name, ip, socket.id)
-    
+
     socket.emit('loggedIn', user)
+  })
+  socket.on('getAvailableGames', userId => {
+    socket.emit('availableGames', getAvailableGames())
   })
   socket.on('newGame', userId => {
     createGame(userId)
+
     socket.emit('joinedGame')
+    io.emit('availableGames', getAvailableGames())
   })
   socket.on('leaveGame', userId => {
-    leaveGame(userId)
+    let gameStatus = leaveGame(userId)
 
     socket.emit('leftGame')
+
+    if (gameStatus === 'Closed') {
+      io.emit('availableGames', getAvailableGames())
+    }
+    if (gameStatus === 'Halted') {
+      io.to()
+    }
   })
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
+
+    let user = getUser(socket.id)
+
+    if (user && user.game) {
+      let gameId = user.game
+      let gameStatus = leaveGame(socket.id)
+
+      if (gameStatus === 'Closed') {
+        io.emit('availableGames', getAvailableGames())
+      }
+      if (gameStatus === 'Halted') {
+        io.to(gameId).emit('updateGame', getGame(gameId).status())
+      }
+    }
+
   })
 })
