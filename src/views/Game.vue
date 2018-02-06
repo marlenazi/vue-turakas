@@ -19,7 +19,10 @@
           Moves: {{ game.active + 1 }}<br>
           Defender: {{ game.defending + 1 }}<br>
           Attacker: {{ game.attacking + 1}}<br>
-          Attacking Card: {{ game.attackerCard }}
+          Attacking Card: 
+          <span v-if="game.attackerCard">
+            {{ game.attackerCard.rank }}{{ game.attackerCard.suit }}
+          </span> 
         </div>
         <div class="card">
           {{ game.deck }}
@@ -141,6 +144,7 @@ h1 {
 .board {
   height: 12rem;
   display: flex;
+  flex-flow: row wrap;
   padding: .5rem;
   justify-content: space-around;
   background: peachpuff;

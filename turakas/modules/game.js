@@ -77,20 +77,51 @@ module.exports = function Game(gameSize = 2) {
     return inited ? players.find(player => player.id === user.id).hand : []
   }
   function move(card) {
-    let ix = players[active].hand
-      .findIndex(pCard => pCard.suit === card.suit && pCard.rank === card.rank)
-    
-    if (ix > -1) {
+
+    let ix = players[active].hand.findIndex( pCard => 
+                                             pCard.suit === card.suit && 
+                                             pCard.rank === card.rank    )
+    function isValid() {
+      console.log(card)
+
+      //  so lets get corresponding serverside card
+      if (ix > -1) { 
+        card = players[active].hand[ix]
+      } else return false
+      console.log(card)
+      console.log(attackerCard)
+      if (attackerCard) {
+        // when there is an attackerCard check if our card is:
+        // -- same suit or trump
+        // -- has higher value
+        if (card.value > attackerCard.value && 
+           (card.suit === attackerCard.suit || card.suit === trump.suit)) {
+          return true
+        } else return false
+        // if there is no attacker, card (new attacker) can go on the board
+      } else if (board.length && board.length < 6) {
+        if (board.some( el => el.rank === card.rank)) {
+          return true
+        } else return false
+      } else return true
+    }
+      
+    if (isValid()) {
       board.push(...players[active].hand.splice(ix, 1))
       _nextActive()
     }
     
+    attackerCard = (board.length % 2 === 0) ? null
+                                            : board[board.length - 1]
+
     return state()
   }
   function pickUp(user) {
 
     if (players[active].id === user.id && defending === active) {
       players[active].hand.push(...board.splice(0))
+
+      attackerCard = null
 
       _replenish()
       _nextActive()
@@ -102,6 +133,8 @@ module.exports = function Game(gameSize = 2) {
 
     if (players[active].id === user.id && attacking === active) {
       mucked.push(...board.splice(0))
+
+      attackerCard = null
 
       _replenish()
       _nextActive()
