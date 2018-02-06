@@ -86,6 +86,17 @@ module.exports = function Game(gameSize = 2) {
     
     return state()
   }
+  function pickUp(user) {
+
+    if (players[active].id === user.id && defending === active) {
+      players[active].hand.push(...board.splice(0))
+
+      _replenish()
+      _nextActive()
+    }
+
+    return state()
+  }
   function _start() {
     console.log('Starting game ' + id)
 
@@ -109,6 +120,13 @@ module.exports = function Game(gameSize = 2) {
     }
     console.log(active)
   }
+  function _replenish() {
+    players.forEach(player => {
+      if (player.hand.length < 6) {
+        player.hand.push(...deck.splice(0, 6 - player.hand.length))
+      }
+    })
+  }
   
   return {
     id,
@@ -118,5 +136,6 @@ module.exports = function Game(gameSize = 2) {
     leave,
     hand,
     move,
+    pickUp,
   }
 }

@@ -138,6 +138,12 @@ io.on('connection', socket => {
 
     io.to(game.id).emit('updateGame', game.move(card))
   })
+  socket.on('pickUp', userId => {
+    let user = getUser(userId)
+    let game = getGame(user.game)
+
+    io.to(game.id).emit('updateGame', game.pickUp(user))
+  })
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
 

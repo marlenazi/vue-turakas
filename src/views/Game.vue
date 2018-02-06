@@ -35,6 +35,8 @@
           {{ card.rank }}{{ card.suit }}
         </div>
       </div>
+        <button class="pickUpBtn" @click="pickUp"> Pick up </button>
+        <button class="muckBtn" @click="muck"> Muck </button>
       <div class="hand">
         <div class="card" 
           v-for="card in hand" 
@@ -67,6 +69,12 @@ export default {
     move(card) {
       console.log(card)
       this.$socket.emit('move', this.game.id, card)
+    },
+    pickUp() {
+      this.$socket.emit('pickUp', this.hero.id)
+    },
+    muck() {
+      return
     }
   },
   computed: {
@@ -95,6 +103,9 @@ export default {
   background: greenyellow;
   height: 30rem;
   width: 20rem;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
 }
 nav {
   display: flex;
