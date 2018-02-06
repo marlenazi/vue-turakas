@@ -145,9 +145,9 @@ module.exports = function Game(gameSize = 2) {
       attackerCard = null
 
       _replenish()
-      _nextActive()
       _nextAttacking()
       _nextDefending()
+      _nextActive()
     }
 
     return state()
@@ -171,11 +171,12 @@ module.exports = function Game(gameSize = 2) {
     inited = true
   }
   function _nextActive() {
-    if (active === 0) {
-      active += 1
-    } else {
-      active -= 1
-    }
+
+    if (active === 0) { active += 1 } 
+    else              { active -= 1 }
+
+    if (deck.length < 6) { _checkForEnding() }
+
     _setTimerToActive()
     zzz.emit('refresh', id, state())
   }
@@ -194,16 +195,25 @@ module.exports = function Game(gameSize = 2) {
     }
   }
   function _replenish() {
-    players.forEach(player => {
-      if (player.hand.length < 6) {
+
+    // killer is replenished last
+    // replenishing should go in the order that the last round was played
+
+    players.forEach((player, ix) => {
+      if (player.hand.length < 6 && deck.length && ix !== active) {
         player.hand.push(...deck.splice(0, 6 - player.hand.length))
       }
     })
+
+    // we skipped the killer and it gets replenished last
+    let hand = players[active].hand
+    if (hand.length < 6 && deck.length) {
+      hand.push(...deck.splice(0, 6 - hand.length))
   }
-  function _timer(seconds = 5, player, callback) {
+  function _timer(seconds = 30, player, callback) {
     const time = (seconds + 2) * 1000
     let timePassed = seconds
-    
+    // we use ticToc to send updates on time to client
     let ticToc = setInterval(() => {
       zzz.emit('time', id, timePassed)
       timePassed -= 1
@@ -219,21 +229,24 @@ module.exports = function Game(gameSize = 2) {
     }, time);
 
   }
-  function _setTimerToActive() {
+  function _setTimerToActive(seconds = 30) {
 
     if (active === attacking && board.length > 0) {
       
-      _timer(5, players[active], muck)
+      _timer(seconds, players[active], muck)
 
     } else if (active === attacking && board.length === 0) {
 
-      _timer(5, players[active], move)
+      _timer(seconds, players[active], move)
       
     } else {
       
-      _timer(5, players[active], pickUp)
+      _timer(seconds, players[active], pickUp)
       
     }
+
+  }
+  function _checkForEnding() {
 
   }
 
