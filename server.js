@@ -142,17 +142,10 @@ io.on('connection', socket => {
       if (status === 'Closed') {
         io.emit('availableGames', getAvailableGames())
       }
-      if (status === 'Halted') {
+      if (status === 'Playing') {
         io.to(gameId).emit('updateGame', gameState)
       }
     }
 
-  })
-
-  socket.on('timer', () => {
-    setInterval(() => {
-      console.log('timed')
-      io.emit('timer')
-    }, 1000)
   })
 })

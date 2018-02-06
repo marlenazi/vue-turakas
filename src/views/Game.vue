@@ -1,10 +1,19 @@
 <template>
   <div class="game">
-    <button @click="leaveGame"> X </button>
-    <h1>{{msg}}: </h1>
-      {{ game.id }} <br>
-      Players: {{ game.players.length }}/{{ game.size }} <br>
-      Hero: {{ hero.name }} Villain: {{ villain }} <br>
+    <nav>
+      <h1>{{msg}}: {{ game.id }}</h1>
+      
+      Players: {{ game.players.length }}/{{ game.size }}
+      <button class="leaveGameBtn" @click="leaveGame"> X </button>
+      
+    </nav>
+      Hero: {{ hero.name }}<br>
+    <hr>
+      <ul>
+        <li v-for="player in game.players" :key="player.id">
+          P{{ player.ix + 1 }}: {{ player.name }} Cards: {{ player.hand }}
+        </li>
+      </ul>
       <div class="info">
         <div class="status">
           Moves: {{ game.active + 1 }}<br>
@@ -20,7 +29,11 @@
         </div>
       </div>
       <div class="board">
-
+        <div class="card" 
+          v-for="card in game.board" 
+          :key="card.rank + card.suit">
+          {{ card.rank }}{{ card.suit }}
+        </div>
       </div>
       {{ game }}
 
@@ -60,9 +73,17 @@ export default {
   height: 30rem;
   width: 20rem;
 }
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
 h1 {
   margin: 0;
   display: inline-block;
+}
+.leaveGameBtn {
+  padding: .5rem;
 }
 .info {
   display: flex;
@@ -72,16 +93,18 @@ h1 {
   margin-right: 3rem;
 }
 .card {
-  height: 4rem;
-  width: 3rem;
+  height: 5rem;
+  width: 4rem;
   background: peru;
 }
 .trump {
   background: palegreen;
 }
 .board {
-  widows: 80%;
-  height: 10rem;
+  height: 12rem;
+  display: flex;
+  padding: .5rem;
+  justify-content: space-around;
   background: peachpuff;
 }
 </style>

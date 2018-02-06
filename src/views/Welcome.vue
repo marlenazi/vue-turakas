@@ -22,7 +22,7 @@ export default {
   data () {
     return {
       msg: 'Lets play some cards',
-      name: 'Macarena' + parseInt(Math.random() * 10),
+      name: 'Mac' + parseInt(Math.random() * 10) + 'la',
     }
   },
   methods: {

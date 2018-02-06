@@ -1,7 +1,7 @@
 <template>
 <div>
   <button @click="changeView">Change View</button>
-  <button @click="timeIt">Timer</button>
+  <button >Timer</button>
   <transition name="fade" mode="out-in">
     <component 
       :is="view"
@@ -34,9 +34,7 @@ export default {
       console.log(this.view)
       this.view = this.view === 'Welcome' ? 'Lobby' : 'Welcome'
     },
-    timeIt() {
-      this.$socket.emit('timer')
-    }
+
   },
   computed: {
 
@@ -58,9 +56,6 @@ export default {
       console.log('Updating game')
       this.game = state
     },
-    timer() {
-      console.log('time')
-    }
 
   }
 }

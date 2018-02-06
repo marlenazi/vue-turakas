@@ -56,6 +56,8 @@ module.exports = function Game(gameSize = 2) {
       player.hand = deck.splice(0, 6)
     })
 
+    board.push(...deck.splice(0, 3))
+
     inited = true
   }
   function state() {
