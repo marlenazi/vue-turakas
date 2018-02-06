@@ -86,10 +86,6 @@ io.on('connection', socket => {
 
     return gameState
   }
-  /* ROOMS
-  ==========
-    lobby
-  */
 
   socket.on('login', name => {
     let ip = socket.request.connection.remoteAddress
@@ -128,6 +124,19 @@ io.on('connection', socket => {
     }
 
     io.emit('availableGames', getAvailableGames())
+  })
+  socket.on('getHand', userId => {
+    console.log('getting a hand')
+    let user = getUser(userId)
+    let game = getGame(user.game)
+
+    socket.emit('hand', game.hand(user))
+  })
+  socket.on('move', (gameId, card) => {
+    // console.log(card)
+    let game = getGame(gameId)
+
+    io.to(game.id).emit('updateGame', game.move(card))
   })
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)

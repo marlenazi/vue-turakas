@@ -56,8 +56,6 @@ module.exports = function Game(gameSize = 2) {
       player.hand = deck.splice(0, 6)
     })
 
-    board.push(...deck.splice(0, 3))
-
     inited = true
   }
   function state() {
@@ -87,6 +85,19 @@ module.exports = function Game(gameSize = 2) {
       }}}))(),
     }
   }
+  function hand(user) {
+    
+    return inited ? players.find(player => player.id === user.id).hand : []
+  }
+  function move(card) {
+    let ix = players[active].hand.findIndex(pCard => pCard.suit === card.suit && pCard.rank === card.rank)
+
+    if (ix > -1) {
+      board.push(...players[active].hand.splice(ix, 1))
+    }
+
+    return state()
+  }
 
   return {
     id,
@@ -94,5 +105,7 @@ module.exports = function Game(gameSize = 2) {
     state,
     join,
     leave,
+    hand,
+    move,
   }
 }

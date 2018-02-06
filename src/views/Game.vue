@@ -35,7 +35,16 @@
           {{ card.rank }}{{ card.suit }}
         </div>
       </div>
-      {{ game }}
+      <div class="hand">
+        <div class="card" 
+          v-for="card in hand" 
+          :key="card.rank + card.suit"
+          @click="move(card)">
+          {{ card.rank }}{{ card.suit }}
+        </div>
+      </div>
+      <!-- {{ game }} -->
+      <!-- {{ hand }} -->
 
   </div>
 </template>
@@ -47,22 +56,36 @@ export default {
   data () {
     return {
       msg: 'Game',
+      hand: []
     }
   },
   methods: {
     leaveGame() {
       console.log('Leaving game')
       this.$socket.emit('leaveGame', this.hero.id)
+    },
+    move(card) {
+      console.log(card)
+      this.$socket.emit('move', this.game.id, card)
     }
   },
   computed: {
-    villain() {
-      if (this.game.players.length > 1) {
-        return this.game.players.filter(p => p.id !== this.hero.id)[0].name
-      } else return '--'
+    
+  },
+  mounted() {
+    if (this.game.status === 'Playing') {
+      this.$socket.emit('getHand', this.hero.id)
     }
   },
   sockets: {
+    hand(hand) {
+      this.hand = hand
+    },
+    updateGame(game) {
+      if (game.status === 'Playing') {
+        this.$socket.emit('getHand', this.hero.id)
+      }
+    }
   }
 }
 </script>
@@ -93,6 +116,8 @@ h1 {
   margin-right: 3rem;
 }
 .card {
+  border: 1px solid silver;
+  border-radius: 5px;
   height: 5rem;
   width: 4rem;
   background: peru;
@@ -106,5 +131,10 @@ h1 {
   padding: .5rem;
   justify-content: space-around;
   background: peachpuff;
+}
+.hand {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 </style>
