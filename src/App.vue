@@ -42,11 +42,17 @@ export default {
       this.hero = user
       this.view = 'Lobby'
     },
-    joinedGame() {
+    joinedGame(state) {
       this.view = 'Game'
+      this.game = state
     },
     leftGame() {
       this.view = 'Lobby'
+      this.game = {}
+    },
+    updateGame(state) {
+      console.log('Updating game')
+      this.game = state
     }
   }
 }
