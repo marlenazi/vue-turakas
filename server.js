@@ -179,11 +179,12 @@ io.on('connection', socket => {
 // events that game emits
 zzz.on('refresh', (gameId, state) => {
 
-  console.log('zzzing')
-
   io.to(gameId).emit('updateGame', state)
 })
 zzz.on('time', (gameId, timePassed) => {
-  console.log(timePassed)
+  // console.log(timePassed)
   io.to(gameId).emit('time', timePassed)
+})
+zzz.on('gameOver', (gameId, winnerId) => {
+  io.to(gameId).emit('gameOver', getUser(winnerId).name)
 })

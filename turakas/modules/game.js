@@ -1,5 +1,3 @@
-
-
 const shortId = require('shortid')
 const Cards = require('./cards')
 const zzz = require('./emitter')
@@ -29,6 +27,8 @@ module.exports = function Game(gameSize = 2) {
   let defending = attacking === (size - 1) ? 0 : attacking + 1
   let active = attacking
   let attackerCard = null
+  let timer, actionTimer
+
 
   function join(user) {
 
@@ -166,7 +166,7 @@ module.exports = function Game(gameSize = 2) {
       player.hand = deck.splice(0, 6)
     })
 
-    _timer(30, players[active], move)
+    _setTimerToActive(5)
 
     inited = true
   }
@@ -177,7 +177,7 @@ module.exports = function Game(gameSize = 2) {
 
     if (deck.length < 6) { _checkForEnding() }
 
-    _setTimerToActive()
+    _setTimerToActive(5)
     zzz.emit('refresh', id, state())
   }
   function _nextAttacking() {
@@ -209,27 +209,38 @@ module.exports = function Game(gameSize = 2) {
     let hand = players[active].hand
     if (hand.length < 6 && deck.length) {
       hand.push(...deck.splice(0, 6 - hand.length))
+    }
   }
   function _timer(seconds = 30, player, callback) {
-    const time = (seconds + 2) * 1000
+
     let timePassed = seconds
-    // we use ticToc to send updates on time to client
-    let ticToc = setInterval(() => {
-      zzz.emit('time', id, timePassed)
+
+    timer = setInterval(() => {
+      // console.log(timer)
+      if (timePassed <= -1) {
+
+        if (callback === move) {
+          callback(player.hand[Math.floor(Math.random() * player.hand.length)])
+        } else { callback(player) }
+        
+      } else {
+        
+        zzz.emit('time', id, timePassed)
+      }
+
       timePassed -= 1
     }, 1000)
 
-    setTimeout(() => {
-      if (callback === move) {
-        callback(player.hand[Math.floor(Math.random() * player.hand.length)])
-      } else {
-        callback(player)
-      }
-      clearInterval(ticToc)
-    }, time);
-
   }
   function _setTimerToActive(seconds = 30) {
+    console.log('setting timer to active. Sec: ' + seconds)
+
+    if (timer) { 
+      console.log('clearing timer')
+      clearInterval(timer)
+      timer = false
+    }
+
 
     if (active === attacking && board.length > 0) {
       
@@ -242,12 +253,19 @@ module.exports = function Game(gameSize = 2) {
     } else {
       
       _timer(seconds, players[active], pickUp)
-      
+
     }
 
   }
   function _checkForEnding() {
 
+    if (!deck.length) {
+      if (players.some(player => !player.hand.length)) {
+        console.log('We have a winner')
+
+      }
+    }
+    return false
   }
 
   return {

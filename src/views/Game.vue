@@ -50,9 +50,6 @@
           {{ card.rank }}{{ card.suit }}
         </div>
       </div>
-      <!-- {{ game }} -->
-      <!-- {{ hand }} -->
-
   </div>
 </template>
 
@@ -102,6 +99,9 @@ export default {
     },
     time(timePassed) {
       this.time = timePassed
+    },
+    gameOver(winner) {
+      console.log('Winner: ' + winner)
     }
   }
 }
@@ -157,6 +157,7 @@ h1 {
 }
 .hand {
   width: 95%;
+  height: 6rem;
   padding: .2rem;
   align-self: center;
   display: flex;
