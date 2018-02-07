@@ -21,6 +21,7 @@ module.exports = function Game(gameSize = 2) {
   const deck = Cards()
   const trump = deck.slice(-1)[0]
   const board = []
+  const hands = []
   const mucked = []
   const timers = {}
   const players = []
@@ -84,7 +85,7 @@ module.exports = function Game(gameSize = 2) {
             id: player.id,
             ix: player.ix,
             name: player.name,
-            hand: player.hand.length,
+            hand: hands[player.ix].length,
           }
         } else {
           return {
@@ -95,19 +96,19 @@ module.exports = function Game(gameSize = 2) {
   }
   function hand(user) {
     
-    return inited ? players.find(player => player.id === user.id).hand : []
+    return inited ? hands[players.findIndex(player => player.id === user.id)] : []
   }
   function move(card) {
 
-    let ix = players[active].hand.findIndex( pCard => 
-                                             pCard.suit === card.suit && 
-                                             pCard.rank === card.rank    )
+    let ix = hands[active].findIndex( pCard => 
+                                      pCard.suit === card.suit && 
+                                      pCard.rank === card.rank    )
     function isValid() {
       console.log(card)
 
       //  so lets get corresponding serverside card
       if (ix > -1) { 
-        card = players[active].hand[ix]
+        card = hands[active][ix]
       } else return false
       console.log(card)
       console.log(attackerCard)
@@ -128,7 +129,7 @@ module.exports = function Game(gameSize = 2) {
     }
       
     if (isValid()) {
-      board.push(...players[active].hand.splice(ix, 1))
+      board.push(...hands[active].splice(ix, 1))
       _nextActive()
     }
     
@@ -140,7 +141,7 @@ module.exports = function Game(gameSize = 2) {
   function pickUp(user) {
 
     if (players[active].id === user.id && defending === active) {
-      players[active].hand.push(...board.splice(0))
+      hands[active].push(...board.splice(0))
 
       attackerCard = null
 
@@ -176,7 +177,7 @@ module.exports = function Game(gameSize = 2) {
 
     players.forEach((player, ix) => {
       player.ix = ix
-      player.hand = deck.splice(0, 6)
+      hands.push(deck.splice(0, 6))
     })
 
     _setTimerToActive(5)
@@ -213,13 +214,13 @@ module.exports = function Game(gameSize = 2) {
     // replenishing should go in the order that the last round was played
 
     players.forEach((player, ix) => {
-      if (player.hand.length < 6 && deck.length && ix !== active) {
-        player.hand.push(...deck.splice(0, 6 - player.hand.length))
+      if (hands[ix].length < 6 && deck.length && ix !== active) {
+        hands[ix].push(...deck.splice(0, 6 - hands[ix].length))
       }
     })
 
     // we skipped the killer and it gets replenished last
-    let hand = players[active].hand
+    let hand = hands[active]
     if (hand.length < 6 && deck.length) {
       hand.push(...deck.splice(0, 6 - hand.length))
     }
@@ -233,7 +234,7 @@ module.exports = function Game(gameSize = 2) {
       if (timePassed <= -1) {
 
         if (callback === move) {
-          callback(player.hand[Math.floor(Math.random() * player.hand.length)])
+          callback(hands[active][Math.floor(Math.random() * hands[active].length)])
         } else { callback(player) }
         
       } else {
@@ -274,7 +275,7 @@ module.exports = function Game(gameSize = 2) {
   function _checkForEnding() {
 
     if (!deck.length) {
-      if (players.some(player => !player.hand.length)) {
+      if (players.some((player, ix) => !hands[ix].length)) {
         console.log('We have a winner')
 
       }
