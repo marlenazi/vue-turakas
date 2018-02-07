@@ -225,7 +225,7 @@ module.exports = function Game(gameSize = 2) {
       hand.push(...deck.splice(0, 6 - hand.length))
     }
   }
-  function _timer(seconds = 30, player, callback) {
+  function _timer(seconds = 30, callback) {
 
     let timePassed = seconds
 
@@ -235,7 +235,7 @@ module.exports = function Game(gameSize = 2) {
 
         if (callback === move) {
           callback(hands[active][Math.floor(Math.random() * hands[active].length)])
-        } else { callback(player) }
+        } else { callback(players[active]) }
         
       } else {
         
@@ -259,15 +259,15 @@ module.exports = function Game(gameSize = 2) {
 
     if (active === attacking && board.length > 0) {
       
-      _timer(seconds, players[active], muck)
+      _timer(seconds, muck)
 
     } else if (active === attacking && board.length === 0) {
 
-      _timer(seconds, players[active], move)
+      _timer(seconds, move)
       
     } else {
       
-      _timer(seconds, players[active], pickUp)
+      _timer(seconds, pickUp)
 
     }
 
