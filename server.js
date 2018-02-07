@@ -132,11 +132,11 @@ io.on('connection', socket => {
 
     socket.emit('leftGame')
 
-    if (status === 'Halted' || status === 'Waiting') {
+    if (status === 'Waiting') {
       io.to(gameState.id).emit('updateGame', gameState)
     }
 
-    io.emit('availableGames', getAvailableGames(getUser(userId)))
+    io.emit('availableGames', getAvailableGames())
   })
   socket.on('getHand', userId => {
     // console.log('getting a hand')
