@@ -24,6 +24,8 @@ console.log('Listening to ' + port)
 io.on('connection', socket => {
   console.log(`Socket ${socket.id} connected`)
 
+  console.log(games)
+
   function getGame(id) {
     return games.find(game => game.id === id)
   }
@@ -90,7 +92,7 @@ io.on('connection', socket => {
     game.leave(user)
     
     let gameState = game.state()
-    console.log(gameState.status)
+
     if (gameState.status === 'Closed') {
       console.log('Closing game ' + game.id)
       games.splice(games.indexOf(game), 1)
@@ -117,26 +119,34 @@ io.on('connection', socket => {
     let gameState = createGame(userId)
 
     socket.emit('joinedGame', gameState)
-    io.emit('availableGames', getAvailableGames())
+    io.emit('gameCreated', {
+      id: gameState.id, 
+      size: gameState.size, 
+      status: gameState.status, 
+      players: gameState.player, 
+    })
   })
   socket.on('joinGame', (gameId, userId) => {
     let gameState = joinGame(gameId, userId)
 
     socket.emit('joinedGame', gameState)
     io.to(gameState.id).emit('updateGame', gameState)
-    io.emit('availableGames', getAvailableGames())
+    io.emit('gameClosed', gameState.id)
   })
   socket.on('leaveGame', userId => {
     let gameState = leaveGame(userId)
     let status = gameState.status
 
+    socket.leave(gameState.id)
     socket.emit('leftGame')
 
     if (status === 'Waiting') {
       io.to(gameState.id).emit('updateGame', gameState)
     }
+    if (status === 'Closed') {
+      io.emit('gameClosed', gameState.id)
+    }
 
-    io.emit('availableGames', getAvailableGames())
   })
   socket.on('getHand', userId => {
     // console.log('getting a hand')

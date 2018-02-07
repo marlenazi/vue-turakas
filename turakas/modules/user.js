@@ -6,6 +6,7 @@ module.exports = function User(name, ip) {
     id: shortId.generate(),
     ip,
     name,
-    game: null
+    game: null,
+    left: false
   }
 }

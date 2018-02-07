@@ -50,6 +50,17 @@ export default {
       console.log(games)
       this.games = games
     },
+    gameCreated(game) {
+      console.log('New game')
+      console.log(game)
+      this.games.push(game)
+    },
+    gameClosed(closedGame) {
+      console.log('Game closed')
+      console.log(closedGame)
+      this.games.splice(this.games.findIndex(game => 
+                                             game.id === closedGame.id), 1)
+    }
   }
 }
 </script>
