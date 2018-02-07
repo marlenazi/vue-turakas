@@ -1,9 +1,9 @@
 <template>
   <div class="game">
     <nav>
-      <h1>{{msg}}: {{ game.id }}</h1>
+      <h1>{{msg}}: {{ game.id }}</h1>{{ game.status }}
       
-      <span v-if="game.status !== 'Playing'">Players: {{ game.players.length }}/{{ game.size }}</span>
+      <span v-if="game.status === 'Waiting'">Players: {{ game.players.length }}/{{ game.size }}</span>
       <button class="leaveGameBtn" @click="leaveGame"> X </button>
       
     </nav>
@@ -50,6 +50,7 @@
           {{ card.rank }}{{ card.suit }}
         </div>
       </div>
+      <!-- {{game}} -->
   </div>
 </template>
 
@@ -93,15 +94,16 @@ export default {
       this.hand = hand
     },
     updateGame(game) {
-      if (game.status === 'Playing') {
+      if (game.status === 'Playing' || game.status === 'Finished') {
         this.$socket.emit('getHand', this.hero.id)
       }
     },
     time(timePassed) {
       this.time = timePassed
     },
-    gameOver(winner) {
-      console.log('Winner: ' + winner)
+    gameOver(state) {
+      console.log('Winner: ' + state.winner.name)
+      console.log('Turakas: ' + state.turakas.name)
     }
   }
 }

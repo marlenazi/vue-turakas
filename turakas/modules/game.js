@@ -7,12 +7,15 @@ module.exports = function Game(gameSize = 2) {
   let inited = false
   let status = () => {
     if (inited) {
+      console.log('====================')
+      console.log(players)
       if (players.every(player => 
-            player.away === true)) { return 'Closed'  }
-      if (players.length === size) { return 'Playing' }
+            player.away === true)) { return 'Closed'   }
+      if (_checkForEnding()      ) { return 'Finished' }
+      if (players.length === size) { return 'Playing'  }
     } else {
-      if (players.length  >   0  ) { return 'Waiting' }
-      else                         { return 'Closed'  }
+      if (players.length  >   0  ) { return 'Waiting'  }
+      else                         { return 'Closed'   }
     }
   }
 
@@ -32,6 +35,7 @@ module.exports = function Game(gameSize = 2) {
   let attackerCard = null
   let timer, actionTimer
 
+  let winner, turakas
 
   function join(user) {
 
@@ -56,15 +60,16 @@ module.exports = function Game(gameSize = 2) {
       players.splice(players.indexOf(user), 1)
       user.game = null
     }
-    if (status() === 'Playing') {
+    if (status() === 'Playing' || status() === 'Finished') {
       // we want to leave id, so if user reconnects, they can continue
       let leavingPlayer = players.find(player => player.id === user.id)
       leavingPlayer.away = true
       console.log(`${user.name} has left the game`)
 
-      console.log(players)
-      console.log(players.every(player => 
-                                player.away === true))
+      if (status() === 'Closed' && timer) {
+        clearInterval(timer)
+        timer = false
+      }
     }
   }
   function state() {
@@ -79,6 +84,8 @@ module.exports = function Game(gameSize = 2) {
       defending,
       active,
       attackerCard,
+      winner,
+      turakas,
       players: (() => players.map(player => {
         if (inited) {
           return {
@@ -99,13 +106,14 @@ module.exports = function Game(gameSize = 2) {
     return inited ? hands[players.findIndex(player => player.id === user.id)] : []
   }
   function move(card) {
-
+    
     let ix = hands[active].findIndex( pCard => 
                                       pCard.suit === card.suit && 
                                       pCard.rank === card.rank    )
+
     function isValid() {
       console.log(card)
-
+      
       //  so lets get corresponding serverside card
       if (ix > -1) { 
         card = hands[active][ix]
@@ -133,8 +141,6 @@ module.exports = function Game(gameSize = 2) {
       _nextActive()
     }
     
-    attackerCard = (board.length % 2 === 0) ? null
-                                            : board[board.length - 1]
 
     return state()
   }
@@ -189,10 +195,20 @@ module.exports = function Game(gameSize = 2) {
     if (active === 0) { active += 1 } 
     else              { active -= 1 }
 
-    if (deck.length < 6) { _checkForEnding() }
+    attackerCard = (board.length % 2 === 0) ? null
+                                            : board[board.length - 1]
+
+    
 
     _setTimerToActive(5)
     zzz.emit('refresh', id, state())
+
+    if (deck.length < 6) { 
+      if (_checkForEnding()) {
+
+        zzz.emit('gameOver', state())
+      }
+    }
   }
   function _nextAttacking() {
     if (attacking === 0) {
@@ -277,7 +293,16 @@ module.exports = function Game(gameSize = 2) {
     if (!deck.length) {
       if (players.some((player, ix) => !hands[ix].length)) {
         console.log('We have a winner')
+        if (timer) { 
+          // console.log('clearing timer')
+          clearInterval(timer)
+          timer = false
+        }
 
+        winner = players.find((player, ix) => !hands[ix].length)
+        turakas = players.find(player => player !== winner)
+
+        return true
       }
     }
     return false

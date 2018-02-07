@@ -24,7 +24,6 @@ console.log('Listening to ' + port)
 io.on('connection', socket => {
   console.log(`Socket ${socket.id} connected`)
 
-  console.log(games)
 
   function getGame(id) {
     return games.find(game => game.id === id)
@@ -196,13 +195,13 @@ io.on('connection', socket => {
 
 // events that game emits
 zzz.on('refresh', (gameId, state) => {
-
+  console.log(state)
   io.to(gameId).emit('updateGame', state)
 })
 zzz.on('time', (gameId, timePassed) => {
   // console.log(timePassed)
   io.to(gameId).emit('time', timePassed)
 })
-zzz.on('gameOver', (gameId, winnerId) => {
-  io.to(gameId).emit('gameOver', getUser(winnerId).name)
+zzz.on('gameOver', state => {
+  io.to(state.id).emit('gameOver', state)
 })

@@ -56,8 +56,8 @@ export default {
       console.log('Updating game')
       this.game = state
     },
-    gameOver(winner) {
-      return
+    gameOver(state) {
+      this.game = state
     } 
   }
 }
