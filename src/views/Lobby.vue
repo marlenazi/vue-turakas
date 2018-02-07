@@ -42,7 +42,7 @@ export default {
   },
   created() {
     console.log(this.games)
-    this.$socket.emit('getAvailableGames')
+    this.$socket.emit('getAvailableGames', this.hero.id)
   },
   sockets: {
     availableGames(games) {

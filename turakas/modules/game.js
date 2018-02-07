@@ -7,6 +7,8 @@ module.exports = function Game(gameSize = 2) {
   let inited = false
   let status = () => {
     if (inited) {
+      if (players.every(player => 
+            player.away === true)) { return 'Closed'  }
       if (players.length === size) { return 'Playing' }
     } else {
       if (players.length  >   0  ) { return 'Waiting' }
@@ -34,8 +36,15 @@ module.exports = function Game(gameSize = 2) {
 
     if (players.length < size) {
       players.push(user)
+      // in case the user has left a game before and has 'away' attached
+      if (user.away) { user.away = false } // maybe its better to use delete?
       user.game = id
     } else console.log('Game full')
+
+    if (status() === 'Playing') {
+      players.find(player => player.id === user.id)
+        .away = false
+    }
 
     if (players.length === size && !inited) { _start() }
 
@@ -49,8 +58,12 @@ module.exports = function Game(gameSize = 2) {
     if (status() === 'Playing') {
       // we want to leave id, so if user reconnects, they can continue
       let leavingPlayer = players.find(player => player.id === user.id)
+      leavingPlayer.away = true
+      console.log(`${user.name} has left the game`)
 
-      console.log(`Player ${user.name} has left the game`)
+      console.log(players)
+      console.log(players.every(player => 
+                                player.away === true))
     }
   }
   function state() {
@@ -233,14 +246,15 @@ module.exports = function Game(gameSize = 2) {
 
   }
   function _setTimerToActive(seconds = 30) {
-    console.log('setting timer to active. Sec: ' + seconds)
+    // console.log('setting timer to active. Sec: ' + seconds)
 
     if (timer) { 
-      console.log('clearing timer')
+      // console.log('clearing timer')
       clearInterval(timer)
       timer = false
     }
 
+    if (players[active].away) { seconds = 2 }
 
     if (active === attacking && board.length > 0) {
       
