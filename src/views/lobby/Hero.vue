@@ -3,6 +3,7 @@
     <div class="avatarAndRank">
       <img class="avatar" src="../../assets/theFool.svg" alt="" srcset="">
       <!-- <div class="rank">
+        <span>Rank:</span>
         {{ hero.rank }}
       </div> -->
     </div>
@@ -43,34 +44,42 @@ export default {
 <style scoped>
 .hero {
   background: whitesmoke;
-  margin: .5rem;
   padding: .5rem;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   flex: 0 0 auto;
 }
 .avatarAndRank {
   display: flex;
-  flex-flow: column;
+  flex-flow: row;
   align-items: center;
 }
 .avatar {
-  height: 6rem;
+  height: 4rem;
   flex: 0 0 auto;
 }
 .rank {
   border: 1px solid black;
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   margin: .5rem;
   font-size: 3rem;
+  color: red;
+}
+.rank span {
+  font-size: 1rem;
 }
 .name {
   margin: 1rem 1rem;
-  font-size: 3rem;
+  font-size: 2rem;
+}
+
+@media screen and (orientation: landscape) {
+
 }
 </style>

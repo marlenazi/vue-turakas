@@ -4,7 +4,12 @@
     <hero
       :hero="hero">
     </hero>
-    
+
+    <button class="newGameBtn"
+        @click="newGame">
+        New Game
+    </button>
+
     <games
       :hero="hero"
       :games="games">
@@ -71,11 +76,18 @@ export default {
 
 .newGameBtn {
   border-radius: 50%;
-  margin: 2rem;
+  position: absolute;
+  top: 1.2rem;
+  right: 1rem;
+  margin: 1rem;
   height: 6rem;
   width: 6rem;
   font-size: 1.4rem;
   background: red;
   color: white;
+}
+
+@media screen and (orientation: landscape) {
+
 }
 </style>

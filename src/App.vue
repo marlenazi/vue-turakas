@@ -94,7 +94,7 @@ html, body {
   width: 100%;
   height: 100%;
   /* max-width: 50rem; */
-  padding: .2rem;
+  /* padding: .2rem; */
 }
 
 ul {
