@@ -108,7 +108,7 @@ input:focus {
   border-radius: 50%;
   background: $btn;
   font-size: 1.2rem;
-  color: white;
+  color: $action;
 }
 
 </style>

@@ -42,12 +42,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+@import './../../style/variables';
+
 .hero {
-  background: whitesmoke;
+  background: $bg;
   padding: .5rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  width: 100%;
   flex: 0 0 auto;
 }
 .avatarAndRank {

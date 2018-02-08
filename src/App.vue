@@ -114,7 +114,7 @@ ul {
 
 button {
   border: none;
-  // height-3
+  background: $btn;
   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 
               0 15px 12px rgba(0,0,0,0.22);
 

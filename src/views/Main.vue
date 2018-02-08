@@ -71,13 +71,12 @@ export default {
 @import './../style/variables';
 
 .lobby {
-  border: 3px solid yellow;
+  // border: 3px solid yellow;
   height: 100%;
   width: 100%;
   display: flex;
-  flex-flow: column wrap;
-  justify-content: flex-end;
-  align-items: center;
+  flex-flow: column nowrap;
+  align-content: flex-start;
 }
 
 .newGameBtn {
@@ -90,7 +89,7 @@ export default {
   width: 6rem;
   font-size: 1.4rem;
   background: $btn;
-  color: white;
+  color: $action;
 }
 
 @media screen and (orientation: landscape) {
