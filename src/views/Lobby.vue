@@ -1,20 +1,13 @@
 <template>
   <div class="lobby">
-    <div class="heroAndButton">
-      <hero
-        :hero="hero">
 
-      </hero>
-      <button class="newGameBtn height-2"
-        @click="newGame">
-        New Game
-      </button>
-    </div>
+    <hero
+      :hero="hero">
+    </hero>
     
     <games
       :hero="hero"
       :games="games">
-
     </games>
     
   </div>
@@ -73,13 +66,9 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   background: rgb(255, 140, 100);
+  background: white;
 }
-.heroAndButton {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: flex-end;
-}
+
 .newGameBtn {
   border-radius: 50%;
   margin: 2rem;

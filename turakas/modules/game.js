@@ -146,7 +146,7 @@ module.exports = function Game(gameSize = 2) {
   }
   function pickUp(user) {
 
-    if (players[active].id === user.id && defending === active) {
+    if (inited && players[active].id === user.id && defending === active) {
       hands[active].push(...board.splice(0))
 
       attackerCard = null
@@ -159,7 +159,7 @@ module.exports = function Game(gameSize = 2) {
   }
   function muck(user) {
 
-    if (players[active].id === user.id && attacking === active) {
+    if (inited && players[active].id === user.id && attacking === active) {
       mucked.push(...board.splice(0))
 
       attackerCard = null

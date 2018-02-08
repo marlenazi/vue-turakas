@@ -8,7 +8,7 @@
           name="nameField" 
           placeholder="Your Name"
           v-model="name"/>
-        <button class="loginBtn height-2" @click.prevent="login">Enter</button>
+        <button class="loginBtn" @click.prevent="login">Enter</button>
       </form>
   </div>
 </template>

@@ -2,9 +2,9 @@
   <div class="hero height-1">
     <div class="avatarAndRank">
       <img class="avatar" src="../../assets/theFool.svg" alt="" srcset="">
-      <div class="rank">
+      <!-- <div class="rank">
         {{ hero.rank }}
-      </div>
+      </div> -->
     </div>
     <div class="name">
       {{ hero.name }}
@@ -42,13 +42,13 @@ export default {
 
 <style scoped>
 .hero {
-  background: orangered;
+  background: whitesmoke;
   margin: .5rem;
   padding: .5rem;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
 }
 .avatarAndRank {
   display: flex;

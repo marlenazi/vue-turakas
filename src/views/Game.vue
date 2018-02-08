@@ -1,8 +1,6 @@
 <template>
   <div class="game">
-    <nav>
-      <h1>{{msg}}: {{ game.id }}</h1>{{ game.status }}
-      
+    <nav>      
       <span v-if="game.status === 'Waiting'">Players: {{ game.players.length }}/{{ game.size }}</span>
       <button class="leaveGameBtn" @click="leaveGame"> X </button>
       
