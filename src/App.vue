@@ -1,9 +1,9 @@
 <template>
-<div>
-  <button @click="changeView">Change View</button>
-  <button >Timer</button>
+<div id="app" class="turakas">
+  <!-- <button @click="changeView">Change View</button>
+  <button >Timer</button> -->
   <transition name="fade" mode="out-in">
-    <component 
+    <component class="mainView"
       :is="view"
       :hero="hero"
       :game="game">
@@ -69,17 +69,32 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
+html, body {
+  height: 100%;
+  width: 100%;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
-
-h1, h2 {
-  font-weight: normal;
+.turakas *  :focus {
+  outline: none;
+}
+.turakas {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+.mainView {
+  width: 100%;
+  height: 100%;
+  /* max-width: 50rem; */
+  padding: .2rem;
 }
 
 ul {
@@ -89,11 +104,25 @@ ul {
 
 li {
   display: inline-block;
-  margin: 0 10px;
 }
 
-a {
-  color: #42b983;
+.height-1 {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 
+              0 3px 6px rgba(0,0,0,0.23);
+}
+.height-2 {
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 
+              0 15px 12px rgba(0,0,0,0.22);
+}
+
+button {
+  border: none;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 
+              0 15px 12px rgba(0,0,0,0.22);
+}
+button:active {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 
+              0 3px 6px rgba(0,0,0,0.23);
 }
 /* Transitions */
 .fade-enter-active, .fade-leave-active {

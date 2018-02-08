@@ -7,8 +7,8 @@ module.exports = function Game(gameSize = 2) {
   let inited = false
   let status = () => {
     if (inited) {
-      console.log('====================')
-      console.log(players)
+      // console.log('====================')
+      // console.log(players)
       if (players.every(player => 
             player.away === true)) { return 'Closed'   }
       if (_checkForEnding()      ) { return 'Finished' }
@@ -112,14 +112,14 @@ module.exports = function Game(gameSize = 2) {
                                       pCard.rank === card.rank    )
 
     function isValid() {
-      console.log(card)
+      // console.log(card)
       
       //  so lets get corresponding serverside card
       if (ix > -1) { 
         card = hands[active][ix]
       } else return false
-      console.log(card)
-      console.log(attackerCard)
+      // console.log(card)
+      // console.log(attackerCard)
       if (attackerCard) {
         // when there is an attackerCard check if our card is:
         // -- same suit or trump
@@ -301,6 +301,10 @@ module.exports = function Game(gameSize = 2) {
 
         winner = players.find((player, ix) => !hands[ix].length)
         turakas = players.find(player => player !== winner)
+
+        setTimeout(() => {
+          zzz.emit('closeGame', id)
+        }, 1000 * 5)
 
         return true
       }

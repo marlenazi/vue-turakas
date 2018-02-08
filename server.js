@@ -35,13 +35,13 @@ io.on('connection', socket => {
     let playingGame  = [],
       availableGames = []
 
-    if (user && user.game) {
-      playingGame = games.filter( game => game.id === user.game)
+    if (user && user.game && getGame(user.game)) {
+      playingGame = [getGame(user.game)]
     }
 
-    availableGames = games.filter( game => game.status() === 'Waiting' )
+    availableGames = games.filter( game => game.status() === 'Waiting')
 
-    return playingGame.concat(availableGames)
+    return playingGame.concat(availableGames).map(game => game.state())
       
   }
   function login(name, ip, socketId) {
@@ -106,13 +106,15 @@ io.on('connection', socket => {
 
     socket.emit('loggedIn', user)
 
-    if (user.game) {
+    if (user.game && getGame(user.game)) {
       socket.emit('joinedGame', getGame(user.game).state())
     }
   })
   socket.on('getAvailableGames', userId => {
-
-    socket.emit('availableGames', getAvailableGames(getUser(userId)))
+    let games = getAvailableGames(getUser(userId))
+    console.log('============ Games =============')
+    console.log(games)
+    socket.emit('availableGames', games)
   })
   socket.on('newGame', userId => {
     let gameState = createGame(userId)
@@ -122,7 +124,7 @@ io.on('connection', socket => {
       id: gameState.id, 
       size: gameState.size, 
       status: gameState.status, 
-      players: gameState.player, 
+      players: gameState.players, 
     })
   })
   socket.on('joinGame', (gameId, userId) => {
@@ -204,4 +206,9 @@ zzz.on('time', (gameId, timePassed) => {
 })
 zzz.on('gameOver', state => {
   io.to(state.id).emit('gameOver', state)
+})
+zzz.on('closeGame', gameId => {
+
+  io.to(gameId).emit('leftGame')
+  games.splice(games.findIndex(game => game.id === gameId), 1)
 })

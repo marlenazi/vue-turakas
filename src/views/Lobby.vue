@@ -1,28 +1,34 @@
 <template>
   <div class="lobby">
-      {{ hero.name }} : {{ hero.id }}<br>
-      {{ games }}
-    <br>
-    <button class="newGameBtn"
-      @click="newGame">
-      New Game
-    </button>
-      <div>Resume: </div>
-    <ul v-if="games.length > 0"
-      v-for="game in games"
-      :key="game.id">
-      <li>{{ game.id }} {{game.players}} <button @click="joinGame(game.id)">Join</button> </li>
-    </ul>
+    <div class="heroAndButton">
+      <hero
+        :hero="hero">
+
+      </hero>
+      <button class="newGameBtn height-2"
+        @click="newGame">
+        New Game
+      </button>
+    </div>
+    
+    <games
+      :hero="hero"
+      :games="games">
+
+    </games>
+    
   </div>
 </template>
 
 <script>
+import hero from './lobby/Hero'
+import games from './lobby/Games'
 
 export default {
   name: 'Lobby',
   props: ['hero', 'game'],
   components: {
-
+    hero, games
   },
   data() {
     return {
@@ -33,15 +39,12 @@ export default {
     newGame() {
       this.$socket.emit('newGame', this.hero.id)
     },
-    joinGame(id) {
-      this.$socket.emit('joinGame', id, this.hero.id)
-    }
   },
   computed: {
 
   },
   created() {
-    console.log(this.games)
+    // console.log(this.games)
     this.$socket.emit('getAvailableGames', this.hero.id)
   },
   sockets: {
@@ -65,11 +68,25 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .lobby {
-  background: greenyellow;
-  height: 25rem;
-  width: 16rem;
-  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  background: rgb(255, 140, 100);
+}
+.heroAndButton {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.newGameBtn {
+  border-radius: 50%;
+  margin: 2rem;
+  height: 6rem;
+  width: 6rem;
+  font-size: 1.4rem;
+  background: red;
+  color: white;
 }
 </style>
