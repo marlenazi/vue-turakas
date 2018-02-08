@@ -14,13 +14,13 @@
 
 <script>
 import Welcome from './views/Welcome'
-import Lobby from './views/Lobby'
+import Main from './views/Main'
 import Game from './views/Game'
 
 export default {
   name: 'Turakas',
   components: {
-    Welcome, Lobby, Game
+    Welcome, Main, Game
   },
   data () {
     return {
@@ -30,10 +30,6 @@ export default {
     }
   },
   methods: {
-    changeView() {
-      console.log(this.view)
-      this.view = this.view === 'Welcome' ? 'Lobby' : 'Welcome'
-    },
 
   },
   computed: {
@@ -42,14 +38,14 @@ export default {
   sockets: {
     loggedIn(user) {
       this.hero = user
-      this.view = 'Lobby'
+      this.view = 'Main'
     },
     joinedGame(state) {
       this.view = 'Game'
       this.game = state
     },
     leftGame() {
-      this.view = 'Lobby'
+      this.view = 'Main'
       this.game = {}
     },
     updateGame(state) {
@@ -88,7 +84,6 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: black;
 }
 .mainView {
   width: 100%;
@@ -122,12 +117,17 @@ li {
 
 button {
   border: none;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
-              0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 
+              0 15px 12px rgba(0,0,0,0.22);
 
-  transition: all .05s ease-in-out;
+  transition: all .1s ease-in-out;
+}
+button:focus, button:hover {
+  cursor: pointer;
+  text-decoration: underline; 
 }
 button:active {
+
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 
               0 3px 6px rgba(0,0,0,0.23);
 }

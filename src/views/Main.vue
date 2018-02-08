@@ -23,7 +23,7 @@ import hero from './lobby/Hero'
 import games from './lobby/Games'
 
 export default {
-  name: 'Lobby',
+  name: 'Main',
   props: ['hero', 'game'],
   components: {
     hero, games
@@ -83,7 +83,7 @@ export default {
   height: 6rem;
   width: 6rem;
   font-size: 1.4rem;
-  background: red;
+  background: green;
   color: white;
 }
 
