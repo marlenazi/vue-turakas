@@ -1,9 +1,11 @@
 <template>
-  <div class="welcome" onsubmit="return">
+  <div class="welcome">
+
       <header>
         <h1>{{ title }}</h1>
         <img src="../assets/theFool.svg" alt="the fool" srcset="">
       </header>
+
       <form action="" autocomplete="off">
         <!-- container for not to interfere with other elements on focus -->
         <div class=inputContainer>
@@ -14,9 +16,15 @@
             v-model="name"/>
         </div>
 
-        <button class="loginBtn" @click.prevent="login">Enter</button>
+        <button 
+        class="loginBtn" 
+        @click.prevent="login" 
+        :disabled="name.length < 2">
+        Enter
+        </button>
 
       </form>
+
   </div>
 </template>
 
@@ -41,38 +49,33 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+
+@import './../style/variables';
+
 .welcome {
-  background: hotpink;
-  padding: 1rem;
+  
+  background: $bg;
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
 }
 header {
-  /* border: 2px solid green !important; */
-  flex: 0 1 auto;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-end;
-  align-items: flex-end;
+  flex: 0 0 16.5rem;
+  // height: 16.5rem;
 }
-img {
-  /* flex: 0 0 20rem; */
-}
+
 h1 {
   font-size: 3rem;
   text-align: center;
   font-variant: small-caps;
 }
 form {
-  display: flex;
-  /* height: 12.5rem; */
-  flex: 1 1 auto;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
+  flex: 0 0 9.5rem;
+  // height: 9.5rem;
 }
 /* for not to interfere with other elements on focus */
 .inputContainer {
@@ -80,7 +83,7 @@ form {
   width: 14rem;
 }
 input {
-  border: .1rem solid rgb(255, 0, 140);
+  border: .1rem solid $btn;
   border-radius: .5rem;
   margin: .5rem;
   padding: .3rem;
@@ -91,12 +94,11 @@ input {
   transition: all 0.15s ease-in-out;
 }
 input:focus {
-  outline: none;
   font-size: 1.5rem;
   margin: 0.25rem;
   height: 3.5rem;
   width: 12.5rem;
-  border: .25rem solid rgb(255, 0, 140);
+  border: .25rem solid $btn;
   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 
               0 15px 12px rgba(0,0,0,0.22);
 }
@@ -104,7 +106,7 @@ input:focus {
   height: 4.5rem;
   width: 4.5rem;
   border-radius: 50%;
-  background: rgb(255, 0, 140);
+  background: $btn;
   font-size: 1.2rem;
   color: white;
 }

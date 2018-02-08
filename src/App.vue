@@ -60,8 +60,10 @@ export default {
 </script>
 
 
+<style lang="scss">
 
-<style >
+@import './style/variables';
+
 * {
   margin: 0;
   padding: 0;
@@ -70,6 +72,7 @@ export default {
 html, body {
   height: 100%;
   width: 100%;
+  background: $bg;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -77,30 +80,22 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
-.turakas *  :focus {
+.turakas *:focus {
   outline: none;
 }
 .turakas {
+  background: $bg;
   height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.mainView {
-  width: 100%;
-  height: 100%;
-  /* max-width: 50rem; */
-  /* padding: .2rem; */
-}
+
 
 ul {
   list-style-type: none;
   padding: 0;
-}
-
-li {
-  display: inline-block;
 }
 
 .height-1 {
@@ -119,6 +114,7 @@ li {
 
 button {
   border: none;
+  // height-3
   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 
               0 15px 12px rgba(0,0,0,0.22);
 
@@ -126,13 +122,21 @@ button {
 }
 button:focus, button:hover {
   cursor: pointer;
-  text-decoration: underline; 
+  background: $focus;
 }
-button:active {
 
+button:active {
+  // height-1
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 
               0 3px 6px rgba(0,0,0,0.23);
 }
+button:disabled {
+  opacity: .2;
+  // height-1
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 
+              0 3px 6px rgba(0,0,0,0.23);
+}
+
 /* Transitions */
 .fade-enter-active, .fade-leave-active {
   transition: opacity .2s ease-in-out;
@@ -142,3 +146,5 @@ button:active {
 }
 
 </style>
+
+

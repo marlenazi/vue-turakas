@@ -66,12 +66,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+@import './../style/variables';
+
 .lobby {
+  border: 3px solid yellow;
+  height: 100%;
+  width: 100%;
   display: flex;
-  flex-flow: column nowrap;
-  background: rgb(255, 140, 100);
-  background: white;
+  flex-flow: column wrap;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .newGameBtn {
@@ -83,7 +89,7 @@ export default {
   height: 6rem;
   width: 6rem;
   font-size: 1.4rem;
-  background: green;
+  background: $btn;
   color: white;
 }
 

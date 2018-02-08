@@ -41,7 +41,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .hero {
   background: whitesmoke;
   padding: .5rem;
