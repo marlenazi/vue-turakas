@@ -91,6 +91,10 @@ html, body {
   justify-content: center;
   align-items: center;
 }
+.mainView {
+  height: 100%;
+  width: 100%;
+}
 
 
 ul {

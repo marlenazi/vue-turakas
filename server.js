@@ -88,16 +88,18 @@ io.on('connection', socket => {
     let user = getUser(userId)
     let game = getGame(user.game)
     
-    game.leave(user)
-    
-    let gameState = game.state()
-
-    if (gameState.status === 'Closed') {
-      console.log('Closing game ' + game.id)
-      games.splice(games.indexOf(game), 1)
-    }
-
-    return gameState
+    if (game) {
+      
+      game.leave(user)
+      
+      if (gameState.status === 'Closed') {
+        console.log('Closing game ' + game.id)
+        games.splice(games.indexOf(game), 1)
+      }
+      let gameState = game.state()
+      
+      return gameState
+    } else return
   }
 
   socket.on('login', name => {
@@ -136,6 +138,12 @@ io.on('connection', socket => {
   })
   socket.on('leaveGame', userId => {
     let gameState = leaveGame(userId)
+
+    if (!gameState) { 
+      socket.emit('leftGame', 'Game did not exist')
+      return 
+    }
+
     let status = gameState.status
 
     socket.leave(gameState.id)

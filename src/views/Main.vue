@@ -71,9 +71,6 @@ export default {
 @import './../style/variables';
 
 .lobby {
-  // border: 3px solid yellow;
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-flow: column nowrap;
   align-content: flex-start;
@@ -82,13 +79,12 @@ export default {
 .newGameBtn {
   border-radius: 50%;
   position: absolute;
-  top: 1.2rem;
-  right: 1rem;
-  margin: 1rem;
-  height: 6rem;
-  width: 6rem;
-  font-size: 1.4rem;
-  background: $btn;
+  top: .8rem;
+  right: 0rem;
+  margin: 2rem;
+  height: 5rem;
+  width: 5rem;
+  font-size: 1.2rem;
   color: $action;
 }
 

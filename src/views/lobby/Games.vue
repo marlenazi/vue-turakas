@@ -66,13 +66,13 @@ export default {
 
 .games {
   padding: 1rem;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
   overflow: auto;
-  align-items: flex-start;
-  align-content: flex-start;
+  // align-items: flex-start;
+  // align-content: flex-start;
 }
 .gamesHeader {
   color: $action;
