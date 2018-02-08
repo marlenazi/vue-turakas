@@ -1,6 +1,6 @@
 # turakas
 
-> A card game
+> Multi player card game based on the popular Durak
 
 ## Build Setup
 

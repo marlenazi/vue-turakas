@@ -59,7 +59,9 @@ export default {
 }
 </script>
 
-<style>
+
+
+<style >
 * {
   margin: 0;
   padding: 0;

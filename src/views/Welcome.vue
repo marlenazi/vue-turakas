@@ -50,9 +50,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.welcome * {
-  /* border: 1px solid black; */
-}
 header {
   /* border: 2px solid green !important; */
   flex: 0 1 auto;
