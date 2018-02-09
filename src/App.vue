@@ -1,10 +1,8 @@
 <template>
 <div id="app" class="turakas">
-  <!-- <button @click="changeView">Change View</button>
-  <button >Timer</button> -->
   <transition name="fade" mode="out-in">
     <component class="mainView"
-      :is="view"
+      :is="mainView"
       :hero="hero"
       :game="game">
     </component>
@@ -24,7 +22,7 @@ export default {
   },
   data () {
     return {
-      view: 'Welcome',
+      mainView: 'Welcome',
       hero: {},
       game: {},
     }
@@ -37,15 +35,18 @@ export default {
   },
   sockets: {
     loggedIn(user) {
+      console.log(`Logged in ${user.name}`)
+      console.log(user)
+
       this.hero = user
-      this.view = 'Main'
+      this.mainView = 'Main'
     },
     joinedGame(state) {
-      this.view = 'Game'
+      this.mainView = 'Game'
       this.game = state
     },
     leftGame() {
-      this.view = 'Main'
+      this.mainView = 'Main'
       this.game = {}
     },
     updateGame(state) {

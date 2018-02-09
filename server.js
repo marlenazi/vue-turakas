@@ -8,7 +8,7 @@ const index = fs.readFile('index.html', (error, file) => file)
 
 const User = require('./turakas/modules/user')
 const Game = require('./turakas/modules/game')
-const zzz = require('./turakas/modules/emitter')
+const zzz = require('./turakas/modules/emitter').setMaxListeners(50)
 // collections for users and games
 const users = []
 const games = []
@@ -23,7 +23,6 @@ console.log('Listening to ' + port)
 // socket connection and events
 io.on('connection', socket => {
   console.log(`Socket ${socket.id} connected`)
-
 
   function getGame(id) {
     return games.find(game => game.id === id)
@@ -97,6 +96,8 @@ io.on('connection', socket => {
   }
   function leaveGame(userId) {
     console.log('Func leaveGame')
+    if (!getUser(userId)) return
+    if (!getGame(getUser(userId).game)) return
 
     let user = getUser(userId)
     let game = getGame(user.game)
@@ -259,7 +260,6 @@ io.on('connection', socket => {
     user.socketIds = user.socketIds.filter(id => id !== socket.id)
 
   })
-
 
   // ======================
   // events that game emits

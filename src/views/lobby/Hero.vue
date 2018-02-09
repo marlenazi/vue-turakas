@@ -81,6 +81,7 @@ export default {
 .name {
   margin: 1rem 1rem;
   font-size: 2rem;
+  color: $title;
 }
 
 @media screen and (orientation: landscape) {

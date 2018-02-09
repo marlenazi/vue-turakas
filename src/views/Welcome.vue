@@ -65,7 +65,6 @@ export default {
 }
 header {
   flex: 0 0 16.5rem;
-  // height: 16.5rem;
 }
 
 h1 {
@@ -111,4 +110,9 @@ input:focus {
   color: $action;
 }
 
+@media screen and (max-height: 250px) {
+  .welcome {
+    flex-wrap: nowrap;
+  }
+}
 </style>

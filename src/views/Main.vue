@@ -10,11 +10,12 @@
     @click="newGame">
       New Game
     </button>
-
+  
     <games
       :hero="hero"
       :games="games">
     </games>
+ 
     
   </div>
 </template>
@@ -74,7 +75,9 @@ export default {
 .lobby {
   display: flex;
   flex-flow: column nowrap;
-  align-content: flex-start;
+  align-content: center;
+  align-items: center;
+
 }
 
 .newGameBtn {
