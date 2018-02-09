@@ -93,7 +93,7 @@ export default {
     gameCreated(newGame) {
       console.log('New game created')
       console.log(newGame)
-      
+
       console.log(this.games.some(game => game.id === newGame.id))
       if (this.games.some(game => game.id === newGame.id)) return
 

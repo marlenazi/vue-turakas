@@ -37,11 +37,14 @@ io.on('connection', socket => {
            null
   }
   function getAvailableGames(user) {
-    let playingGame  = [],
-      availableGames = []
+    let playingGame  = []
+    let availableGames = []
 
     if (user && user.game && getGame(user.game)) {
-      playingGame = [getGame(user.game)]
+      if (getGame(user.game).status() !== 'Waiting') {
+
+        playingGame = [getGame(user.game)]
+      }
     }
 
     availableGames = games.filter( game => game.status() === 'Waiting')
