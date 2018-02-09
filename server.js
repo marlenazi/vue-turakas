@@ -122,7 +122,7 @@ io.on('connection', socket => {
       io.to(socId).emit(event, data)
     })
   }
-  function emitToMany(event, data, gameId) {
+  function emitToMany(gameId, event, data = '') {
     if (!getGame(gameId)) return
 
     let many = getGame(gameId).state().players
@@ -181,7 +181,7 @@ io.on('connection', socket => {
     let gameState = joinGame(gameId, userId)
 
     emitToOne('joinedGame', gameState)
-    emitToMany('updateGame', gameState, gameState.id)
+    emitToMany(gameId, 'updateGame', gameState)
     
     io.emit('gameClosed', gameState.id)
   })
@@ -195,7 +195,7 @@ io.on('connection', socket => {
     emitToOne('leftGame')
 
     if (status === 'Waiting') {
-      emitToMany('updateGame', gameState, gameState.id)
+      emitToMany(gameState.id, 'updateGame', gameState)
     }
     if (status === 'Closed') {
       io.emit('gameClosed', gameState.id)
@@ -216,7 +216,7 @@ io.on('connection', socket => {
 
     let game = getGame(gameId)
 
-    emitToMany('updateGame', game.move(card), game.id)
+    emitToMany(gameId, 'updateGame', game.move(card))
   })
   socket.on('pickUp', userId => {
     if (!getUser(userId)) return
@@ -265,18 +265,18 @@ io.on('connection', socket => {
 // ======================
 
 zzz.on('refresh', (gameId, state) => {
-  console.log(state)
-  io.to(gameId).emit('updateGame', state)
+  // console.log(state)
+  emitToMany(gameId, 'updateGame', state)
 })
 zzz.on('time', (gameId, timePassed) => {
   // console.log(timePassed)
-  io.to(gameId).emit('time', timePassed)
+  emitToMany(gameId, 'time', timePassed)
 })
 zzz.on('gameOver', state => {
-  io.to(state.id).emit('gameOver', state)
+  emitToMany(state.id, 'gameOver', state)
 })
 zzz.on('closeGame', gameId => {
-
-  io.to(gameId).emit('leftGame')
+  emitToMany(gameId, 'updateGame')
+  emitToMany(gameId, 'leftGame')
   games.splice(games.findIndex(game => game.id === gameId), 1)
 })
