@@ -163,10 +163,13 @@ io.on('connection', socket => {
   })
   socket.on('newGame', userId => {
     if (!getUser(userId)) return
-    if (getUser(userId).game && getGame(getUser(userId).game)) return
+    if (getUser(userId).game && getGame(getUser(userId).game)) {
+      console.log(`${userId} @ on.newGame: already registered`)
+      return
+    }
 
     let gameState = createGame(userId)
-
+    console.log('created game: ' + gameState.id)
     emitToOne('joinedGame', gameState)
     io.emit('gameCreated', {
       id: gameState.id, 

@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       activeView: 'TurakasLobby',
-      games: [],
+      game: [],
     }
   },
   methods: {
@@ -42,16 +42,6 @@ export default {
   //   this.$socket.emit('getAvailableGames', this.hero.id)
   // },
   sockets: {
-    availableGames(games) {
-      console.log('Got available games')
-      console.log(games)
-      this.games = games
-    },
-    gameCreated(game) {
-      console.log('New game')
-      console.log(game)
-      this.games.push(game)
-    },
     gameClosed(closedGame) {
       console.log('Game closed')
       console.log(closedGame)

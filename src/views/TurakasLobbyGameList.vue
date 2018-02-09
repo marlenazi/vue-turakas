@@ -84,12 +84,21 @@ export default {
     this.$_getAvailableGames()
   },
   sockets: {
-    availableGames(games) {
+    availableGames(newGames) {
       console.log('Received games to lobby')
-      console.log(games)
+      console.log(newGames)
 
-      this.games = games
-    }
+      this.games = newGames
+    },
+    gameCreated(newGame) {
+      console.log('New game created')
+      console.log(newGame)
+      
+      console.log(this.games.some(game => game.id === newGame.id))
+      if (this.games.some(game => game.id === newGame.id)) return
+
+      this.games.push(newGame)
+    },
   }
 };
 </script>
