@@ -99,10 +99,7 @@ io.on('connection', socket => {
     console.log('Func leaveGame')
 
     let user = getUser(userId)
-    if (!user.game) return null
     let game = getGame(user.game)
-    
-    if (game) {
       
       game.leave(user)
       
@@ -113,7 +110,6 @@ io.on('connection', socket => {
       }
       
       return gameState
-    } else return
   }
   function emitToOne(event, data = '', theOne = getUser(socket.id)) {
     // this loops over all socketIds connected to user and 
@@ -126,7 +122,7 @@ io.on('connection', socket => {
     if (!getGame(gameId)) return
 
     let many = getGame(gameId).state().players
-    console.log(many)
+
     many.forEach(player => {
       emitToOne(event, data, player)
     })
@@ -204,7 +200,7 @@ io.on('connection', socket => {
   })
   socket.on('getHand', userId => {
     if (!getUser(userId)) return
-    if (!getGame(getUser(userId))) return
+    if (!getGame(getUser(userId).game)) return
 
     let user = getUser(userId)
     let game = getGame(user.game)
@@ -220,7 +216,7 @@ io.on('connection', socket => {
   })
   socket.on('pickUp', userId => {
     if (!getUser(userId)) return
-    if (!getGame(getUser(userId))) return
+    if (!getGame(getUser(userId).game)) return
 
     let user = getUser(userId)
     let game = getGame(user.game)
@@ -229,7 +225,7 @@ io.on('connection', socket => {
   })
   socket.on('muck', userId => {
     if (!getUser(userId)) return
-    if (!getGame(getUser(userId))) return
+    if (!getGame(getUser(userId).game)) return
 
     let user = getUser(userId)
     let game = getGame(user.game)
@@ -243,6 +239,11 @@ io.on('connection', socket => {
     let user = getUser(socket.id)
 
     if (user.game) {
+      if (!getGame(user.game)) {
+        user.game = null
+        return
+      }
+
       let gameId = user.game
       let gameState = leaveGame(socket.id)
       let status = gameState.status
@@ -258,25 +259,28 @@ io.on('connection', socket => {
     user.socketIds = user.socketIds.filter(id => id !== socket.id)
 
   })
+
+
+  // ======================
+  // events that game emits
+  // ======================
+
+  zzz.on('refresh', (gameId, state) => {
+    // console.log(state)
+    emitToMany(gameId, 'updateGame', state)
+  })
+  zzz.on('time', (gameId, timePassed) => {
+    // console.log(timePassed)
+    emitToMany(gameId, 'time', timePassed)
+  })
+  zzz.on('gameOver', state => {
+    emitToMany(state.id, 'gameOver', state)
+  })
+  zzz.on('closeGame', gameId => {
+    
+    emitToMany(gameId, 'leftGame')
+    io.emit('gameClosed', gameId)
+    games.splice(games.findIndex(game => game.id === gameId), 1)
+  })
 })
 
-// ======================
-// events that game emits
-// ======================
-
-zzz.on('refresh', (gameId, state) => {
-  // console.log(state)
-  emitToMany(gameId, 'updateGame', state)
-})
-zzz.on('time', (gameId, timePassed) => {
-  // console.log(timePassed)
-  emitToMany(gameId, 'time', timePassed)
-})
-zzz.on('gameOver', state => {
-  emitToMany(state.id, 'gameOver', state)
-})
-zzz.on('closeGame', gameId => {
-  emitToMany(gameId, 'updateGame')
-  emitToMany(gameId, 'leftGame')
-  games.splice(games.findIndex(game => game.id === gameId), 1)
-})

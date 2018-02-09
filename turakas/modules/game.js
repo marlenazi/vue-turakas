@@ -294,7 +294,7 @@ module.exports = function Game(gameSize = 2) {
 
     if (!deck.length) {
       if (players.some((player, ix) => !hands[ix].length)) {
-        console.log('We have a winner')
+        // console.log('We have a winner')
         if (timer) { 
           // console.log('clearing timer')
           clearInterval(timer)
