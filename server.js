@@ -76,6 +76,7 @@ io.on('connection', socket => {
     return user
   }
   function createGame(userId) {
+
     let user = getUser(userId)
     let game = Game()
 
@@ -162,6 +163,7 @@ io.on('connection', socket => {
   })
   socket.on('newGame', userId => {
     if (!getUser(userId)) return
+    if (getUser(userId).game && getGame(getUser(userId).game)) return
 
     let gameState = createGame(userId)
 
