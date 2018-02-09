@@ -80,14 +80,14 @@ export default {
   flex: 1 0 100%;
 }
 .gamesHeader h2 {
-  margin: 1rem;
+  margin: .5rem 1rem;
 }
 
 .game {
   flex: 1 0 8rem;
   max-width: 16rem;
   height: 6rem;
-  margin: 1rem;
+  margin: .5rem;
 }
 
 
