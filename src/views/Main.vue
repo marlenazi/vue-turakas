@@ -6,8 +6,9 @@
     </hero>
 
     <button class="newGameBtn"
-        @click="newGame">
-        New Game
+    tabindex="1"
+    @click="newGame">
+      New Game
     </button>
 
     <games

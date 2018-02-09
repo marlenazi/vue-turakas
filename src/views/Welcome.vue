@@ -19,7 +19,7 @@
         <button 
         class="loginBtn" 
         @click.prevent="login" 
-        :disabled="name.length < 2">
+        :disabled="name.length < 3">
         Enter
         </button>
 
