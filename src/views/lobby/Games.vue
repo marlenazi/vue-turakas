@@ -32,7 +32,7 @@
 <script>
 
 export default {
-  name: 'Games',
+  name: 'MainLobby',
   props: ['hero', 'games'],
   components: {
 

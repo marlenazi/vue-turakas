@@ -4,7 +4,7 @@
     <component class="mainView"
       :is="mainView"
       :hero="hero"
-      :game="game">
+    >
     </component>
   </transition>
 </div>
@@ -12,19 +12,18 @@
 
 <script>
 import Welcome from './views/Welcome'
-import Main from './views/Main'
-import Game from './views/Game'
+import Turakas from './views/Turakas'
 
 export default {
-  name: 'Turakas',
+  name: 'App',
   components: {
-    Welcome, Main, Game
+    Welcome, Turakas
   },
   data () {
     return {
       mainView: 'Welcome',
       hero: {},
-      game: {},
+      // game: {},
     }
   },
   methods: {
@@ -39,23 +38,23 @@ export default {
       console.log(user)
 
       this.hero = user
-      this.mainView = 'Main'
+      this.mainView = 'Turakas'
     },
-    joinedGame(state) {
-      this.mainView = 'Game'
-      this.game = state
-    },
-    leftGame() {
-      this.mainView = 'Main'
-      this.game = {}
-    },
-    updateGame(state) {
-      console.log('Updating game')
-      this.game = state
-    },
-    gameOver(state) {
-      this.game = state
-    } 
+    // joinedGame(state) {
+    //   this.mainView = 'Game'
+    //   this.game = state
+    // },
+    // leftGame() {
+    //   this.mainView = 'Main'
+    //   this.game = {}
+    // },
+    // updateGame(state) {
+    //   console.log('Updating game')
+    //   this.game = state
+    // },
+    // gameOver(state) {
+    //   this.game = state
+    // } 
   }
 }
 </script>
@@ -79,19 +78,13 @@ html, body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-.turakas *:focus {
-  outline: none;
-}
-.turakas {
-  background: $bg;
   height: 100%;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
+#app *:focus {
+  outline: none;
+}
+
 .mainView {
   height: 100%;
   width: 100%;

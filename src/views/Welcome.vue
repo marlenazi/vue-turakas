@@ -54,7 +54,6 @@ export default {
 @import './../style/variables';
 
 .welcome {
-  
   background: $bg;
   display: flex;
   flex-flow: column wrap;
@@ -74,7 +73,7 @@ h1 {
 }
 form {
   flex: 0 0 9.5rem;
-  // height: 9.5rem;
+  text-align: center;
 }
 /* for not to interfere with other elements on focus */
 .inputContainer {
@@ -82,7 +81,7 @@ form {
   width: 14rem;
 }
 input {
-  border: .1rem solid $btn;
+  border: .1rem solid $accent;
   border-radius: .5rem;
   margin: .5rem;
   padding: .3rem;
@@ -112,6 +111,7 @@ input:focus {
 
 @media screen and (max-height: 250px) {
   .welcome {
+    // when keyboard was open, it squashed the layout, especially in landscape
     flex-wrap: nowrap;
   }
 }

@@ -58,7 +58,6 @@ module.exports = function Game(gameSize = 2) {
   function leave(user) {
     if (status() === 'Waiting') {
       players.splice(players.indexOf(user), 1)
-      user.game = null
     }
     if (status() === 'Playing' || status() === 'Finished') {
       // we want to leave id, so if user reconnects, they can continue
@@ -304,14 +303,19 @@ module.exports = function Game(gameSize = 2) {
         winner = players.find((player, ix) => !hands[ix].length)
         turakas = players.find(player => player !== winner)
 
-        setTimeout(() => {
-          zzz.emit('closeGame', id)
-        }, 1000 * 5)
-
+        _closeGame()
+        
         return true
       }
     }
     return false
+  }
+  function closeGame() {
+    players.forEach(player => player.away = null)
+
+    setTimeout(() => {
+      zzz.emit('closeGame', id)
+    }, 1000 * 5)
   }
 
   return {

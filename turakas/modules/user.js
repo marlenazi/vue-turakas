@@ -7,7 +7,7 @@ module.exports = function User(name, ip) {
     name,
     socketIds: [],
     game: null,
-    away: false,
+    away: null,
     rank: '0'
   }
 }

@@ -102,13 +102,15 @@ io.on('connection', socket => {
     let user = getUser(userId)
     let game = getGame(user.game)
       
-      game.leave(user)
-      
-      let gameState = game.state()
-      if (gameState.status === 'Closed') {
-        console.log('Closing game ' + game.id)
-        games.splice(games.indexOf(game), 1)
-      }
+    game.leave(user)
+    
+    let gameState = game.state()
+
+    if (gameState.status === 'Closed') {
+      console.log('Closing game ' + game.id)
+      user.game = null
+      games.splice(games.indexOf(game), 1)
+    }
       
       return gameState
   }
@@ -148,7 +150,7 @@ io.on('connection', socket => {
     if (user.game && getGame(user.game)) {
       emitToOne('joinedGame', getGame(user.game).state())
     } else if (user.game) {
-      delete user.game
+      user.game = null
     }
   })
   socket.on('getAvailableGames', userId => {
@@ -208,6 +210,8 @@ io.on('connection', socket => {
 
     emitToOne('hand', game.hand(user))
   })
+
+  // game actions
   socket.on('move', (gameId, card) => {
     if (!getGame(gameId)) return
 
@@ -233,6 +237,10 @@ io.on('connection', socket => {
 
     emitToMany('updateGame', game.muck(user), game.id)
   })
+
+  /**
+   * When socket disconnects, remove it from the player
+   */
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
     if (!getUser(socket.id)) return
@@ -265,22 +273,37 @@ io.on('connection', socket => {
   // events that game emits
   // ======================
 
-  zzz.on('refresh', (gameId, state) => {
-    // console.log(state)
-    emitToMany(gameId, 'updateGame', state)
-  })
-  zzz.on('time', (gameId, timePassed) => {
-    // console.log(timePassed)
-    emitToMany(gameId, 'time', timePassed)
-  })
-  zzz.on('gameOver', state => {
-    emitToMany(state.id, 'gameOver', state)
-  })
-  zzz.on('closeGame', gameId => {
-    
-    emitToMany(gameId, 'leftGame')
-    io.emit('gameClosed', gameId)
-    games.splice(games.findIndex(game => game.id === gameId), 1)
-  })
-})
+  function addGameListeners() {
 
+    if (!zzz.listeners('refresh').length) {
+      zzz.on('refresh', (gameId, state) => {
+        // console.log(state)
+        emitToMany(gameId, 'updateGame', state)
+      })
+    }
+
+    if (!zzz.listeners('time').length) {
+      zzz.on('time', (gameId, timePassed) => {
+        // console.log(timePassed)
+        emitToMany(gameId, 'time', timePassed)
+      })
+    }
+    
+    if (!zzz.listeners('gameOver').length) {
+      zzz.on('gameOver', state => {
+        emitToMany(state.id, 'gameOver', state)
+      })
+    }
+
+    if (!zzz.listeners('closeGame').length) {
+      zzz.on('closeGame', gameId => {   
+        emitToMany(gameId, 'leftGame')
+        io.emit('gameClosed', gameId)
+        games.splice(games.findIndex(game => game.id === gameId), 1)
+      })
+    }
+
+    return
+  } addGameListeners()
+
+})

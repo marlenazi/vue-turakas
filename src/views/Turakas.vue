@@ -1,52 +1,46 @@
 <template>
-  <div class="lobby">
+  <div class="turakas">
 
-    <hero
+    <turakas-navbar
       :hero="hero">
-    </hero>
-
-    <button class="newGameBtn"
-    tabindex="1"
-    @click="newGame">
-      New Game
-    </button>
+    </turakas-navbar>
   
-    <games
-      :hero="hero"
-      :games="games">
-    </games>
+    <component 
+      :is="activeView"
+      :heroId="hero.id">
+    </component>
  
     
   </div>
 </template>
 
 <script>
-import hero from './lobby/Hero'
-import games from './lobby/Games'
+import TurakasNavbar from './TurakasNavbar'
+import TurakasLobby from './TurakasLobby'
+import TurakasGame from './TurakasGame'
 
 export default {
-  name: 'Main',
-  props: ['hero', 'game'],
+  name: 'Turakas',
+  props: ['hero'],
   components: {
-    hero, games
+    TurakasNavbar, TurakasLobby
   },
   data() {
     return {
+      activeView: 'TurakasLobby',
       games: [],
     }
   },
   methods: {
-    newGame() {
-      this.$socket.emit('newGame', this.hero.id)
-    },
+
   },
   computed: {
 
   },
-  created() {
-    // console.log(this.games)
-    this.$socket.emit('getAvailableGames', this.hero.id)
-  },
+  // created() {
+  //   // console.log(this.games)
+  //   this.$socket.emit('getAvailableGames', this.hero.id)
+  // },
   sockets: {
     availableGames(games) {
       console.log('Got available games')
@@ -69,30 +63,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 @import './../style/variables';
 
-.lobby {
+.turakas {
   display: flex;
   flex-flow: column nowrap;
-  align-content: center;
-  align-items: center;
-
-}
-
-.newGameBtn {
-  border-radius: 50%;
-  position: absolute;
-  top: .8rem;
-  right: 0rem;
-  margin: 2rem;
-  height: 5rem;
-  width: 5rem;
-  font-size: 1.2rem;
-  color: $action;
-}
-
-@media screen and (orientation: landscape) {
-
 }
 </style>
