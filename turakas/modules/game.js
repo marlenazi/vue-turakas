@@ -92,12 +92,14 @@ module.exports = function Game(gameSize = 2) {
             id: player.id,
             ix: player.ix,
             name: player.name,
+            socketIds: player.socketIds,
             hand: hands[player.ix].length,
           }
         } else {
           return {
             id: player.id,
             name: player.name,
+            socketIds: player.socketIds,
       }}}))(),
     }
   }

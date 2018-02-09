@@ -115,13 +115,20 @@ io.on('connection', socket => {
       return gameState
     } else return
   }
-  function emitToUser(event, data) {
+  function emitToOne(event, data = '', theOne = getUser(socket.id)) {
     // this loops over all socketIds connected to user and 
     // emits same event and data
-    console.log('checking from emitToUser')
-    console.log(event, data)
-    getUser(socket.id).socketIds.forEach(socId => {
+    theOne.socketIds.forEach(socId => {
       io.to(socId).emit(event, data)
+    })
+  }
+  function emitToMany(event, data, gameId) {
+    if (!getGame(gameId)) return
+
+    let many = getGame(gameId).state().players
+    console.log(many)
+    many.forEach(player => {
+      emitToOne(event, data, player)
     })
   }
 
@@ -139,10 +146,10 @@ io.on('connection', socket => {
     let ip = socket.request.connection.remoteAddress
     let user = login(name, ip, socket.id)
 
-    emitToUser('loggedIn', user)
+    emitToOne('loggedIn', user)
 
     if (user.game && getGame(user.game)) {
-      emitToUser('joinedGame', getGame(user.game).state())
+      emitToOne('joinedGame', getGame(user.game).state())
     } else if (user.game) {
       delete user.game
     }
@@ -152,14 +159,14 @@ io.on('connection', socket => {
 
     let games = getAvailableGames(getUser(userId))
 
-    socket.emit('availableGames', games)
+    emitToOne('availableGames', games)
   })
   socket.on('newGame', userId => {
     if (!getUser(userId)) return
 
     let gameState = createGame(userId)
 
-    socket.emit('joinedGame', gameState)
+    emitToOne('joinedGame', gameState)
     io.emit('gameCreated', {
       id: gameState.id, 
       size: gameState.size, 
@@ -173,8 +180,9 @@ io.on('connection', socket => {
 
     let gameState = joinGame(gameId, userId)
 
-    socket.emit('joinedGame', gameState)
-    io.to(gameState.id).emit('updateGame', gameState)
+    emitToOne('joinedGame', gameState)
+    emitToMany('updateGame', gameState, gameState.id)
+    
     io.emit('gameClosed', gameState.id)
   })
   socket.on('leaveGame', userId => {
@@ -184,10 +192,10 @@ io.on('connection', socket => {
     let status = gameState.status
 
     socket.leave(gameState.id)
-    socket.emit('leftGame')
+    emitToOne('leftGame')
 
     if (status === 'Waiting') {
-      io.to(gameState.id).emit('updateGame', gameState)
+      emitToMany('updateGame', gameState, gameState.id)
     }
     if (status === 'Closed') {
       io.emit('gameClosed', gameState.id)
@@ -201,14 +209,14 @@ io.on('connection', socket => {
     let user = getUser(userId)
     let game = getGame(user.game)
 
-    emitToUser('hand', game.hand(user))
+    emitToOne('hand', game.hand(user))
   })
   socket.on('move', (gameId, card) => {
     if (!getGame(gameId)) return
 
     let game = getGame(gameId)
 
-    io.to(game.id).emit('updateGame', game.move(card))
+    emitToMany('updateGame', game.move(card), game.id)
   })
   socket.on('pickUp', userId => {
     if (!getUser(userId)) return
@@ -217,7 +225,7 @@ io.on('connection', socket => {
     let user = getUser(userId)
     let game = getGame(user.game)
 
-    io.to(game.id).emit('updateGame', game.pickUp(user))
+    emitToMany('updateGame', game.pickUp(user), game.id)
   })
   socket.on('muck', userId => {
     if (!getUser(userId)) return
@@ -226,7 +234,7 @@ io.on('connection', socket => {
     let user = getUser(userId)
     let game = getGame(user.game)
 
-    io.to(game.id).emit('updateGame', game.muck(user))
+    emitToMany('updateGame', game.muck(user), game.id)
   })
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
@@ -243,7 +251,7 @@ io.on('connection', socket => {
         io.emit('gameClosed', gameState.id)
       }
       if (status === 'Playing') {
-        io.to(gameId).emit('updateGame', gameState)
+        emitToMany('updateGame', gameState, gameState.id)
       }
     }
 
