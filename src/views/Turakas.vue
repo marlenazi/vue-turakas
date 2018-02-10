@@ -67,4 +67,5 @@ export default {
   display: flex;
   flex-flow: column nowrap;
 }
+
 </style>

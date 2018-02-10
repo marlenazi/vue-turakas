@@ -38,11 +38,13 @@ export default {
 @import './../style/variables';
 
 .turakasGameWaiting {
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   border-radius: .5rem;
+
 }
 
 .message {
+  // width: 18rem;
   padding: 2rem;
 }
 </style>

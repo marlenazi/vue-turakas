@@ -78,8 +78,13 @@ export default {
 @import './../style/variables';
 
 .turakasGamePlaying {
-  flex: 1 0 auto;
+
+  flex: 1 1 auto;
   background: $btn;
   border-radius: .5rem;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
 }
 </style>

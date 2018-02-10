@@ -35,7 +35,7 @@ export default {
 @import './../style/variables';
 
 .gameHand {
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   border-radius: .5rem;
   border: .2rem solid $accent;
   background: $action;
