@@ -2,14 +2,23 @@
   <div class="gameInfo">
 
     <div class="villain">
-      {{ villain.name }}
-      <game-card
-        id="villain"
-        :card="villainCard">
-      </game-card>
+      <div class="villainName">
+        {{ villain.name }}
+      </div>
+      {{ moves }}
+      <transition-group
+        class="villainHand"
+        name="fade" 
+        mode="out-in">
+          <game-card
+            id="villainCard"
+            v-for="(card, ix) in villain.hand"
+            :key="ix"
+            :card="villainCard">
+          </game-card>
+      </transition-group>
     </div>
 
-    {{ moves }}
     <div class="trumpAndDeck">
       <game-card
         id="trumpCard"
@@ -71,33 +80,58 @@ export default {
 @import './../style/variables';
 
 .gameInfo {
-  border: .2rem solid $accent;
-  padding: .5rem;
+  padding: .3rem;
   flex: 1 1 auto;
   border-radius: .5rem;
   background: $action;
 
   overflow: hidden;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .trumpAndDeck {
   flex: 0 0 auto;
 }
 
-#trumpCard, #deck, #villain {
+#deck {
   height: 4rem;
   width: 3rem;
   margin: 0;
 }
+#trumpCard {
+  margin-top: .2rem;
+  margin-right: -1rem;
+  height: 3rem;
+  width: 4rem;
+}
 #deck {
   margin-left: -1rem;
+  color: rgb(219, 197, 0);
 }
-
 .villain {
+  flex: 0 0 5rem;
+  max-width: 5rem;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
+  justify-content: space-around;  
+}
+.villainName {
+  font-weight: bold;
+  white-space: nowrap;
+}
+.villainHand {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  padding-left: .3rem; 
+}
+#villainCard {
+  height: 2rem;
+  width: 1.4rem;
+  margin: 0 -.3rem;
+  color: rgb(219, 197, 0);
+  overflow: hidden;
+  
 }
 </style>

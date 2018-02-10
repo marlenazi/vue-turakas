@@ -33,11 +33,12 @@ export default {
 @import './../style/variables';
 
 .leaveGameButton {
+  flex: 0 0 auto;
   border-radius: 50%;
-  margin: 1rem;
-  height: 3.5rem; 
-  width: 3.5rem;
-  font-size: 2.75rem;
+  margin: .8rem;
+  height: 3rem; 
+  width: 3rem;
+  font-size: 2.4rem;
   color: $action;
 }
 </style>

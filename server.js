@@ -227,12 +227,13 @@ io.on('connection', socket => {
   })
 
   // game actions
-  socket.on('move', (gameId, card) => {
-    if (!getGame(gameId)) return
+  socket.on('move', card => {
+    if (!getUser(socket.id) || !getUser(socket.id).game) return
+    if (!getGame(getUser(socket.id).game)) return
 
-    let game = getGame(gameId)
+    let game = getGame(getUser(socket.id).game)
 
-    emitToMany(gameId, 'updateGame', game.move(card))
+    emitToMany(game.id, 'updateGame', game.move(card))
   })
   socket.on('pickUp', userId => {
     if (!getUser(userId)) return

@@ -25,6 +25,12 @@ export default {
       }
     }
   },
+  methods: {
+    // move(card) {
+    //   console.log(card)
+    //   // this.$socket.emit('move', this.game.id, card)
+    // },
+  }
 }
 
 </script>
@@ -33,16 +39,18 @@ export default {
 @import './../style/variables';
 
 .turakasGameCard {
+  flex: 0 0 auto;
   display: inline-block;
-  border: 1px solid seagreen;
   margin: .2rem;
   padding: .3rem;
   height: 6rem;
   width: 4.5rem;
-  border-radius: .2rem;
+  border-radius: .3rem;
   color: $action;
   text-align: left;
   font-size: 1.5rem;
+  user-select: none;
+  cursor: pointer;
 }
 .spades {
   background: rgb(51, 51, 51);
@@ -51,7 +59,7 @@ export default {
   background: rgb(39, 165, 1);
 }
 .hearts {
-  background: rgb(177, 0, 0);
+  background: rgb(197, 0, 0);
 }
 .diamonds {
   background: rgb(53, 31, 255);

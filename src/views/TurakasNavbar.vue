@@ -1,7 +1,9 @@
 <template>
   <nav>
     <img class="avatar" src="../assets/theFool.svg" alt="turakas logo">
-    <div class="name">
+    <div 
+      class="name"
+      v-bind:style="{fontSize: $_fontSize + 'rem'}">
       {{ hero.name }}
     </div>
   </nav>
@@ -13,6 +15,11 @@ export default {
   name: 'TurakasNavbar',
   props: {
     hero: Object
+  },
+  computed: {
+    $_fontSize() {
+      return this.hero.name.length < 10 ? 2 : 1.6
+    }
   }
 }
 

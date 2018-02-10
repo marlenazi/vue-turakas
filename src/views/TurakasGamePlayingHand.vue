@@ -1,12 +1,14 @@
 <template>
   <div class="gameHand">
     
-    <transition-group class="cards" name="fade" mode="out-in">
+    <transition-group class="cards" name="fade" mode="out-in" >
       <game-card
         tabindex="1"
         v-for="card in hand"
         :key="card.rank + card.suit"
-        :card="card">
+        :card="card"
+        @click.native="move(card)"
+        >
       </game-card>
     </transition-group>
 
@@ -23,10 +25,13 @@ export default {
   components: {
     GameCard
   },
-  data() {
-    return {
-      
-    }
+  methods: {
+    move(card) {
+      console.log(card)
+      // we used to emit game id aswell,
+      // but it should work well enough even without
+      this.$socket.emit('move', card)
+    },
   }
 }
 
@@ -51,5 +56,6 @@ export default {
   text-align: center;
   white-space: nowrap;
   overflow-x: auto;
+  z-index: 10;
 }
 </style>

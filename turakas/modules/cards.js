@@ -3,7 +3,7 @@ module.exports = function Cards() {
   function makeCards() {
 
     let suits = ["h", "d", "s", "c"]
-    let ranks = [/*"9", "8", "7", "6", "5", "4", "3",*/ "2", "1"]
+    let ranks = ["9", "8", "7", "6", "5", "4", "3", "2", "1"]
     let cards = []
 
     for (rank of ranks) {

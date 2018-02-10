@@ -9,8 +9,11 @@
       <form action="" autocomplete="off">
         <!-- container for not to interfere with other elements on focus -->
         <div class=inputContainer>
-          <input id="nameField" class="height-1"
-            type="text" 
+          <input 
+            id="nameField" 
+            class="height-1"
+            type="text"
+            maxlength="15" 
             name="nameField" 
             placeholder="Your Name"
             v-model="name"/>
