@@ -20,11 +20,11 @@ export default {
         h: 'hearts',
         d: 'diamonds',
         c: 'clubs',
-        s: 'spades'
+        s: 'spades',
+        b: 'back'
       }
     }
   },
-
 }
 
 </script>
@@ -36,10 +36,13 @@ export default {
   display: inline-block;
   border: 1px solid seagreen;
   margin: .2rem;
+  padding: .3rem;
   height: 6rem;
   width: 4.5rem;
   border-radius: .2rem;
   color: $action;
+  text-align: left;
+  font-size: 1.5rem;
 }
 .spades {
   background: rgb(51, 51, 51);
@@ -52,6 +55,9 @@ export default {
 }
 .diamonds {
   background: rgb(53, 31, 255);
+}
+.back {
+  background: rgb(219, 197, 0);
 }
 
 </style>
