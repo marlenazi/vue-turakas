@@ -14,6 +14,7 @@
 <script>
 import GameWaiting from './TurakasGameWaiting'
 import GamePlaying from './TurakasGamePlaying'
+import GameFinished from './TurakasGameFinished'
 
 export default {
   name: 'TurakasGame',
@@ -22,7 +23,7 @@ export default {
     game: Object
   },
   components: {
-    GameWaiting, GamePlaying
+    GameWaiting, GamePlaying, GameFinished
   },
   data() {
     return {

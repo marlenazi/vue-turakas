@@ -1,7 +1,9 @@
 <template>
   <div
     class="gameInfo">
-    
+    Deck: {{ deck }}<br>
+    Trump: {{ trump.rank }}{{ trump.suit }}<br>
+    {{ moves }}
   </div>
 </template>
 
@@ -10,6 +12,7 @@
 export default {
   name: 'GameInfo',
   props: {
+    heroId: String,
     deck: Number,
     players: Array,
     trump: Object,
@@ -21,6 +24,14 @@ export default {
   data() {
     return {
       
+    }
+  },
+  computed: {
+    moves() {
+      return this.active === this.players.find(player => 
+        player.id === this.heroId).ix ? 'You' : 'Not You'
+
+
     }
   }
 }

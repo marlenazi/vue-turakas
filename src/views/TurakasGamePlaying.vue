@@ -4,6 +4,7 @@
     <leave-button :heroId="hero.id"></leave-button>
 
     <game-info
+      :heroId="hero.id"
       :deck="game.deck"
       :players="game.players"
       :trump="game.trump"
@@ -17,9 +18,8 @@
     <game-hand
       :hand="hand">
     </game-hand>
-    
-    Status: {{ game.status }} <br>
-    {{ game }}
+
+    <!-- {{ hand }} -->
   </div>
 </template>
 
@@ -54,6 +54,7 @@ export default {
   },
   sockets: {
     hand(hand) {
+      console.log('Got hand?')
       this.hand = hand
     },
     updateGame(game) {
