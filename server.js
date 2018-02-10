@@ -195,7 +195,7 @@ io.on('connection', socket => {
 
     emitToOne('joinedGame', gameState)
     emitToMany(gameId, 'updateGame', gameState)
-    
+    // emit this to remove it from the lobby
     io.emit('gameClosed', gameState.id)
   })
   socket.on('leaveGame', userId => {

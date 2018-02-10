@@ -56,9 +56,6 @@ export default {
     leftGame() {
       this.activeView = 'TurakasLobby'
     },
-    gameClosed() {
-      this.activeView = 'TurakasLobby'
-    }
   }
 }
 </script>

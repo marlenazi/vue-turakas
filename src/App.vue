@@ -43,12 +43,6 @@ export default {
       this.hero = user
       this.mainView = 'Turakas'
     },
-    joinedGame(state) {
-      console.log('Joined game')
-      // console.log(state)
-      this.activeView = 'TurakasGame'
-      this.game = state
-    },
     availableGamesSent(newGames) {
       console.log('Received an array of games')
       // console.log(newGames)
@@ -62,7 +56,7 @@ export default {
     },
     gameClosed(closedGameId) {
       console.log('Game closed')
-      // console.log(closedGameId)
+      console.log(closedGameId)
 
       this.games.splice(this.games.findIndex(game => 
                                              game.id === closedGameId), 1)
