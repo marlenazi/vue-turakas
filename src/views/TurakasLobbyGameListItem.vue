@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     $_joinGame(id) {
+      console.log('Joining game: ' + id)
       this.$socket.emit('joinGame', id, this.heroId)
     },
   },

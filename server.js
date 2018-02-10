@@ -123,8 +123,6 @@ io.on('connection', socket => {
     // emits same event and data
     theOne.socketIds.forEach(socId => {
       io.to(socId).emit(event, data)
-      console.log(event)
-      console.log(socId)
     })
   }
   function emitToMany(gameId, event, data = '') {
@@ -155,7 +153,7 @@ io.on('connection', socket => {
 
     if (user.game && getGame(user.game)) {
       console.log('User has a game and will be logged on')
-      console.log(user.socketIds)
+
       emitToOne('joinedGame', getGame(user.game).state())
     } else if (user.game) {
       user.game = null
