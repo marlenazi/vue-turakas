@@ -1,5 +1,8 @@
 <template>
-  <button class="game">
+  <button 
+    class="game"
+    @click="$_joinGame(game.id)"
+  >
     <span>Play</span>
     <div class="registeredPlayers">
       <div 
@@ -18,7 +21,8 @@
 export default {
   name: 'GameList',
   props: {
-    game: Object
+    game: Object,
+    heroId: String
   },
   data() {
     return {
@@ -26,8 +30,10 @@ export default {
     }
   },
   methods: {
-    
-  }
+    $_joinGame(id) {
+      this.$socket.emit('joinGame', id, this.heroId)
+    },
+  },
 }
 
 </script>

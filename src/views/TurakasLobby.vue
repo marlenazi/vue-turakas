@@ -24,7 +24,8 @@ import GameList from './TurakasLobbyGameList'
 export default {
   name: 'TurakasLobby',
   props: {
-    heroId: String
+    heroId: String,
+    game: Object
   },
   components: {
     NewGame, GameList,

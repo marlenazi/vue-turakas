@@ -5,11 +5,14 @@
       :hero="hero">
     </turakas-navbar>
   
+  <transition name="fade" mode="out-in">
     <component 
       :is="activeView"
-      :heroId="hero.id">
+      :heroId="hero.id"
+      :hero="hero"
+      :game="game">
     </component>
- 
+  </transition>
     
   </div>
 </template>
@@ -21,14 +24,16 @@ import TurakasGame from './TurakasGame'
 
 export default {
   name: 'Turakas',
-  props: ['hero'],
+  props: {
+    hero: Object
+  },
   components: {
-    TurakasNavbar, TurakasLobby
+    TurakasNavbar, TurakasLobby, TurakasGame
   },
   data() {
     return {
       activeView: 'TurakasLobby',
-      game: [],
+      game: {},
     }
   },
   methods: {
@@ -37,16 +42,23 @@ export default {
   computed: {
 
   },
-  // created() {
-  //   // console.log(this.games)
-  //   this.$socket.emit('getAvailableGames', this.hero.id)
-  // },
   sockets: {
-    gameClosed(closedGame) {
-      console.log('Game closed')
-      console.log(closedGame)
-      this.games.splice(this.games.findIndex(game => 
-                                             game.id === closedGame.id), 1)
+    joinedGame(state) {
+      console.log('Joined game')
+      console.log(state)
+      this.activeView = 'TurakasGame'
+      this.game = state
+    },
+    leftGame() {
+      this.activeView = 'TurakasLobby'
+      this.game = {}
+    },
+    updateGame(state) {
+      console.log('Updating game')
+      this.game = state
+    },
+    gameOver(state) {
+      this.game = state
     }
   }
 }

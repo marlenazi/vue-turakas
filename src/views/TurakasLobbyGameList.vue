@@ -3,7 +3,8 @@
     <game-list-item
       v-for="game in games"
       :key="game.id"
-      :game="game">
+      :game="game"
+      :heroId="heroId">
     </game-list-item>
   </div>
 </template>
@@ -84,21 +85,25 @@ export default {
     this.$_getAvailableGames()
   },
   sockets: {
-    availableGames(newGames) {
-      console.log('Received games to lobby')
+    availableGamesSent(newGames) {
+      console.log('Received an array of games')
       console.log(newGames)
-
+      console.log(this.$parent.game.status)
       this.games = newGames
     },
     gameCreated(newGame) {
       console.log('New game created')
       console.log(newGame)
 
-      console.log(this.games.some(game => game.id === newGame.id))
-      if (this.games.some(game => game.id === newGame.id)) return
-
       this.games.push(newGame)
     },
+    gameClosed(closedGameId) {
+      console.log('Game closed')
+      console.log(closedGameId)
+
+      this.games.splice(this.games.findIndex(game => 
+                                             game.id === closedGameId), 1)
+    }
   }
 };
 </script>

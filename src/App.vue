@@ -23,7 +23,6 @@ export default {
     return {
       mainView: 'Welcome',
       hero: {},
-      // game: {},
     }
   },
   methods: {
@@ -40,21 +39,19 @@ export default {
       this.hero = user
       this.mainView = 'Turakas'
     },
-    // joinedGame(state) {
-    //   this.mainView = 'Game'
-    //   this.game = state
-    // },
-    // leftGame() {
-    //   this.mainView = 'Main'
-    //   this.game = {}
-    // },
-    // updateGame(state) {
-    //   console.log('Updating game')
-    //   this.game = state
-    // },
-    // gameOver(state) {
-    //   this.game = state
-    // } 
+    joinedGame(state) {
+      console.log('Joined game')
+      console.log(state)
+      this.activeView = 'TurakasGame'
+      this.game = state
+    },
+    gameClosed(closedGameId) {
+      console.log('Game closed')
+      console.log(closedGameId)
+
+      this.games.splice(this.games.findIndex(game => 
+                                             game.id === closedGameId), 1)
+    }
   }
 }
 </script>

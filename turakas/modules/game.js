@@ -310,7 +310,7 @@ module.exports = function Game(gameSize = 2) {
     }
     return false
   }
-  function closeGame() {
+  function _closeGame() {
     players.forEach(player => player.away = null)
 
     setTimeout(() => {

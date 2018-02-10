@@ -2,7 +2,7 @@
   <button 
     class="newGameButton" 
     tabindex="1"
-    @click="newGame"
+    @click="$_newGame"
   >
     {{ title }}
   </button>
@@ -21,7 +21,7 @@ export default {
     }
   },
   methods: {
-    newGame() {
+    $_newGame() {
       console.log('Starting a new game')
       this.$socket.emit('newGame', this.heroId)
     },

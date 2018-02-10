@@ -32,9 +32,9 @@ io.on('connection', socket => {
      * We return the user object either by id or socketId
      * If we cant find neither, we return null
      */
-    return users.find(user => user.id === id)                             || 
-           users.find(user => user.socketIds.some(socId => socId === id)) || 
-           null
+    return users.find(user => user.id === id) || users.find(user =>
+        user.socketIds.some(socId => socId === id)
+      ) || null;
   }
   function getAvailableGames(user) {
     let playingGame  = []
@@ -116,13 +116,15 @@ io.on('connection', socket => {
       games.splice(games.indexOf(game), 1)
     }
       
-      return gameState
+    return gameState
   }
   function emitToOne(event, data = '', theOne = getUser(socket.id)) {
     // this loops over all socketIds connected to user and 
     // emits same event and data
     theOne.socketIds.forEach(socId => {
       io.to(socId).emit(event, data)
+      console.log(event)
+      console.log(socId)
     })
   }
   function emitToMany(gameId, event, data = '') {
@@ -152,6 +154,8 @@ io.on('connection', socket => {
     emitToOne('loggedIn', user)
 
     if (user.game && getGame(user.game)) {
+      console.log('User has a game and will be logged on')
+      console.log(user.socketIds)
       emitToOne('joinedGame', getGame(user.game).state())
     } else if (user.game) {
       user.game = null
@@ -162,7 +166,7 @@ io.on('connection', socket => {
 
     let games = getAvailableGames(getUser(userId))
 
-    emitToOne('availableGames', games)
+    emitToOne('availableGamesSent', games)
   })
   socket.on('newGame', userId => {
     if (!getUser(userId)) return
@@ -184,6 +188,10 @@ io.on('connection', socket => {
   socket.on('joinGame', (gameId, userId) => {
     if (!getUser(userId)) return
     if (!getGame(gameId)) return
+    if (getUser(userId).game && getGame(getUser(userId).game)) {
+      console.log(`${userId} @ on.joinGame: already registered`)
+      return
+    }
 
     let gameState = joinGame(gameId, userId)
 
@@ -264,7 +272,8 @@ io.on('connection', socket => {
       let gameId = user.game
       let gameState = leaveGame(socket.id)
       let status = gameState.status
-
+      console.log('==================')
+      console.log(status)
       if (status === 'Closed') {
         io.emit('gameClosed', gameState.id)
       }
