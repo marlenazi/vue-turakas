@@ -187,10 +187,11 @@ io.on('connection', socket => {
     // ADD ABILITY TO JOIN WHEN LEFT GAME!!!
     if (!getUser(userId)) return
     if (!getGame(gameId)) return
-    if (getUser(userId).game && getGame(getUser(userId).game)) {
-      console.log(`${userId} @ on.joinGame: already registered`)
-      return
-    }
+      // do we need this check? i think we want to be able to join 
+    // if (getUser(userId).game && getGame(getUser(userId).game)) {
+    //   console.log(`${userId} @ on.joinGame: already registered`)
+    //   return
+    // }
 
     let gameState = joinGame(gameId, userId)
 
