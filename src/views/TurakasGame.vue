@@ -8,7 +8,6 @@
         :game="game">
       </component>
     </transition>
-
   </div>
 </template>
 
@@ -27,7 +26,7 @@ export default {
   },
   data() {
     return {
-      activeView: 'Game' + this.game.status,
+      
     }
   },
   methods: {
@@ -35,6 +34,11 @@ export default {
       console.log('Leaving game')
       console.log(this.hero)
       this.$socket.emit('leaveGame', this.hero.id)
+    }
+  },
+  computed: {
+    activeView() {
+      return 'Game' + this.game.status
     }
   }
 }

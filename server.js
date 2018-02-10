@@ -184,6 +184,7 @@ io.on('connection', socket => {
     })
   })
   socket.on('joinGame', (gameId, userId) => {
+    // ADD ABILITY TO JOIN WHEN LEFT GAME!!!
     if (!getUser(userId)) return
     if (!getGame(gameId)) return
     if (getUser(userId).game && getGame(getUser(userId).game)) {
