@@ -1,19 +1,26 @@
 <template>
-  <div
-    class="gameBoard">
+  <div class="gameBoard">
     
+    <transition-group name="fade" mode="out-in">
+      <game-card
+        v-for="card in board"
+        :key="card.rank + card.suit"
+        :card="card">
+      </game-card>
+    </transition-group>
+
   </div>
 </template>
 
 <script>
-
+import GameCard from './TurakasGameCard'
 export default {
   name: 'GameBoard',
   props: {
     board: Array
   },
   components: {
-
+    GameCard
   },
   data() {
     return {
@@ -30,6 +37,7 @@ export default {
 .gameBoard {
   flex: 1 0 auto;
   border-radius: .5rem;
+  border: .2rem solid $accent;
   background: $action;
 }
 </style>

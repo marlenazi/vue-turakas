@@ -10,7 +10,7 @@
       {{ msg }}  
     </div>
 
-    {{ game }}
+    <!-- {{ game }} -->
   </div>
 </template>
 

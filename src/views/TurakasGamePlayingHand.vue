@@ -1,7 +1,7 @@
 <template>
   <div class="gameHand">
     
-    <transition-group name="fade" mode="out-in">
+    <transition-group class="cards" name="fade" mode="out-in">
       <game-card
         v-for="card in hand"
         :key="card.rank + card.suit"
@@ -39,5 +39,12 @@ export default {
   border-radius: .5rem;
   border: .2rem solid $accent;
   background: $action;
+
+
+}
+.cards {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
 }
 </style>
