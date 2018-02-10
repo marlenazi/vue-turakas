@@ -11,6 +11,7 @@
     </div>
 
     <game-list
+      :games="games"
       :heroId="heroId">
     </game-list>
 
@@ -25,7 +26,8 @@ export default {
   name: 'TurakasLobby',
   props: {
     heroId: String,
-    game: Object
+    game: Object,
+    games: Array
   },
   components: {
     NewGame, GameList,

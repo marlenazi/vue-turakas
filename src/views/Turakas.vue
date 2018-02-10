@@ -10,7 +10,8 @@
       :is="activeView"
       :heroId="hero.id"
       :hero="hero"
-      :game="game">
+      :game="game"
+      :games="games">
     </component>
   </transition>
     
@@ -25,7 +26,9 @@ import TurakasGame from './TurakasGame'
 export default {
   name: 'Turakas',
   props: {
-    hero: Object
+    hero: Object,
+    game: Object,
+    games: Array
   },
   components: {
     TurakasNavbar, TurakasLobby, TurakasGame
@@ -33,7 +36,6 @@ export default {
   data() {
     return {
       activeView: 'TurakasLobby',
-      game: {},
     }
   },
   methods: {
@@ -42,23 +44,20 @@ export default {
   computed: {
 
   },
+  created() {
+    if (this.game.status) {
+      this.activeView = 'TurakasGame'
+    }
+  },
   sockets: {
     joinedGame(state) {
-      console.log('Joined game')
-      console.log(state)
       this.activeView = 'TurakasGame'
-      this.game = state
     },
     leftGame() {
       this.activeView = 'TurakasLobby'
-      this.game = {}
     },
-    updateGame(state) {
-      console.log('Updating game')
-      this.game = state
-    },
-    gameOver(state) {
-      this.game = state
+    gameClosed() {
+      this.activeView = 'TurakasLobby'
     }
   }
 }

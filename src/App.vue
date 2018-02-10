@@ -4,6 +4,8 @@
     <component class="mainView"
       :is="mainView"
       :hero="hero"
+      :game="game"
+      :games="games"
     >
     </component>
   </transition>
@@ -23,6 +25,8 @@ export default {
     return {
       mainView: 'Welcome',
       hero: {},
+      game: {},
+      games: [],
     }
   },
   methods: {
@@ -34,23 +38,50 @@ export default {
   sockets: {
     loggedIn(user) {
       console.log(`Logged in ${user.name}`)
-      console.log(user)
+      // console.log(user)
 
       this.hero = user
       this.mainView = 'Turakas'
     },
     joinedGame(state) {
       console.log('Joined game')
-      console.log(state)
+      // console.log(state)
       this.activeView = 'TurakasGame'
       this.game = state
     },
+    availableGamesSent(newGames) {
+      console.log('Received an array of games')
+      // console.log(newGames)
+      this.games = newGames
+    },
+    gameCreated(newGame) {
+      console.log('New game created')
+      // console.log(newGame)
+
+      this.games.push(newGame)
+    },
     gameClosed(closedGameId) {
       console.log('Game closed')
-      console.log(closedGameId)
+      // console.log(closedGameId)
 
       this.games.splice(this.games.findIndex(game => 
                                              game.id === closedGameId), 1)
+    },
+    joinedGame(state) {
+      console.log('Joined game')
+      // console.log(state)
+      this.activeView = 'TurakasGame'
+      this.game = state
+    },
+    leftGame() {
+      this.game = {}
+    },
+    updateGame(state) {
+      console.log('Updating game')
+      this.game = state
+    },
+    gameOver(state) {
+      this.game = state
     }
   }
 }
