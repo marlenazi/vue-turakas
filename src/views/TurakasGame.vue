@@ -1,16 +1,13 @@
 <template>
   <div class="turakasGame">
 
-
-  <transition name="fade" mode="out-in">
-    <component
-      :is="activeView"
-      :hero="hero"
-      :game="game">
-    </component>
-  </transition>
-
-    Status: {{ activeView }} <br> <br><br><br><br>
+    <transition name="fade" mode="out-in">
+      <component
+        :is="activeView"
+        :hero="hero"
+        :game="game">
+      </component>
+    </transition>
 
   </div>
 </template>

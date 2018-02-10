@@ -199,7 +199,11 @@ io.on('connection', socket => {
     io.emit('gameClosed', gameState.id)
   })
   socket.on('leaveGame', userId => {
-    if (!getUser(userId) || !getUser(userId).game ) return
+    if (!getUser(userId) || 
+        !getUser(userId).game || 
+        !getGame(getUser(userId).game)) {
+    return
+    }
 
     let gameState = leaveGame(userId)
     let status = gameState.status
