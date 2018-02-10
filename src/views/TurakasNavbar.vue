@@ -23,7 +23,7 @@ export default {
 
 nav {
   flex: 0 0 auto;
-  margin: .5rem;
+  // margin: .5rem;
   border: .2rem solid $accent;
   border-radius: .5rem;
   padding: .5rem;

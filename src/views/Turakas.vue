@@ -1,9 +1,5 @@
 <template>
   <div class="turakas">
-
-    <turakas-navbar
-      :hero="hero">
-    </turakas-navbar>
   
   <transition name="fade" mode="out-in">
     <component 
@@ -19,7 +15,7 @@
 </template>
 
 <script>
-import TurakasNavbar from './TurakasNavbar'
+
 import TurakasLobby from './TurakasLobby'
 import TurakasGame from './TurakasGame'
 
@@ -31,7 +27,7 @@ export default {
     games: Array
   },
   components: {
-    TurakasNavbar, TurakasLobby, TurakasGame
+    TurakasLobby, TurakasGame
   },
   data() {
     return {

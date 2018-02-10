@@ -1,6 +1,11 @@
 <template>
   <div class="lobby">
 
+      <turakas-navbar
+        :hero="hero">
+      </turakas-navbar>
+
+
     <div class="titleAndNewGame">
       <div class="lobbyTitle">
         {{ title }}
@@ -19,6 +24,7 @@
 </template>
 
 <script>
+import TurakasNavbar from './TurakasNavbar'
 import NewGame from './TurakasLobbyNewGame'
 import GameList from './TurakasLobbyGameList'
 
@@ -26,11 +32,12 @@ export default {
   name: 'TurakasLobby',
   props: {
     heroId: String,
+    hero: Object,
     game: Object,
     games: Array
   },
   components: {
-    NewGame, GameList,
+    NewGame, GameList, TurakasNavbar
   },
   data() {
     return {
