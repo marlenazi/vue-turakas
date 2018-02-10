@@ -113,14 +113,13 @@ module.exports = function Game(gameSize = 2) {
                                       pCard.rank === card.rank    )
 
     function isValid() {
-      console.log('enter isvalid')
-      console.log(card)
-      console.log(ix)
+
+      // console.log(card)
+
       //  so lets get corresponding serverside card
       if (ix > -1) { 
         card = hands[active][ix]
-        console.log(card)
-        console.log('--------------------')
+
       } else return false
       // console.log(card)
       // console.log(attackerCard)
@@ -135,11 +134,6 @@ module.exports = function Game(gameSize = 2) {
         // if there is no attacker, card (new attacker) can go on the board
       } else if (board.length && board.length < 12) {
         if (board.some( el => el.rank === card.rank)) {
-          console.log('=======================================')
-          console.log(board.some( el => el.rank === card.rank))
-          console.log(card)
-          console.log(board)
-          console.log('=======================================')
           return true
         } else return false
       } else return true
