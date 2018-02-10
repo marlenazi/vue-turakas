@@ -15,6 +15,15 @@
       :board="game.board">
     </game-board>
 
+    <game-controls
+      :active="game.active"
+      :board="game.board.length"
+      :attacking="game.attacking"
+      :defending="game.defending"
+      :players="game.players"
+      :heroId="hero.id">
+    </game-controls>
+    
     <game-hand
       :hand="hand">
     </game-hand>
@@ -28,6 +37,7 @@
 import LeaveButton from './TurakasGameLeaveButton'
 import GameInfo from './TurakasGamePlayingInfo'
 import GameBoard from './TurakasGamePlayingBoard'
+import GameControls from './TurakasGameControls'
 import GameHand from './TurakasGamePlayingHand'
 
 export default {
@@ -37,7 +47,7 @@ export default {
     game: Object
   },
   components: {
-    LeaveButton, GameInfo, GameBoard, GameHand
+    LeaveButton, GameInfo, GameBoard, GameControls, GameHand
   },
   data() {
     return {

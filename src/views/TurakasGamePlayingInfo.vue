@@ -5,14 +5,13 @@
       <div class="villainName">
         {{ villain.name }}
       </div>
-      {{ moves }}
       <transition-group
         class="villainHand"
         name="fade" 
         mode="out-in">
           <game-card
             id="villainCard"
-            v-for="(card, ix) in villain.hand"
+            v-for="(card, ix) in villainHandLength"
             :key="ix"
             :card="villainCard">
           </game-card>
@@ -36,7 +35,7 @@
 </template>
 
 <script>
-import GameCard from './turakasGameCard'
+import GameCard from './TurakasGameCard'
 
 export default {
   name: 'GameInfo',
@@ -52,7 +51,7 @@ export default {
   },
   data() {
     return {
-      villain: this.players.find(player => player.id !== this.heroId),
+
       trumpCard: {rank: this.trump.rank, suit: this.trump.suit},
       deckCard: {rank: this.deck, suit: 'b'},
     }
@@ -64,12 +63,14 @@ export default {
     }
   },
   computed: {
-    moves() {
-      return this.active === this.players.find(player => 
-        player.id === this.heroId).ix ? 'You' : 'Not You'
+    villain() {
+      return this.players.find(player => player.id !== this.heroId)
     },
     villainCard() {
       return {rank: this.villain.hand, suit: 'b'}
+    },
+    villainHandLength() {
+      return this.villain.hand > 9 ? 9 : this.villain.hand
     }
   },
 }
@@ -111,7 +112,7 @@ export default {
 }
 .villain {
   flex: 0 0 5rem;
-  max-width: 5rem;
+  max-width: 7rem;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-around;  
@@ -121,6 +122,7 @@ export default {
   white-space: nowrap;
 }
 .villainHand {
+
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
