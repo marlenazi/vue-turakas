@@ -3,6 +3,7 @@
     
     <transition-group class="cards" name="fade" mode="out-in">
       <game-card
+        tabindex="1"
         v-for="card in hand"
         :key="card.rank + card.suit"
         :card="card">
@@ -43,8 +44,12 @@ export default {
 
 }
 .cards {
-  display: flex;
-  justify-content: center;
+
+  padding: .5rem;
+  flex: 1 1 auto;
+  display: block;
+  text-align: center;
+  white-space: nowrap;
   overflow-x: auto;
 }
 </style>

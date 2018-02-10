@@ -42,7 +42,8 @@ export default {
 @import './../style/variables';
 
 .gameInfo {
-  flex: 0 0 auto;
+  border: .2rem solid $accent;
+  flex: 1 0 auto;
   border-radius: .5rem;
   background: $action;
 }

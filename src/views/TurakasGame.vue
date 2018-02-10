@@ -57,6 +57,6 @@ export default {
   border-radius: .5rem;
 
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column nowrap;
 }
 </style>
