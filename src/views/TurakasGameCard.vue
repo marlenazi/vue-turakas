@@ -25,12 +25,6 @@ export default {
       }
     }
   },
-  methods: {
-    // move(card) {
-    //   console.log(card)
-    //   // this.$socket.emit('move', this.game.id, card)
-    // },
-  }
 }
 
 </script>

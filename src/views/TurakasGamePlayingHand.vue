@@ -43,8 +43,8 @@ export default {
 .gameHand {
   flex: 0 0 auto;
   border-radius: .5rem;
-  border: .2rem solid $accent;
-  background: $action;
+  // border: .2rem solid $accent;
+  // background: $action;
 
 
 }

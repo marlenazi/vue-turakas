@@ -90,7 +90,7 @@ export default {
 .turakasGamePlaying {
 
   flex: 1 1 auto;
-  background: $btn;
+  background: $bg;
   border-radius: .5rem;
 
   display: flex;

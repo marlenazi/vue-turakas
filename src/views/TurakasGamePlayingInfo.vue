@@ -84,7 +84,7 @@ export default {
   padding: .3rem;
   flex: 1 1 auto;
   border-radius: .5rem;
-  background: $action;
+  // background: $action;
 
   overflow: hidden;
   display: flex;

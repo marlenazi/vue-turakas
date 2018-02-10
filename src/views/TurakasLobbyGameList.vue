@@ -42,7 +42,7 @@ export default {
 .games {
   flex: 1 0 auto;
   margin-top: 0.5rem;
-  border: 0.2rem solid $accent;
+  // border: 0.2rem solid $accent;
 
   display: flex;
   flex-flow: row wrap;
