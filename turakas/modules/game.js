@@ -113,11 +113,14 @@ module.exports = function Game(gameSize = 2) {
                                       pCard.rank === card.rank    )
 
     function isValid() {
-      // console.log(card)
-      
+      console.log('enter isvalid')
+      console.log(card)
+      console.log(ix)
       //  so lets get corresponding serverside card
       if (ix > -1) { 
         card = hands[active][ix]
+        console.log(card)
+        console.log('--------------------')
       } else return false
       // console.log(card)
       // console.log(attackerCard)
@@ -130,14 +133,20 @@ module.exports = function Game(gameSize = 2) {
           return true
         } else return false
         // if there is no attacker, card (new attacker) can go on the board
-      } else if (board.length && board.length < 6) {
+      } else if (board.length && board.length < 12) {
         if (board.some( el => el.rank === card.rank)) {
+          console.log('=======================================')
+          console.log(board.some( el => el.rank === card.rank))
+          console.log(card)
+          console.log(board)
+          console.log('=======================================')
           return true
         } else return false
       } else return true
     }
       
     if (isValid()) {
+      console.log('Was valid')
       board.push(...hands[active].splice(ix, 1))
       _nextActive()
     }
@@ -187,7 +196,7 @@ module.exports = function Game(gameSize = 2) {
       hands.push(deck.splice(0, 6))
     })
 
-    _setTimerToActive(5)
+    _setTimerToActive(30)
 
     inited = true
   }
@@ -201,7 +210,7 @@ module.exports = function Game(gameSize = 2) {
 
     
 
-    _setTimerToActive(5)
+    _setTimerToActive(30)
     zzz.emit('refresh', id, state())
 
     if (deck.length < 6) { 

@@ -1,6 +1,8 @@
 <template>
   <div class="gameInfo">
 
+    <leave-button :heroId="heroId"></leave-button>
+
     <div class="villain">
       <div class="villainName">
         {{ villain.name }}
@@ -36,7 +38,7 @@
 
 <script>
 import GameCard from './TurakasGameCard'
-
+import LeaveButton from './TurakasGameLeaveButton'
 export default {
   name: 'GameInfo',
   props: {
@@ -47,7 +49,7 @@ export default {
     active: Number
   },
   components: {
-    GameCard
+    LeaveButton, GameCard
   },
   data() {
     return {
@@ -57,10 +59,7 @@ export default {
     }
   },
   methods: {
-    $_getVillainCard() {
-      console.log('i dont retr')
-      return '2'
-    }
+
   },
   computed: {
     villain() {
@@ -81,18 +80,18 @@ export default {
 @import './../style/variables';
 
 .gameInfo {
+  // border: 1px solid blue;
   padding: .3rem;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   border-radius: .5rem;
-  // background: $action;
-
-  // overflow: hidden;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .trumpAndDeck {
   flex: 0 0 auto;
+  margin-left: auto;
 }
 
 #deck {
@@ -114,7 +113,7 @@ export default {
   // border: 1px solid blue;
   position: relative;
   top: 1.8rem;
-  // left: 1rem;
+  margin-left: auto;
   flex: 0 0 5rem;
   width: 7.5rem;
   display: flex;

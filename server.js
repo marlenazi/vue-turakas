@@ -160,7 +160,7 @@ io.on('connection', socket => {
     }
   })
   socket.on('getAvailableGames', userId => {
-    if (!getUser(userId)) return
+    if (!getUser(userId) || !getUser(socket.id)) return
 
     let games = getAvailableGames(getUser(userId))
 

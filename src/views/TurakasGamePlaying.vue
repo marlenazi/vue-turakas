@@ -1,16 +1,14 @@
 <template>
   <div class="turakasGamePlaying">
-    <div class="leaveAndInfo">
-      <leave-button :heroId="hero.id"></leave-button>
 
-      <game-info
-        :heroId="hero.id"
-        :deck="game.deck"
-        :players="game.players"
-        :trump="game.trump"
-        :active="game.active">
-      </game-info>
-    </div>
+    <game-info
+      :heroId="hero.id"
+      :deck="game.deck"
+      :players="game.players"
+      :trump="game.trump"
+      :active="game.active">
+    </game-info>
+
     <game-board
       :board="game.board">
     </game-board>
@@ -98,10 +96,5 @@ export default {
   justify-content: space-around;
 
 }
-.leaveAndInfo {
 
-  flex: 0 1 auto;
-  display: flex;
-  
-}
 </style>
