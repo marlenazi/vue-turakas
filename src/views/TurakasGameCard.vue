@@ -37,8 +37,8 @@ export default {
   display: inline-block;
   margin: .2rem;
   padding: .3rem;
-  height: 6rem;
-  width: 4.5rem;
+  height: 4rem;
+  width: 3rem;
   border-radius: .3rem;
   color: $action;
   text-align: left;

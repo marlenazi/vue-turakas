@@ -86,7 +86,7 @@ export default {
   border-radius: .5rem;
   // background: $action;
 
-  overflow: hidden;
+  // overflow: hidden;
   display: flex;
   justify-content: space-between;
 }
@@ -111,13 +111,19 @@ export default {
   color: rgb(219, 197, 0);
 }
 .villain {
+  // border: 1px solid blue;
+  position: relative;
+  top: 1.8rem;
+  // left: 1rem;
   flex: 0 0 5rem;
-  max-width: 7rem;
+  width: 7.5rem;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: space-around;  
+  justify-content: flex-start;
+  text-align: center;
 }
 .villainName {
+  margin: .1rem;
   font-weight: bold;
   white-space: nowrap;
 }

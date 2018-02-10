@@ -1,17 +1,18 @@
 <template>
 <div class="gameControls">
-
-  <div class="moves">
-    {{ $_moves }}
+<transition name="fade" mode="out-in">
+  <div class="moves" v-if="$_moves === 'hero'">
+    Your Move
   </div>
+</transition>
 <transition name="fade" mode="out-in">
   <button
-    v-if="$_moves === 'you' && $_heroIx() === defending && board"
+    v-if="$_moves === 'hero' && $_heroIx() === defending && board"
     @click="$_pickUp">
     Pick Up
   </button>
   <button
-    v-else-if="$_moves === 'you' && $_heroIx() === attacking && board"
+    v-else-if="$_moves === 'hero' && $_heroIx() === attacking && board"
     @click="$_muck">
     Finished
   </button>
@@ -20,7 +21,7 @@
     v-else>
   </button>
 </transition>
-  <div class="spacer" ></div>
+  <!-- <div class="spacer" ></div> -->
 </div>
 </template>
 
@@ -55,8 +56,7 @@ export default {
   },
   computed: {
     $_moves() {
-      console.log('======= Moves this =======')
-      return this.active === this.$_heroIx() ? 'you' : 'other'
+      return this.active === this.$_heroIx() ? 'hero' : 'villain'
     },
   }
 }
@@ -66,27 +66,27 @@ export default {
 @import './../style/variables';
 
 .gameControls {
-  margin-top: -3rem;
+  position: relative;
+  top: -1rem;
   display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
+  flex-flow: column nowrap;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 button {
   height: 3rem;
-  width: 4.5rem;
+  width: 5rem;
   color: $action;
   font-size: 1rem;
   border-radius: .5rem;
+  text-align: center;
   
 }
-.moves, .spacer {
-  // border: 1px solid white;
-  width: 3.5rem;
-  height: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.moves {
+  margin: .1rem;
+  color: $action;
+  // border-bottom: 1px solid $accent;
 }
 
 </style>

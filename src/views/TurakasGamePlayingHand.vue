@@ -3,6 +3,7 @@
     
     <transition-group class="cards" name="fade" mode="out-in" >
       <game-card
+        id="handCard"
         tabindex="1"
         v-for="card in hand"
         :key="card.rank + card.suit"
@@ -42,14 +43,13 @@ export default {
 
 .gameHand {
   flex: 0 0 auto;
-  border-radius: .5rem;
+  // border-radius: .5rem;
   // border: .2rem solid $accent;
   // background: $action;
 
 
 }
 .cards {
-
   padding: .5rem;
   flex: 1 1 auto;
   display: block;
@@ -58,4 +58,11 @@ export default {
   overflow-x: auto;
   z-index: 10;
 }
+#handCard:first-child {
+  margin-left: .2rem;
+}
+#handCard {
+  margin-left: -.3rem;
+}
+
 </style>

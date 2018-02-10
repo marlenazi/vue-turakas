@@ -38,22 +38,23 @@ export default {
 .gameBoard {
   flex: 1 0 auto;
   border-radius: .5rem;
-  // border: .2rem solid $accent;
+  // border: 1px solid $accent;
+  padding: 1rem;
   // background: $action;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 
   min-width: 280px;
 }
 
 #boardCard {
-  height: 4rem;
+  margin-top: 2rem;
+  height: 4.2rem;
   width: 3rem;
 }
 #boardCard:nth-child(even) {
   position: relative;
-  top: .4rem;
+  top: .5rem;
   margin-left: -1rem;
 }
 </style>
