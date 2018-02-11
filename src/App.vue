@@ -95,6 +95,9 @@ html, body {
   height: 100%;
   width: 100%;
   background: $bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -102,14 +105,18 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   width: 100%;
+  max-height: 640px;
+  max-width: 640px;
 }
 #app *:focus {
   outline: none;
 }
 
 .mainView {
+  border: 1px solid blue;
   height: 100%;
   width: 100%;
+
 }
 
 
@@ -164,6 +171,11 @@ button:disabled {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+@media screen and (min-width: 640px){
+  
+}
+
 
 </style>
 

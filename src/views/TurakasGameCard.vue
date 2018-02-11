@@ -2,7 +2,17 @@
   <div
     class="turakasGameCard height-1"
     v-bind:class="cardSuit[card.suit]">
-    {{ card.rank }}{{ card.suit }}
+
+      <div class="rank">
+        {{ rank[card.rank] }}
+        <span 
+          class="smallSuit"
+          v-html="symbol[card.suit]">
+        </span> 
+      </div>
+      <div class="bigRank">
+        {{ rank[card.rank ]}}
+      </div>
   </div>
 </template>
 
@@ -22,6 +32,23 @@ export default {
         c: 'clubs',
         s: 'spades',
         b: 'back'
+      },
+      symbol: {
+        's': '&spades;',
+        'c': '&clubs;' ,
+        'h': '&hearts;',
+        'd': '&diams;' ,
+      },
+      rank: {
+        '1': '6',
+        '2': '7',
+        '3': '8',
+        '4': '9',
+        '5': '10',
+        '6': 'J',
+        '7': 'Q',
+        '8': 'K',
+        '9': 'A'
       }
     }
   },
@@ -33,18 +60,20 @@ export default {
 @import './../style/variables';
 
 .turakasGameCard {
-  flex: 0 0 auto;
+  flex: 1 1 3rem;
   display: inline-block;
-  margin: .2rem;
+  margin: .1rem;
   padding: .3rem;
-  height: 4rem;
-  width: 3rem;
+  height: 4.3rem;
+  width: 3.2rem;
   border-radius: .3rem;
   color: $action;
   text-align: left;
   font-size: 1.5rem;
+  // font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   user-select: none;
   cursor: pointer;
+  transition: all .2s ease-in-out;
 }
 .spades {
   background: rgb(51, 51, 51);
@@ -62,4 +91,24 @@ export default {
   background: rgb(219, 197, 0);
 }
 
+.rank {
+  margin-right: auto;
+  font-size: 1rem;
+}
+.smallSuit {
+  font-size: 1.2rem;
+}
+.bigRank {
+  font-size: 2rem;
+  text-align: center;
+  margin-top: -.2rem;
+}
+
+
+// @media screen and (min-width: 640px){
+//   .turakasGameCard {
+//     height: 6rem;
+//     width: 4rem;
+//   }
+// }
 </style>

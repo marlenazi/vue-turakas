@@ -13,6 +13,7 @@
         mode="out-in">
           <game-card
             id="villainCard"
+            v-bind:class="{ active: active !== heroIx }"
             v-for="(card, ix) in villainHandLength"
             :key="ix"
             :card="villainCard">
@@ -42,6 +43,7 @@ import LeaveButton from './TurakasGameLeaveButton'
 export default {
   name: 'GameInfo',
   props: {
+    heroIx: Number,
     heroId: String,
     deck: Number,
     players: Array,
@@ -105,9 +107,11 @@ export default {
   height: 3rem;
   width: 4rem;
 }
+
 #deck {
   margin-left: -1rem;
   color: rgb(219, 197, 0);
+  z-index: 5;
 }
 .villain {
   // border: 1px solid blue;
@@ -140,5 +144,8 @@ export default {
   color: rgb(219, 197, 0);
   overflow: hidden;
   
+}
+.active {
+  box-shadow: 0px 0px 2px 2px $shadow;
 }
 </style>

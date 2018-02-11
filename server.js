@@ -172,6 +172,7 @@ io.on('connection', socket => {
       console.log(`${userId} @ on.newGame: already registered`)
       return
     }
+    console.log(getUser(userId))
 
     let gameState = createGame(userId)
     console.log('created game: ' + gameState.id)

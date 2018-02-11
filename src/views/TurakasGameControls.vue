@@ -1,9 +1,9 @@
 <template>
 <div class="gameControls">
 <transition name="fade" mode="out-in">
-  <div class="moves" v-if="$_moves === 'hero'">
+  <!-- <div class="moves" v-if="$_moves === 'hero'">
     Your Move
-  </div>
+  </div> -->
 </transition>
 <transition name="fade" mode="out-in">
   <button

@@ -2,6 +2,7 @@
   <div class="turakasGamePlaying">
 
     <game-info
+      :heroIx="heroIx"
       :heroId="hero.id"
       :deck="game.deck"
       :players="game.players"
@@ -21,8 +22,9 @@
       :players="game.players"
       :heroId="hero.id">
     </game-controls>
-    
+
     <game-hand
+      :active="game.active === heroIx"
       :hand="hand">
     </game-hand>
 
@@ -50,10 +52,10 @@ export default {
   data() {
     return {
       hand: [],
+      heroIx: this.game.players.find(pl => pl.id === this.hero.id).ix,
     }
   },
   methods: {
-
   },
   mounted() {
     if (this.game.status === 'Playing') {

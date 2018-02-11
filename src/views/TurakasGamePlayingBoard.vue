@@ -43,7 +43,6 @@ export default {
   // background: $action;
   display: flex;
   justify-content: center;
-
   min-width: 280px;
 }
 
