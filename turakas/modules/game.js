@@ -140,7 +140,7 @@ module.exports = function Game(gameSize = 2) {
     }
       
     if (isValid()) {
-      console.log('Was valid')
+      // console.log('Was valid')
       board.push(...hands[active].splice(ix, 1))
       _nextActive()
     }
@@ -318,7 +318,7 @@ module.exports = function Game(gameSize = 2) {
 
     setTimeout(() => {
       zzz.emit('closeGame', id)
-    }, 1000 * 5)
+    }, 1000 * 30)
   }
 
   return {

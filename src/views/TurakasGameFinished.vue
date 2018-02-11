@@ -1,22 +1,43 @@
 <template>
-  <div
-    class="turakasGameFinished">
+  <div class="turakasGameFinished">
 
-    <leave-button :heroId="hero.id"></leave-button>
   
-    <b>Game Status:</b> {{ game.status }}
+    <leave-button 
+      class="leaveButton"
+      :heroId="hero.id">
+    </leave-button>
 
-    <div class="message">
-      {{ msg }}  
+    <h2>
+      Game Over
+    </h2> 
+    
+    <div class="info">
+      <img src="../assets/theFool.svg" alt="the fool" srcset="">
+      <h2> 
+        {{ game.turakas.name }} 
+      </h2>
+      <p>All hail the dummy!</p>
+      <br><br>
+      <strong>Winner:</strong>
+      <game-card
+        id="winnerCards"
+        v-for="card in game.board"
+        :key="card.rank + card.suit"
+        :card="card">
+      </game-card>
+
+
+      <strong>{{ game.winner.name }}</strong>
+      
     </div>
 
-    Viiner: {{ game.winner }}<br>
-    Luuser: {{ game.loser }}
   </div>
 </template>
 
 <script>
 import LeaveButton from './TurakasGameLeaveButton'
+import GameCard from './TurakasGameCard'
+
 export default {
   name: 'TurakasGameFinished',
   props: {
@@ -24,11 +45,11 @@ export default {
     game: Object
   },
   components: {
-    LeaveButton
+    GameCard, LeaveButton
   },
   data() {
     return {
-      msg: "Looks like this is over"
+      msg: "Looks like this one is finished"
     }
   }
 }
@@ -41,9 +62,28 @@ export default {
 .turakasGameFinished {
   flex: 1 0 auto;
   border-radius: .5rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
 }
-
+h1 {
+  font-size: 2rem;
+}
+img {
+  height: 10rem;
+}
 .message {
   padding: 2rem;
+}
+
+.leaveButton {
+  margin-right: auto;
+}
+
+.info {
+  padding: 0 3rem;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 </style>
