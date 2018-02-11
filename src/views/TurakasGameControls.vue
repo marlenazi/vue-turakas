@@ -85,7 +85,8 @@ button {
 }
 .moves {
   margin: .1rem;
-  color: $action;
+  color: $accent;
+  font-weight: bold;
   // border-bottom: 1px solid $accent;
 }
 

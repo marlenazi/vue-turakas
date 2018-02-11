@@ -12,7 +12,6 @@
         >
       </game-card>
     </transition-group>
-
   </div>
 </template>
 
@@ -27,12 +26,25 @@ export default {
     GameCard
   },
   methods: {
+    $_hasScrollBar() {
+      console.log('==============================')
+      console.log(this)
+      console.log(this.$el.offsetWidth)
+      console.log(this.$el.scrollWidth)
+      console.log(this.$el.clientWidth)
+      console.log(this.hand.length * 48)
+      console.log('==============================')
+    },
     move(card) {
       console.log(card)
       // we used to emit game id aswell,
       // but it should work well enough even without
       this.$socket.emit('move', card)
+      this.$_hasScrollBar()
     },
+  },
+  computed: {
+    
   }
 }
 
@@ -43,11 +55,6 @@ export default {
 
 .gameHand {
   flex: 0 0 auto;
-  // border-radius: .5rem;
-  // border: .2rem solid $accent;
-  // background: $action;
-
-
 }
 .cards {
   padding: .5rem;
