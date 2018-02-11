@@ -8,7 +8,9 @@
         v-for="card in hand"
         v-bind:class="{ active: active }"
         :key="card.rank + card.suit"
-        :card="card"
+        :rank="card.rank"
+        :suit="card.suit"
+        :bigRank="card.rank"
         @click.native="move(card)"
         >
       </game-card>
@@ -29,21 +31,10 @@ export default {
     GameCard
   },
   methods: {
-    $_hasScrollBar() {
-      console.log('==============================')
-      console.log(this)
-      console.log(this.$el.offsetWidth)
-      console.log(this.$el.scrollWidth)
-      console.log(this.$el.clientWidth)
-      console.log(this.hand.length * 48)
-      console.log('==============================')
-    },
     move(card) {
       console.log(card)
-      // we used to emit game id aswell,
-      // but it should work well enough even without
+
       this.$socket.emit('move', card)
-      this.$_hasScrollBar()
     },
   },
   computed: {
@@ -60,7 +51,7 @@ export default {
   flex: 0 0 auto;
 }
 .cards {
-  padding: .5rem;
+  padding: 1rem;
   flex: 1 1 auto;
   display: block;
   text-align: center;
@@ -71,11 +62,11 @@ export default {
 
 #handCard:hover {
   transform: scale(1.2);
-  box-shadow: 0px 0px 5px 5px $shadow,
-        inset 0px 0px 3px 1px $shadow;
+
 }
 .active {
-  box-shadow: 0px 0px 3px 3px $shadow;
+  box-shadow: 0px 0px 8px 3px $shadow;
+        // inset 0px 0px 1px 1px $shadow;
 }
 @media screen and (max-width: 340px){
   #handCard {

@@ -106,14 +106,14 @@ html, body {
   height: 100%;
   width: 100%;
   max-height: 640px;
-  max-width: 640px;
+  max-width: 440px;
 }
 #app *:focus {
   outline: none;
 }
 
 .mainView {
-  border: 1px solid blue;
+  // border: 1px solid blue;
   height: 100%;
   width: 100%;
 

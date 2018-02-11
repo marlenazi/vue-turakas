@@ -6,7 +6,9 @@
         id="boardCard"
         v-for="card in board"
         :key="card.rank + card.suit"
-        :card="card">
+        :rank="card.rank"
+        :suit="card.suit"
+        :bigRank="card.rank">
       </game-card>
     </transition-group>
 
@@ -54,6 +56,19 @@ export default {
 #boardCard:nth-child(even) {
   position: relative;
   top: .5rem;
-  margin-left: -1rem;
+  margin-left: -.8rem;
+}
+
+@media screen and (max-width: 340px){
+  #boardCard {
+    margin-top: 2rem;
+    height: 4.2rem;
+    width: 3rem;
+  }
+  #boardCard:nth-child(even) {
+    position: relative;
+    top: .5rem;
+    margin-left: -1rem;
+  }
 }
 </style>

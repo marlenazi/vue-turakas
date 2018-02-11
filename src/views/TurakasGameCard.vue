@@ -1,17 +1,17 @@
 <template>
   <div
     class="turakasGameCard height-1"
-    v-bind:class="cardSuit[card.suit]">
+    v-bind:class="cardSuit[suit]">
 
       <div class="rank">
-        {{ rank[card.rank] }}
+        {{ cardRank[rank] }}
         <span 
           class="smallSuit"
-          v-html="symbol[card.suit]">
+          v-html="symbol[suit]">
         </span> 
       </div>
       <div class="bigRank">
-        {{ rank[card.rank ]}}
+        {{ cardRank[bigRank]}}
       </div>
   </div>
 </template>
@@ -21,7 +21,9 @@
 export default {
   name: 'TurakasGameCard',
   props: {
-    card: Object
+    rank: String,
+    suit: String,
+    bigRank: String,
   },
   data() {
     return {
@@ -31,15 +33,16 @@ export default {
         d: 'diamonds',
         c: 'clubs',
         s: 'spades',
-        b: 'back'
+    blank: 'back',
       },
       symbol: {
         's': '&spades;',
         'c': '&clubs;' ,
         'h': '&hearts;',
         'd': '&diams;' ,
+    'blank': '',
       },
-      rank: {
+      cardRank: {
         '1': '6',
         '2': '7',
         '3': '8',
@@ -48,10 +51,14 @@ export default {
         '6': 'J',
         '7': 'Q',
         '8': 'K',
-        '9': 'A'
+        '9': 'A',
+    'blank': '',
       }
     }
   },
+  computed: {
+
+  }
 }
 
 </script>
@@ -70,7 +77,6 @@ export default {
   color: $action;
   text-align: left;
   font-size: 1.5rem;
-  // font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   user-select: none;
   cursor: pointer;
   transition: all .2s ease-in-out;
@@ -88,7 +94,7 @@ export default {
   background: rgb(53, 31, 255);
 }
 .back {
-  background: rgb(219, 197, 0);
+  background: $cardBack;
 }
 
 .rank {

@@ -16,7 +16,9 @@
             v-bind:class="{ active: active !== heroIx }"
             v-for="(card, ix) in villainHandLength"
             :key="ix"
-            :card="villainCard">
+            :rank="'blank'"
+            :suit="'blank'"
+            :bigRank="'blank'">
           </game-card>
       </transition-group>
     </div>
@@ -24,13 +26,14 @@
     <div class="trumpAndDeck">
       <game-card
         id="trumpCard"
-        :card="trumpCard">
+        :rank="trump.rank"
+        :suit="trump.suit"
+        :bigRank="'blank'">
       </game-card>
 
-      <game-card
-        id="deck"
-        :card="deckCard">
-      </game-card>
+      <div id="deck">
+        {{ deck }}
+      </div>
     </div>
 
 
@@ -64,6 +67,9 @@ export default {
 
   },
   computed: {
+    $_deck() {
+      return this.deck
+    },
     villain() {
       return this.players.find(player => player.id !== this.heroId)
     },
@@ -71,7 +77,7 @@ export default {
       return {rank: this.villain.hand, suit: 'b'}
     },
     villainHandLength() {
-      return this.villain.hand > 9 ? 9 : this.villain.hand
+      return this.villain.hand > 12 ? 12 : this.villain.hand
     }
   },
 }
@@ -94,24 +100,29 @@ export default {
 .trumpAndDeck {
   flex: 0 0 auto;
   margin-left: auto;
+  display: flex;
 }
 
 #deck {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: .3rem;
   height: 4rem;
   width: 3rem;
-  margin: 0;
+  background: $cardBack;
+  font-size: 1.5rem;
 }
 #trumpCard {
-  margin-top: .2rem;
-  margin-right: -1rem;
+  margin-top: .3rem;
+  margin-right: -1.8rem;
   height: 3rem;
   width: 4rem;
 }
 
 #deck {
-  margin-left: -1rem;
-  color: rgb(219, 197, 0);
-  z-index: 5;
+  
 }
 .villain {
   // border: 1px solid blue;
@@ -141,11 +152,10 @@ export default {
   height: 2rem;
   width: 1.4rem;
   margin: 0 -.3rem;
-  color: rgb(219, 197, 0);
   overflow: hidden;
   
 }
 .active {
-  box-shadow: 0px 0px 2px 2px $shadow;
+  box-shadow: 0px 0px 8px 1px $shadow;
 }
 </style>
