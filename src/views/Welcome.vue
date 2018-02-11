@@ -112,6 +112,7 @@ input:focus {
   color: $action;
 }
 
+
 @media screen and (max-height: 250px) {
   .welcome {
     // when keyboard was open, it squashed the layout, especially in landscape

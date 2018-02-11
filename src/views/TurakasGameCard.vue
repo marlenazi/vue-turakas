@@ -1,8 +1,7 @@
 <template>
   <div
     class="turakasGameCard height-1"
-    v-bind:class="cardSuit[suit]">
-
+    :class="cardSuit[suit]">
       <div class="rank">
         {{ cardRank[rank] }}
         <span 
@@ -40,7 +39,7 @@ export default {
         'c': '&clubs;' ,
         'h': '&hearts;',
         'd': '&diams;' ,
-    'blank': '',
+    'blank': '',// turakas logo siia???
       },
       cardRank: {
         '1': '6',
@@ -67,16 +66,17 @@ export default {
 @import './../style/variables';
 
 .turakasGameCard {
-  flex: 1 1 3rem;
+
   display: inline-block;
-  margin: .1rem;
-  padding: .3rem;
-  height: 4.3rem;
-  width: 3.2rem;
-  border-radius: .3rem;
+
+  padding: .4em;
+  height: 6em;
+  width: 4.2em;
+  border-radius: .2em;
   color: $action;
   text-align: left;
-  font-size: 1.5rem;
+  font-size: 1.5em;
+  
   user-select: none;
   cursor: pointer;
   transition: all .2s ease-in-out;
@@ -98,23 +98,15 @@ export default {
 }
 
 .rank {
-  margin-right: auto;
-  font-size: 1rem;
+
 }
 .smallSuit {
-  font-size: 1.2rem;
+
 }
 .bigRank {
-  font-size: 2rem;
+
+  font-size: 3em;
   text-align: center;
-  margin-top: -.2rem;
 }
 
-
-// @media screen and (min-width: 640px){
-//   .turakasGameCard {
-//     height: 6rem;
-//     width: 4rem;
-//   }
-// }
 </style>

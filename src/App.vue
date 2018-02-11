@@ -106,7 +106,8 @@ html, body {
   height: 100%;
   width: 100%;
   max-height: 640px;
-  max-width: 440px;
+  max-width: 360px;
+  border: 1px solid $accent;
 }
 #app *:focus {
   outline: none;

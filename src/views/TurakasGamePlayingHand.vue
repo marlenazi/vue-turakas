@@ -1,21 +1,22 @@
 <template>
   <div class="gameHand">
+    <!-- <transition-group class="cards" name="fade" mode="out-in" > -->
 
-    <transition-group class="cards" name="fade" mode="out-in" >
       <game-card
-        id="handCard"
+        id="playingCard"
         tabindex="1"
         v-for="card in hand"
-        v-bind:class="{ active: active }"
+        :class="{ active: active }"
+        :style="$_spread(card)"
         :key="card.rank + card.suit"
         :rank="card.rank"
         :suit="card.suit"
         :bigRank="card.rank"
-        @click.native="move(card)"
+        @click.native="$_move(card)"
         >
       </game-card>
-    </transition-group>
-    
+
+    <!-- </transition-group> -->
   </div>
 </template>
 
@@ -27,18 +28,43 @@ export default {
     hand: Array,
     active: Boolean,
   },
+  data() {
+    return {
+
+    }
+  },
   components: {
     GameCard
   },
   methods: {
-    move(card) {
-      console.log(card)
-
+    $_move(card) {
+      // console.log(card)
       this.$socket.emit('move', card)
     },
+    $_spread(card) {
+      let cards = this.hand.length
+      let cardIx = this.hand.findIndex(el => el === card)
+      let middle = cards / 2 - .25
+      let pos = middle - cardIx
+      let       [scale, margin, step, angle] = 
+          cards < 8  ? [ 1, 1.30, 5, 8] : 
+          cards < 12 ? [.8, 1.45, 5, 7] : 
+                       [.5, 1.65, 5, 6]
+
+      return {
+        position: 'relative',
+        top: `${ Math.abs(pos) / step }em`,
+        transform: `scale(${scale}) rotate(${ pos * - angle }deg)`,
+        margin: `0 -${margin}em`
+      }
+    },
   },
+
   computed: {
-    
+    $_handSize() {
+      let cards = this.hand.length
+      return cards < 8 ? 'size-1' : 'size-2'
+    }
   }
 }
 
@@ -48,33 +74,35 @@ export default {
 @import './../style/variables';
 
 .gameHand {
-  flex: 0 0 auto;
-}
-.cards {
-  padding: 1rem;
-  flex: 1 1 auto;
-  display: block;
+  // border:1px solid blue;
+  margin-bottom: 3em;
   text-align: center;
   white-space: nowrap;
-  overflow-x: auto;
-  z-index: 10;
+}
+// padding is needed so that the scale on hover would be visible
+.cards {
+  display: block;
+  // height: 12rem;
+  // position: relative;
+  text-align: center;
+  
+  // overflow-x: auto;
+}
+#playingCard {
+  // position: absolute;
+}
+#playingCard:hover {
+
 }
 
-#handCard:hover {
-  transform: scale(1.2);
 
-}
 .active {
   box-shadow: 0px 0px 8px 3px $shadow;
         // inset 0px 0px 1px 1px $shadow;
+
 }
-@media screen and (max-width: 340px){
-  #handCard {
-    margin-left: -.3rem;
-  }
-  #handCard:first-child {
-    margin-left: .2rem;
-  }
+.border {
+  border: 2px solid orangered;
 }
 
 
