@@ -317,7 +317,7 @@ module.exports = function Game(gameSize = 2) {
     players.forEach(player => player.away = null)
 
     setTimeout(() => {
-      player.forEach(player => {
+      players.forEach(player => {
         if (player.game === id) {
           player.game = null
         }

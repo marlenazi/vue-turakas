@@ -45,6 +45,7 @@ export default {
       let cardIx = this.hand.findIndex(el => el === card)
       let middle = cards / 2 - .5
       let pos = middle - cardIx
+      let ang = 190 / cards
 
       let              [ scale , margin , step , angle , origin, rightPad, ] =
           cards < 4  ? [   1   ,  0.20  ,   6  ,    5  ,   30  ,    0.8  , ] :
@@ -52,12 +53,17 @@ export default {
           cards < 6  ? [   1   ,  0.80  ,   4  ,    5  ,   30  ,    0.8  , ] :
           cards < 7  ? [   1   ,  1.50  ,   2  ,    6  ,   30  ,    1.2  , ] :
           cards < 8  ? [   1   ,  1.95  ,   5  ,    5  ,   30  ,    1.9  , ] :
-          // cards < 8  ? [   1   ,  2.70  ,  15  ,   17  ,   50  ,    2.5  , ] :  
-          cards < 10 ? [   1   ,  3.10  ,  18  ,   21  ,   50  ,    3.0  , ] : 
-          cards < 12 ? [   1   ,  3.00  ,   6  ,   17  ,   20  ,    0.0  , ] : 
-          cards < 13 ? [   1   ,  3.20  ,   5  ,   15  ,   25  ,    0.0  , ] :
-          cards < 15 ? [   1   ,  2.95  ,  25  ,   15  ,    5  ,    0.0  , ] :
-                       [   1   ,  3.20  ,  85  ,  8.5  ,    0  ,    0.0  , ] 
+          cards < 9  ? [   1   ,  2.50  ,   5  ,    8  ,   50  ,    2.5  , ] :  
+          cards < 10 ? [   1   ,  3.10  ,  18  ,   21  ,   50  ,    3.0  , ] :
+          cards < 11 ? [   1   ,  3.20  ,  18  ,   20  ,   50  ,    3.0  , ] :
+          cards < 12 ? [   1   ,  3.25  ,  18  ,   18  ,   50  ,    3.2  , ] : 
+          cards < 13 ? [   1   ,  3.32  ,  18  ,   16  ,   50  ,    3.2  , ] :
+          cards < 14 ? [   1   ,  3.40  ,  28  ,  ang  ,   50  ,    3.2  , ] :
+          cards < 15 ? [   1   ,  3.40  ,  28  ,  ang  ,   50  ,    3.2  , ] :
+          cards < 16 ? [   1   ,  3.40  ,  28  ,  ang  ,   50  ,    3.2  , ] :
+          cards < 17 ? [   1   ,  3.40  ,  28  ,  ang  ,   50  ,    3.2  , ] :
+          cards < 18 ? [   1   ,  3.55  ,  28  ,  ang  ,   50  ,    3.4  , ] : 
+                       [  .9   ,  3.55  ,  28  ,  ang  ,   50  ,    3.4  , ]
       
 
 
@@ -90,7 +96,7 @@ export default {
   height: 9em;
   // border: 1px solid blue;
   // position: relative;
-  padding: 1em 0;
+  padding: .6em 0;
   overflow: hidden;
 
   text-align: center;
