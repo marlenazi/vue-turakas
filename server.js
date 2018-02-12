@@ -260,17 +260,20 @@ io.on('connection', socket => {
    */
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
-    if (!getUser(socket.id)) return
+    if (!getUser(socket.id)) {
+      console.log('tried to disconnect, but user was not found: socId: ' + socket.id)
+      return
+    }
 
     let user = getUser(socket.id)
-
+    consol.log(user)
     if (user.game) {
       if (!getGame(user.game)) {
+        console.log('failed to get game for gameId: ' + user.game)
         user.game = null
         return
       }
 
-      let gameId = user.game
       let gameState = leaveGame(socket.id)
       let status = gameState.status
       console.log('==================')
