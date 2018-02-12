@@ -70,8 +70,8 @@ export default {
   display: inline-block;
 
   padding: .4em;
-  height: 6em;
-  width: 4.2em;
+  height: 5em;
+  width: 3.4em;
   border-radius: .2em;
   color: $action;
   text-align: left;
@@ -106,7 +106,7 @@ export default {
 }
 .bigRank {
 
-  font-size: 3em;
+  font-size: 2.4em;
   text-align: center;
 }
 

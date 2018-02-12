@@ -43,34 +43,35 @@ export default {
     $_style(card) {
       let cards = this.hand.length
       let cardIx = this.hand.findIndex(el => el === card)
-      let middle = cards / 2 + .25
+      let middle = cards / 2 - .25
       let pos = middle - cardIx
-      // let angle = 170 / cards
-      let              [scale, margin, step, angle] =
-          cards < 6  ? [  .6,   0.00,   5,     0  ] :
-          cards < 8  ? [  .8,   2.80,   2,    10  ] : 
-          cards < 10 ? [  .7,   1.90,   5,    18  ] : 
-          cards < 12 ? [  .8,   1.95,   5,    15  ] : 
-                       [  .5,   2.00,   5,     6  ]
+
+      let              [ scale , margin , step , angle , origin, rightPad, ] =
+          cards < 6  ? [  .8   ,  1.80  ,   8  ,    8  ,   50  ,    2.3  , ] :
+          cards < 8  ? [  .8   ,  2.20  ,   8  ,   10  ,   30  ,    2.3  , ] : 
+          cards < 10 ? [  .8   ,  2.70  ,  20  ,   18  ,   25  ,    2.0  , ] : 
+          cards < 12 ? [  .8   ,  2.80  ,   6  ,   19  ,   10  ,    0.0  , ] : 
+                       [  .6   ,  3.00  ,  25  ,   18  ,    0  ,    2.3  , ]
+      
+
 
       return {
         card: {
           position: 'relative',
-          // bottom: `-${ Math.abs(pos) / step }em`,
+          top: `${ Math.abs(pos) / step }em`,
           transform: `scale(${scale}) rotate(${ pos * - angle }deg)`,
+          transformOrigin: `${ origin }% bottom`,
           margin: `0 -${margin}em 0 0`
         },
         hand: {
-          paddingLeft: `${ this.$_handPadding }em`,
+          // paddingLeft: `${ leftPad }em`,
+          paddingRight: `${rightPad}em`
         }
       }
     },
   },
   computed: {
-    $_handPadding() {
-      let cards = this.hand.length
-      return cards < 8 ? 0 : 5.5
-    }
+
   }
 }
 
@@ -80,12 +81,10 @@ export default {
 @import './../style/variables';
 
 .gameHand {
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
-  border: 1px solid blue;
+  width: 100%;
+  // border: 1px solid blue;
   // position: relative;
-  // margin-bottom: 3em;
+  padding-bottom: 2em;
   overflow: hidden;
 
   text-align: center;
