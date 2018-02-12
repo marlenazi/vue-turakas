@@ -254,7 +254,8 @@ io.on('connection', socket => {
     if (!getUser(userId) || 
         !getUser(userId).game || 
         !getGame(getUser(userId).game)) {
-    console.log('failed @ leaveGame: ' + getUser(userId) + getGame(getUser(userId).game))      
+    console.log('failed @ leaveGame: ' + getUser(userId) + getGame(getUser(userId).game)) 
+    emitToOne('leftGame')     
     return
     }
 
@@ -429,5 +430,6 @@ io.on('connection', socket => {
  * 
  * -- Error handling is rudimentary and uses a bad pattern 
  * -- User validation should be handled smarter
- * 
+ * -- File serving must be handled. Express?
+ * -- When user gets stuck, send back error event that resets the game
  */

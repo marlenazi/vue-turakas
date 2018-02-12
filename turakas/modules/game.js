@@ -317,7 +317,11 @@ module.exports = function Game(gameSize = 2) {
     players.forEach(player => player.away = null)
 
     setTimeout(() => {
-      player.forEach(player => player.game = null)
+      player.forEach(player => {
+        if (player.game === id) {
+          player.game = null
+        }
+      })
       zzz.emit('closeGame', id)
     }, 1000 * 30)
   }

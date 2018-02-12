@@ -64,7 +64,6 @@ export default {
     joinedGame(state) {
       console.log('Joined game')
       // console.log(state)
-      this.activeView = 'TurakasGame'
       this.game = state
     },
     leftGame() {
