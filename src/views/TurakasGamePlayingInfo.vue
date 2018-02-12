@@ -156,6 +156,21 @@ export default {
   
 }
 .active {
-  box-shadow: 0px 0px 8px 1px $shadow;
+  box-shadow: 0px 0px 6px 1px $shadow;
+  animation-name: your-move;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
+
+@keyframes your-move {
+  from {
+    box-shadow: 0px 0px 5px 1px $action;
+  }
+  to {
+    box-shadow: 0px 0px 3px 1px orangered;
+  }
+}
+
+
 </style>

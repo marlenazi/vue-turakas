@@ -107,7 +107,7 @@ html, body {
   width: 100%;
   max-height: 640px;
   max-width: 360px;
-  border: 1px solid $accent;
+  // border: 1px solid $accent;
 }
 #app *:focus {
   outline: none;
@@ -172,6 +172,18 @@ button:disabled {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+
+@keyframes your-move {
+  from {
+    box-shadow: 0px 0px 8px 3px $action;
+  }
+  to {
+    box-shadow: 0px 0px 6px 1px orangered;
+  }
+}
+
+
 
 @media screen and (min-width: 640px){
   

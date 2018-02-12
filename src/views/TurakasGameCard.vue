@@ -69,13 +69,13 @@ export default {
 
   display: inline-block;
 
-  padding: .4em;
-  height: 5em;
-  width: 3.4em;
+  padding: .3em;
+  height: 6em;
+  width: 4em;
   border-radius: .2em;
   color: $action;
   text-align: left;
-  font-size: 1.5em;
+  font-size: 16px;
   
   user-select: none;
   cursor: pointer;
@@ -99,13 +99,14 @@ export default {
 }
 
 .rank {
-
+  display: inline-block;
+  margin-right: auto;
+  text-align: center;
 }
 .smallSuit {
-
+  display: block;
 }
 .bigRank {
-
   font-size: 2.4em;
   text-align: center;
 }

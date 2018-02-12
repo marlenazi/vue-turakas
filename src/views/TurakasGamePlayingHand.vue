@@ -43,17 +43,17 @@ export default {
     $_style(card) {
       let cards = this.hand.length
       let cardIx = this.hand.findIndex(el => el === card)
-      let middle = cards / 2 - .25
+      let middle = cards / 2 - .5
       let pos = middle - cardIx
 
       let              [ scale , margin , step , angle , origin, rightPad, ] =
-          cards < 6  ? [  .8   ,  1.80  ,   8  ,    6  ,   50  ,    2.3  , ] :
-          cards < 8  ? [  .8   ,  2.00  ,   8  ,    8  ,   30  ,    2.3  , ] : 
-          cards < 10 ? [  .8   ,  2.60  ,  50  ,   18  ,   40  ,    2.0  , ] : 
-          cards < 12 ? [  .8   ,  2.80  ,   6  ,   17  ,   10  ,    0.0  , ] : 
-          cards < 13 ? [  .8   ,  3.00  ,   5  ,   15  ,    5  ,    0.0  , ] :
-          cards < 15 ? [  .8   ,  2.95  ,  25  ,   15  ,    5  ,    0.0  , ] :
-                       [  .8   ,  3.20  ,  85  ,  8.5  ,    0  ,    0.0  , ] 
+          cards < 6  ? [   1   ,  0.50  ,   2  ,    6  ,   30  ,      0  , ] :
+          cards < 8  ? [   1   ,  1.80  ,   5  ,    7  ,   30  ,    1.0  , ] : 
+          cards < 10 ? [   1   ,  2.60  ,   8  ,   15  ,   40  ,    1.0  , ] : 
+          cards < 12 ? [   1   ,  3.00  ,   6  ,   17  ,   20  ,    0.0  , ] : 
+          cards < 13 ? [   1   ,  3.20  ,   5  ,   15  ,   25  ,    0.0  , ] :
+          cards < 15 ? [   1   ,  2.95  ,  25  ,   15  ,    5  ,    0.0  , ] :
+                       [   1   ,  3.20  ,  85  ,  8.5  ,    0  ,    0.0  , ] 
       
 
 
@@ -82,10 +82,11 @@ export default {
 @import './../style/variables';
 
 .gameHand {
-  width: 100%;
+
+  height: 9em;
   // border: 1px solid blue;
   // position: relative;
-  padding-bottom: 2em;
+  padding: 1em 0;
   overflow: hidden;
 
   text-align: center;

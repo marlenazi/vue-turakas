@@ -41,22 +41,26 @@ export default {
   flex: 1 0 auto;
   border-radius: .5rem;
   // border: 1px solid $accent;
-  padding: 1rem;
+  padding: 0em 1em;
   // background: $action;
-  display: flex;
-  justify-content: center;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: flex-start;
+  text-align: center;
   min-width: 280px;
 }
 
 #boardCard {
-  margin-top: 2rem;
-  height: 4.2em;
-  width: 3em;
+  margin-top: 2em;
+
+}
+#boardCard:nth-child(odd) {
+  margin-left: .5em;
 }
 #boardCard:nth-child(even) {
   position: relative;
   top: .5rem;
-  margin-left: -.8rem;
+  margin-left: -1.8em;
 }
 
 // @media screen and (max-width: 340px){
