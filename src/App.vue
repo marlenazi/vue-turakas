@@ -76,7 +76,9 @@ export default {
     gameOver(state) {
       this.game = state
     },
-    serverError(err) {
+    serverError(err = 'something happened') {
+      console.log('==== SERVER ERROR ====')
+      console.log(err)
       this.mainView = 'Welcome'
     },
   }
