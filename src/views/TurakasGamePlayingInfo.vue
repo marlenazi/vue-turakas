@@ -26,7 +26,7 @@
     <div class="trumpAndDeck">
       <game-card
         id="trumpCard"
-        :rank="trump.rank"
+        :rank="$_trumpRank"
         :suit="trump.suit"
         :bigRank="'blank'">
       </game-card>
@@ -69,6 +69,9 @@ export default {
   computed: {
     $_deck() {
       return this.deck
+    },
+    $_trumpRank() {
+      return this.deck ? this.trump.rank : 'blank'
     },
     villain() {
       return this.players.find(player => player.id !== this.heroId)

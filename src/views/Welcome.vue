@@ -20,10 +20,10 @@
         </div>
 
         <button 
-        class="loginBtn" 
-        @click.prevent="login" 
-        :disabled="name.length < 3">
-        Enter
+          class="loginBtn" 
+          @click.prevent="login" 
+          :disabled="name.length < 3">
+          Enter
         </button>
 
       </form>
@@ -36,11 +36,13 @@
 
 export default {
   name: 'Welcome',
-
+  props: {
+    hero: Object,
+  },
   data () {
     return {
       title: 'Turakas',
-      name: '',//'Ar' + parseInt(Math.random() * 10) + 'o',
+      name: this.hero.name || '',//'Ar' + parseInt(Math.random() * 10) + 'o',
     }
   },
   methods: {
