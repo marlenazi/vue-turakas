@@ -21,7 +21,7 @@
       <strong>Winner:</strong>
       <game-card
         id="winnerCards"
-        v-for="card in game.board"
+        v-for="card in game.board[game.board.length - 1]"
         :key="card.rank + card.suit"
         :rank="card.rank"
         :suit="card.suit"

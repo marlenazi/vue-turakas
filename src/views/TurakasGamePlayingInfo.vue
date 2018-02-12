@@ -116,7 +116,7 @@ export default {
 }
 #trumpCard {
   margin-top: .3rem;
-  margin-right: -1.8rem;
+  margin-right: -2.6em;
   height: 3rem;
   width: 4rem;
 }
