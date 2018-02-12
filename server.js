@@ -100,7 +100,10 @@ io.on('connection', socket => {
   }
   function leaveGame(userId) {
     console.log('Func leaveGame')
-    if (!getUser(userId)) return
+    if (!getUser(userId)) {
+      console.log('')
+      return
+    }
     if (!getGame(getUser(userId).game)) return
 
     let user = getUser(userId)
@@ -156,6 +159,10 @@ io.on('connection', socket => {
 
       emitToOne('joinedGame', getGame(user.game).state())
     } else if (user.game) {
+      console.log(`did not find game ${user.game}, user.game will be null`)
+      if (user.away) {
+        console.log('user is set as Away')
+      }
       user.game = null
     }
   })
@@ -200,6 +207,7 @@ io.on('connection', socket => {
     if (!getUser(userId) || 
         !getUser(userId).game || 
         !getGame(getUser(userId).game)) {
+    console.log('failed @ leaveGame: ' + getUser(userId) + getGame(getUser(userId).game))      
     return
     }
 
@@ -266,7 +274,7 @@ io.on('connection', socket => {
     }
 
     let user = getUser(socket.id)
-    consol.log(user)
+    console.log(user)
     if (user.game) {
       if (!getGame(user.game)) {
         console.log('failed to get game for gameId: ' + user.game)
