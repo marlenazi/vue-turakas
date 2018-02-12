@@ -89,13 +89,13 @@ export default {
 
 .turakasGamePlaying {
 
-  flex: 1 1 auto;
+  flex: 1 0 auto;
   background: $bg;
   border-radius: .5rem;
 
   display: flex;
   flex-flow: column nowrap;
-  justify-content: space-around;
+  justify-content: space-between;
 
 }
 

@@ -23,7 +23,9 @@
         id="winnerCards"
         v-for="card in game.board"
         :key="card.rank + card.suit"
-        :card="card">
+        :rank="card.rank"
+        :suit="card.suit"
+        :bigRank="card.rank">
       </game-card>
 
 

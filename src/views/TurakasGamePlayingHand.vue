@@ -47,11 +47,13 @@ export default {
       let pos = middle - cardIx
 
       let              [ scale , margin , step , angle , origin, rightPad, ] =
-          cards < 6  ? [  .8   ,  1.80  ,   8  ,    8  ,   50  ,    2.3  , ] :
-          cards < 8  ? [  .8   ,  2.20  ,   8  ,   10  ,   30  ,    2.3  , ] : 
-          cards < 10 ? [  .8   ,  2.70  ,  20  ,   18  ,   25  ,    2.0  , ] : 
-          cards < 12 ? [  .8   ,  2.80  ,   6  ,   19  ,   10  ,    0.0  , ] : 
-                       [  .6   ,  3.00  ,  25  ,   18  ,    0  ,    2.3  , ]
+          cards < 6  ? [  .8   ,  1.80  ,   8  ,    6  ,   50  ,    2.3  , ] :
+          cards < 8  ? [  .8   ,  2.00  ,   8  ,    8  ,   30  ,    2.3  , ] : 
+          cards < 10 ? [  .8   ,  2.60  ,  50  ,   18  ,   40  ,    2.0  , ] : 
+          cards < 12 ? [  .8   ,  2.80  ,   6  ,   17  ,   10  ,    0.0  , ] : 
+          cards < 13 ? [  .8   ,  3.00  ,   5  ,   15  ,    5  ,    0.0  , ] :
+          cards < 15 ? [  .8   ,  2.95  ,  25  ,   15  ,    5  ,    0.0  , ] :
+                       [  .8   ,  3.20  ,  85  ,  8.5  ,    0  ,    0.0  , ] 
       
 
 
@@ -64,7 +66,6 @@ export default {
           margin: `0 -${margin}em 0 0`
         },
         hand: {
-          // paddingLeft: `${ leftPad }em`,
           paddingRight: `${rightPad}em`
         }
       }
@@ -103,8 +104,22 @@ export default {
 .active {
   box-shadow: 0px 0px 8px 3px $shadow;
         // inset 0px 0px 1px 1px $shadow;
-
+  animation-name: your-move;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
+
+@keyframes your-move {
+  from {
+    box-shadow: 0px 0px 8px 3px $action;
+  }
+  to {
+    box-shadow: 0px 0px 6px 1px orangered;
+  }
+}
+
+
 .border {
   border: 2px solid orangered;
 }

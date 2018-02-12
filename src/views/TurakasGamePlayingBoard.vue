@@ -50,8 +50,8 @@ export default {
 
 #boardCard {
   margin-top: 2rem;
-  height: 4.2rem;
-  width: 3rem;
+  height: 4.2em;
+  width: 3em;
 }
 #boardCard:nth-child(even) {
   position: relative;
@@ -59,16 +59,16 @@ export default {
   margin-left: -.8rem;
 }
 
-@media screen and (max-width: 340px){
-  #boardCard {
-    margin-top: 2rem;
-    height: 4.2rem;
-    width: 3rem;
-  }
-  #boardCard:nth-child(even) {
-    position: relative;
-    top: .5rem;
-    margin-left: -1rem;
-  }
-}
+// @media screen and (max-width: 340px){
+//   #boardCard {
+//     margin-top: 2rem;
+//     height: 4.2rem;
+//     width: 3rem;
+//   }
+//   #boardCard:nth-child(even) {
+//     position: relative;
+//     top: .5rem;
+//     margin-left: -1rem;
+//   }
+// }
 </style>
