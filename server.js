@@ -4,7 +4,7 @@ const url = require("url")
 const fs = require('fs')
 
 const port = 2000
-const index = fs.readFile('index.html', (error, file) => file)
+const index = fs.readFile('./index.html', (error, file) => file)
 
 const User = require('./turakas/modules/user')
 const Game = require('./turakas/modules/game')
@@ -15,6 +15,8 @@ const games = []
 
 const io = socket(http.createServer( (req, res) => {
   //send index.html
+  console.log('index.html requested')
+  console.log(index)
   res.writeHead(200, {'Content-Type': 'text/html'});
   res.end(index);
 }).listen(port))
@@ -157,28 +159,35 @@ io.on('connection', socket => {
     let user = login(name, ip, socket.id)
 
     emitToOne('loggedIn', user)
-
+    console.log(user.id, user.name)
     if (user.game && getGame(user.game)) {
-      console.log('User has a game and will be logged on')
+      console.log(`${user.id} resumes game: ${user.game}`)
 
       emitToOne('joinedGame', getGame(user.game).state())
     } else if (user.game) {
       console.log(`did not find game ${user.game}, user.game will be null`)
       if (user.away) {
-        console.log('user is set as Away')
+        console.log('user is set as Away. Setting away to null')
+        user.away = null
       }
       user.game = null
     }
   })
   socket.on('getAvailableGames', userId => {
-    if (!getUser(userId) || !getUser(socket.id)) return
+    if (!getUser(userId) || !getUser(socket.id)) {
+      console.log(`${userId} not found @ on.getAvailableGames`)
+      return
+    }
 
     let games = getAvailableGames(getUser(userId))
 
     emitToOne('availableGamesSent', games)
   })
   socket.on('newGame', userId => {
-    if (!getUser(userId)) return
+    if (!getUser(userId)) {
+      console.log(`${userId} not found @ on.newGame`)
+      return
+    }
     if (getUser(userId).game && getGame(getUser(userId).game)) {
       console.log(`${userId} @ on.newGame: already registered`)
       return
@@ -196,7 +205,6 @@ io.on('connection', socket => {
     })
   })
   socket.on('joinGame', (gameId, userId) => {
-    // ADD ABILITY TO JOIN WHEN LEFT GAME!!!
     if (!getUser(userId)) return
     if (!getGame(gameId)) return
 
@@ -347,3 +355,14 @@ io.on('connection', socket => {
   } addGameListeners()
 
 })
+
+
+/**
+ *    =================================================
+ *    =================   Thoughts   ==================
+ *    =================================================
+ * 
+ * -- Error handling is rudimentary and uses a bad pattern 
+ * -- User validation should be handled smarter
+ * 
+ */
