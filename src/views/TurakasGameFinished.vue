@@ -8,15 +8,15 @@
     </leave-button>
 
     <h2>
-      Game Over
+      Turakas
     </h2> 
     
     <div class="info">
       <img src="../assets/theFool.svg" alt="the fool" srcset="">
-      <h2> 
+      <h2 class="loserName"> 
         {{ game.turakas.name }} 
       </h2>
-      <p>All hail the dummy!</p>
+      <!-- <p>All hail the dummy!</p> -->
       <br><br>
       <strong>Winner:</strong>
       <game-card
@@ -29,7 +29,7 @@
       </game-card>
 
 
-      <strong>{{ game.winner.name }}</strong>
+      <strong class="winnerName">{{ game.winner.name }}</strong>
       
     </div>
 
@@ -87,5 +87,15 @@ img {
   display: flex;
   flex-flow: column;
   align-items: center;
+}
+
+.loserName {
+  color: $accent;
+}
+.winnerName {
+  color: $accent;
+}
+#winnerCards {
+  margin: .5em 0;
 }
 </style>

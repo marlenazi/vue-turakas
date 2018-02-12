@@ -42,25 +42,22 @@ export default {
   border-radius: .5rem;
   // border: 1px solid $accent;
   padding: 0em 1em;
-  // background: $action;
-  // display: flex;
-  // justify-content: space-between;
-  // align-items: flex-start;
+
   text-align: center;
   min-width: 280px;
 }
 
 #boardCard {
-  margin-top: 2em;
+  margin-top: 1.5em;
 
 }
 #boardCard:nth-child(odd) {
-  margin-left: .5em;
+  margin-left: .35em;
 }
 #boardCard:nth-child(even) {
   position: relative;
   top: .5rem;
-  margin-left: -1.8em;
+  margin-left: -2.5em;
 }
 
 // @media screen and (max-width: 340px){

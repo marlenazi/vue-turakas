@@ -211,6 +211,7 @@ io.on('connection', socket => {
   socket.on('getAvailableGames', userId => {
     if (!getUser(userId) || !getUser(socket.id)) {
       console.log(`${userId} not found @ on.getAvailableGames`)
+      emitToOne('serverError') 
       return
     }
 
@@ -243,6 +244,7 @@ io.on('connection', socket => {
   socket.on('joinGame', (gameId, userId) => {
     if (!getUser(userId)) {
       console.log(`User ${userId} not found @ on.joinGame`)
+      emitToOne('serverError')
       return
     }
     if (!getGame(gameId)) {
@@ -293,6 +295,7 @@ io.on('connection', socket => {
   socket.on('getHand', userId => {
     if (!getUser(userId)) {
       console.log(`User ${userId} not found @ on.getGame`)
+      emitToOne('serverError')
       return
     }
     if (!getGame(getUser(userId).game)) {
@@ -311,6 +314,9 @@ io.on('connection', socket => {
     if (!getUser(socket.id) || !getUser(socket.id).game) {
       console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.move`)
       console.log(users)
+      if (!getUser(socket.id)) { 
+        emitToOne('serverError') 
+      }
       return
     }
     if (!getGame(getUser(socket.id).game)) {
@@ -327,6 +333,9 @@ io.on('connection', socket => {
     if (!getUser(socket.id) || !getUser(socket.id).game) {
       console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.pickUp`)
       console.log(users)
+      if (!getUser(socket.id)) { 
+        emitToOne('serverError') 
+      }
       return
     }
     if (!getGame(getUser(socket.id).game)) {
@@ -344,6 +353,9 @@ io.on('connection', socket => {
     if (!getUser(socket.id) || !getUser(socket.id).game) {
       console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.muck`)
       console.log(users)
+      if (!getUser(socket.id)) { 
+        emitToOne('serverError') 
+      }
       return
     }
     if (!getGame(getUser(socket.id).game)) {
@@ -365,6 +377,7 @@ io.on('connection', socket => {
     console.log(`Socket ${socket.id} disconnected`)
     if (!getUser(socket.id)) {
       console.log('tried to disconnect, but user was not found: socId: ' + socket.id)
+      emitToOne('serverError') 
       return
     }
 

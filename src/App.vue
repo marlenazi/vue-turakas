@@ -110,9 +110,9 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   width: 100%;
-  max-height: 640px;
-  max-width: 360px;
-  // border: 1px solid $accent;
+  max-height: 500px;
+  max-width: 320px;
+  border: 1px solid $accent;
 }
 #app *:focus {
   outline: none;

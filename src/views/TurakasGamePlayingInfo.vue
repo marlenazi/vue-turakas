@@ -126,8 +126,8 @@ export default {
 }
 .villain {
   // border: 1px solid blue;
-  position: relative;
-  top: 1.8rem;
+  // position: relative;
+  // top: 1rem;
   margin-left: auto;
   flex: 0 0 5rem;
   width: 7.5rem;
@@ -137,9 +137,11 @@ export default {
   text-align: center;
 }
 .villainName {
-  margin: .1rem;
+  margin: .4rem;
   font-weight: bold;
+  font-size: 1.2em;
   white-space: nowrap;
+  color: $accent;
 }
 .villainHand {
 
