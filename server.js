@@ -136,7 +136,7 @@ io.on('connection', socket => {
   function leaveGame(userId) {
     console.log('Func leaveGame')
     if (!getUser(userId)) {
-      console.log('')
+      console.log('User not found @ leaveGame')
       return
     }
     if (!getGame(getUser(userId).game)) return
@@ -396,7 +396,8 @@ io.on('connection', socket => {
       } else {
         let gameState = leaveGame(socket.id)
         let status = gameState.status
-        console.log('==================')
+        console.log('========= Disconnect =========')
+        console.log(gameState.id)
         console.log(status)
         if (status === 'Closed') {
           io.emit('gameClosed', gameState.id)
@@ -443,6 +444,8 @@ io.on('connection', socket => {
       zzz.on('closeGame', gameId => {   
         emitToMany(gameId, 'leftGame')
         io.emit('gameClosed', gameId)
+        console.log(`Closing game ${gameId}`)
+        console.log(games)
         games.splice(games.findIndex(game => game.id === gameId), 1)
       })
     }
@@ -462,4 +465,12 @@ io.on('connection', socket => {
  * -- User validation should be handled smarter
  * -- File serving must be handled. Express?
  * -- When user gets stuck, send back error event that resets the game
+ * -- Clicking on board cards should pick them up
+ * 
+ * 
+ *    =================================================
+ *    =================  Bug  list ====================
+ *    =================================================
+ * 
+ * -- Killer should pick up last
  */

@@ -234,13 +234,13 @@ module.exports = function Game(gameSize = 2) {
     // replenishing should go in the order that the last round was played
 
     players.forEach((player, ix) => {
-      if (hands[ix].length < 6 && deck.length && ix !== active) {
+      if (hands[ix].length < 6 && deck.length && ix !== defending) {
         hands[ix].push(...deck.splice(0, 6 - hands[ix].length))
       }
     })
 
     // we skipped the killer and it gets replenished last
-    let hand = hands[active]
+    let hand = hands[defending]
     if (hand.length < 6 && deck.length) {
       hand.push(...deck.splice(0, 6 - hand.length))
     }
