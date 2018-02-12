@@ -80,6 +80,7 @@ export default {
   user-select: none;
   cursor: pointer;
   transition: all .2s ease-in-out;
+  transform-origin: bottom left,
 }
 .spades {
   background: rgb(51, 51, 51);

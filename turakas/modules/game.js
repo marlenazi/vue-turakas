@@ -246,7 +246,7 @@ module.exports = function Game(gameSize = 2) {
     }
   }
   function _timer(seconds = 30, callback) {
-
+    return
     let timePassed = seconds
 
     timer = setInterval(() => {

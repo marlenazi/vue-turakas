@@ -1,13 +1,13 @@
 <template>
-  <div class="gameHand">
-    <!-- <transition-group class="cards" name="fade" mode="out-in" > -->
+  <div class="gameHand"
+    :style="$_style().hand">
 
       <game-card
         id="playingCard"
         tabindex="1"
         v-for="card in hand"
         :class="{ active: active }"
-        :style="$_spread(card)"
+        :style="$_style(card).card"
         :key="card.rank + card.suit"
         :rank="card.rank"
         :suit="card.suit"
@@ -16,7 +16,6 @@
         >
       </game-card>
 
-    <!-- </transition-group> -->
   </div>
 </template>
 
@@ -41,29 +40,36 @@ export default {
       // console.log(card)
       this.$socket.emit('move', card)
     },
-    $_spread(card) {
+    $_style(card) {
       let cards = this.hand.length
       let cardIx = this.hand.findIndex(el => el === card)
-      let middle = cards / 2 - .25
+      let middle = cards / 2 + .25
       let pos = middle - cardIx
-      let       [scale, margin, step, angle] = 
-          cards < 8  ? [ 1, 1.30, 5, 8] : 
-          cards < 12 ? [.8, 1.45, 5, 7] : 
-                       [.5, 1.65, 5, 6]
+      // let angle = 170 / cards
+      let              [scale, margin, step, angle] =
+          cards < 6  ? [  .6,   0.00,   5,     0  ] :
+          cards < 8  ? [  .8,   2.80,   2,    10  ] : 
+          cards < 10 ? [  .7,   1.90,   5,    18  ] : 
+          cards < 12 ? [  .8,   1.95,   5,    15  ] : 
+                       [  .5,   2.00,   5,     6  ]
 
       return {
-        position: 'relative',
-        top: `${ Math.abs(pos) / step }em`,
-        transform: `scale(${scale}) rotate(${ pos * - angle }deg)`,
-        margin: `0 -${margin}em`
+        card: {
+          position: 'relative',
+          // bottom: `-${ Math.abs(pos) / step }em`,
+          transform: `scale(${scale}) rotate(${ pos * - angle }deg)`,
+          margin: `0 -${margin}em 0 0`
+        },
+        hand: {
+          paddingLeft: `${ this.$_handPadding }em`,
+        }
       }
     },
   },
-
   computed: {
-    $_handSize() {
+    $_handPadding() {
       let cards = this.hand.length
-      return cards < 8 ? 'size-1' : 'size-2'
+      return cards < 8 ? 0 : 5.5
     }
   }
 }
@@ -74,27 +80,26 @@ export default {
 @import './../style/variables';
 
 .gameHand {
-  // border:1px solid blue;
-  margin-bottom: 3em;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  border: 1px solid blue;
+  // position: relative;
+  // margin-bottom: 3em;
+  overflow: hidden;
+
   text-align: center;
   white-space: nowrap;
 }
-// padding is needed so that the scale on hover would be visible
-.cards {
-  display: block;
-  // height: 12rem;
-  // position: relative;
-  text-align: center;
-  
-  // overflow-x: auto;
-}
+
+
 #playingCard {
-  // position: absolute;
+
+
 }
 #playingCard:hover {
 
 }
-
 
 .active {
   box-shadow: 0px 0px 8px 3px $shadow;
