@@ -254,8 +254,18 @@ io.on('connection', socket => {
     if (!getUser(userId) || 
         !getUser(userId).game || 
         !getGame(getUser(userId).game)) {
-    console.log('failed @ leaveGame: ' + getUser(userId) + getGame(getUser(userId).game)) 
-    emitToOne('leftGame')     
+      let user = getUser(socket.id)
+
+      let err = !user ? 'NO USER' 
+                      : !user.game ? 'NO GAME SET FOR USER' 
+                                   : 'GAME DOES NOT EXIST'
+
+      console.log('failed @ leaveGame: ' + err) 
+      if (user) {
+        emitToOne('leftGame')
+      } else {
+        emitToOne('serverError')
+      }     
     return
     }
 

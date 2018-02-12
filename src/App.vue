@@ -75,7 +75,10 @@ export default {
     },
     gameOver(state) {
       this.game = state
-    }
+    },
+    serverError(err) {
+      this.mainView = 'Welcome'
+    },
   }
 }
 </script>
