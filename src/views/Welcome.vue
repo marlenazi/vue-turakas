@@ -40,7 +40,7 @@ export default {
   data () {
     return {
       title: 'Turakas',
-      name: '',
+      name: '',//'Ar' + parseInt(Math.random() * 10) + 'o',
     }
   },
   methods: {

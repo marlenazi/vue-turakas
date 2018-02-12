@@ -4,7 +4,22 @@ const url = require("url")
 const fs = require('fs')
 
 const port = 2000
-const index = fs.readFile('./index.html', (error, file) => file)
+const index = fs.readFileSync('./index.html', (error, file) => {
+  if (err) throw err 
+  return file
+})
+const bundle = fs.readFileSync('./dist/build.js', (error, file) => {
+  if (err) throw err 
+  return file
+})
+const logo = fs.readFileSync('./dist/theFool.svg', (error, file) => {
+  if (err) throw err 
+  return file
+})
+const map = fs.readFileSync('./dist/build.js.map', (error, file) => {
+  if (err) throw err 
+  return file
+})
 
 const User = require('./turakas/modules/user')
 const Game = require('./turakas/modules/game')
@@ -15,10 +30,24 @@ const games = []
 
 const io = socket(http.createServer( (req, res) => {
   //send index.html
-  console.log('index.html requested')
-  console.log(index)
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  res.end(index);
+  console.log(`${req.url} requested`)
+  //console.log(req.url)
+  if (req.url === '/') {
+     res.writeHead(200, {'Content-Type': 'text/html'});
+     res.end(index); 
+  } else if (req.url === '/dist/build.js') {
+  
+    res.writeHead(200, {'Content-Type': 'text/javascript'});
+    res.end(bundle);
+  }else if (req.url === '/dist/theFool.svg?691194fb28c221f6db35d9b6f1b23bdf') {
+  
+    res.writeHead(200, {'Content-Type': 'image/svg+xml'});
+    res.end(logo);
+  } else if (req.url === '/dist/build.js.map') {
+  
+    res.writeHead(200, {'Content-Type': 'text/javascript'});
+    res.end(map);
+  }
 }).listen(port))
 console.log('Listening to ' + port)
 
