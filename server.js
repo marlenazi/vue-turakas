@@ -164,6 +164,8 @@ io.on('connection', socket => {
         io.to(socId).emit(event, data)
       })
     } else {
+      console.log(`user not found, sending - ${event} - to socket`)
+      console.log(data)
       socket.emit(event, data)
     }
   }
@@ -219,6 +221,7 @@ io.on('connection', socket => {
   socket.on('newGame', userId => {
     if (!getUser(userId)) {
       console.log(`${userId} not found @ on.newGame`)
+      emitToOne('serverError')
       return
     }
     if (getUser(userId).game && getGame(getUser(userId).game)) {

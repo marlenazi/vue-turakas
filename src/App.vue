@@ -67,6 +67,7 @@ export default {
       this.game = state
     },
     leftGame() {
+      console.log('leftGame from App')
       this.game = {}
     },
     updateGame(state) {
