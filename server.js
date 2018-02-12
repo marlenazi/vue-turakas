@@ -36,6 +36,10 @@ io.on('connection', socket => {
         user.socketIds.some(socId => socId === id)
       ) || null;
   }
+  function userHasParallelSockets(id) {
+    
+    return getUser(id).socketIds.length > 1 ? true : false
+  }
   function getAvailableGames(user) {
     let playingGame  = []
     let availableGames = []
@@ -281,21 +285,28 @@ io.on('connection', socket => {
         user.game = null
         return
       }
+      
+      if (userHasParallelSockets(user.id)) {
+        console.log(`@ disconnect: user ${user.id} has parallel connections`)
+        console.log(user.socketIds)
+      } else {
+        let gameState = leaveGame(socket.id)
+        let status = gameState.status
+        console.log('==================')
+        console.log(status)
+        if (status === 'Closed') {
+          io.emit('gameClosed', gameState.id)
+        }
+        if (status === 'Playing') {
+          emitToMany('updateGame', gameState, gameState.id)
+        }
+      }
 
-      let gameState = leaveGame(socket.id)
-      let status = gameState.status
-      console.log('==================')
-      console.log(status)
-      if (status === 'Closed') {
-        io.emit('gameClosed', gameState.id)
-      }
-      if (status === 'Playing') {
-        emitToMany('updateGame', gameState, gameState.id)
-      }
     }
 
     user.socketIds = user.socketIds.filter(id => id !== socket.id)
 
+    
   })
 
   // ======================
