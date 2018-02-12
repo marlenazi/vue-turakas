@@ -205,8 +205,14 @@ io.on('connection', socket => {
     })
   })
   socket.on('joinGame', (gameId, userId) => {
-    if (!getUser(userId)) return
-    if (!getGame(gameId)) return
+    if (!getUser(userId)) {
+      console.log(`User ${userId} not found @ on.joinGame`)
+      return
+    }
+    if (!getGame(gameId)) {
+      console.log(`Game ${gameId} not found @ on.joinGame`)
+      return
+    }
 
     let gameState = joinGame(gameId, userId)
 
@@ -238,8 +244,14 @@ io.on('connection', socket => {
 
   })
   socket.on('getHand', userId => {
-    if (!getUser(userId)) return
-    if (!getGame(getUser(userId).game)) return
+    if (!getUser(userId)) {
+      console.log(`User ${userId} not found @ on.getGame`)
+      return
+    }
+    if (!getGame(getUser(userId).game)) {
+      console.log(`Game ${user.game} not found @ on.getGame`)
+      return
+    }
 
     let user = getUser(userId)
     let game = getGame(user.game)
@@ -249,16 +261,32 @@ io.on('connection', socket => {
 
   // game actions
   socket.on('move', card => {
-    if (!getUser(socket.id) || !getUser(socket.id).game) return
-    if (!getGame(getUser(socket.id).game)) return
+    if (!getUser(socket.id) || !getUser(socket.id).game) {
+      console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.move`)
+      console.log(users)
+      return
+    }
+    if (!getGame(getUser(socket.id).game)) {
+      console.log(`Game ${getUser(socket.id).game} not found @ on.move`)
+      console.log(games)
+      return
+    }
 
     let game = getGame(getUser(socket.id).game)
 
     emitToMany(game.id, 'updateGame', game.move(card))
   })
   socket.on('pickUp', userId => {
-    if (!getUser(userId)) return
-    if (!getGame(getUser(userId).game)) return
+    if (!getUser(socket.id) || !getUser(socket.id).game) {
+      console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.pickUp`)
+      console.log(users)
+      return
+    }
+    if (!getGame(getUser(socket.id).game)) {
+      console.log(`Game ${getUser(socket.id).game} not found @ on.pickUp`)
+      console.log(games)
+      return
+    }
 
     let user = getUser(userId)
     let game = getGame(user.game)
@@ -266,8 +294,16 @@ io.on('connection', socket => {
     emitToMany('updateGame', game.pickUp(user), game.id)
   })
   socket.on('muck', userId => {
-    if (!getUser(userId)) return
-    if (!getGame(getUser(userId).game)) return
+    if (!getUser(socket.id) || !getUser(socket.id).game) {
+      console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.muck`)
+      console.log(users)
+      return
+    }
+    if (!getGame(getUser(socket.id).game)) {
+      console.log(`Game ${getUser(socket.id).game} not found @ on.muck`)
+      console.log(games)
+      return
+    }
 
     let user = getUser(userId)
     let game = getGame(user.game)
