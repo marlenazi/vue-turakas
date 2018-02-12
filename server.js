@@ -159,9 +159,13 @@ io.on('connection', socket => {
   function emitToOne(event, data = '', theOne = getUser(socket.id)) {
     // this loops over all socketIds connected to user and 
     // emits same event and data
-    theOne.socketIds.forEach(socId => {
-      io.to(socId).emit(event, data)
-    })
+    if (theOne) {
+      theOne.socketIds.forEach(socId => {
+        io.to(socId).emit(event, data)
+      })
+    } else {
+      socket.emit(event, data)
+    }
   }
   function emitToMany(gameId, event, data = '') {
     if (!getGame(gameId)) return
