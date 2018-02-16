@@ -41,7 +41,7 @@ import LeaveButton from './TurakasGameLeaveButton'
 import GameCard from './TurakasGameCard'
 
 export default {
-  name: 'TurakasGameFinished',
+  name: 'GameFinished',
   props: {
     hero: Object,
     game: Object

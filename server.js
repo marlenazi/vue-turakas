@@ -191,7 +191,9 @@ io.on('connection', socket => {
      * Emits to all players who are registered to a game with provided id
      * If a player is listed in the game, but does not have the same game id
      *    attached any more (perhaps left and started another game), we skip
-     *    the player, not to unexpectedly throw them out of the new game
+     *    the player, not to unexpectedly throw them out of the new game.
+     *    If player is listed, but game property is null, they are new users 
+     *    and should get update that game has started.
      * If provided game id does not match any ongoing games, we return a 
      *    GAME_NOT_FOUND error
      */
@@ -202,7 +204,7 @@ io.on('connection', socket => {
     let many = game.state().players
 
     many.forEach(player => {
-      if (player.game === game.id) {
+      if (player.game === game.id || !player.game) {
 
         emitToOne(event, data, player)
       }
