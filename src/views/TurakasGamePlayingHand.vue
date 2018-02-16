@@ -96,8 +96,6 @@ export default {
 .gameHand {
 
   height: 9em;
-  // border: 1px solid blue;
-  // position: relative;
   padding: .6em 0;
   overflow: hidden;
 
@@ -111,7 +109,7 @@ export default {
 
 }
 #playingCard:hover {
-
+  z-index: 2;
 }
 
 .active {
