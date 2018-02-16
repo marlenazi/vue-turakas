@@ -12,6 +12,7 @@
         :rank="card.rank"
         :suit="card.suit"
         :bigRank="card.rank"
+        v-on:mouseenter="$_style(card, 1.2).card"
         @click.native="$_move(card)"
         >
       </game-card>
@@ -40,7 +41,7 @@ export default {
       // console.log(card)
       this.$socket.emit('move', card)
     },
-    $_style(card) {
+    $_style(card, scale = 1) {
       let cards = this.hand.length
       let cardIx = this.hand.findIndex(el => el === card)
       let middle = cards / 2 - .5
@@ -51,13 +52,13 @@ export default {
       let x = (2.5 * Math.cos(rad))
       let y = (2.5 * Math.sin(rad))
       console.log(x, y, rad)
-
+      console.log('scale: ' + scale)
       return {
         card: {
           position: 'relative',
           bottom: x + 'em',
           right: y + 'em',
-          transform: `rotate(${ pos * -ang }deg)`,
+          transform: `rotate(${ pos * -ang }deg) scale(${scale})`,
           transformOrigin: "50% bottom",
           margin: `0 -4em 0 0`
         },
@@ -92,11 +93,10 @@ export default {
 
 #playingCard {
 
-  // z-index: 10;
+
 }
 #playingCard:hover {
   z-index: 2;
-  border-radius: 0;
 }
 
 .active {

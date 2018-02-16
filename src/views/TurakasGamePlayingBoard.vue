@@ -49,7 +49,7 @@ export default {
 
 #boardCard {
   margin-top: 1.2em;
-  font-size: 14px;
+  font-size: 15px;
 }
 #boardCard:nth-child(odd) {
   margin-left: .35em;
