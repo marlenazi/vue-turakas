@@ -133,8 +133,8 @@ module.exports = function Game(gameSize = 2) {
       } else if (board.length && board.length < 12) {
         if (board.some( el => el.rank === card.rank)) {
           return true
-        }
-      } else return false
+        } else return false
+      } else if (board.length < 12) return true
     }
       
     if (isValid()) {
