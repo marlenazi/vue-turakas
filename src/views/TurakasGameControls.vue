@@ -67,7 +67,7 @@ export default {
 
 .gameControls {
   position: relative;
-  top: -1rem;
+  top: 0rem;
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-end;

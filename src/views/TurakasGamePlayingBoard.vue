@@ -39,7 +39,7 @@ export default {
 
 .gameBoard {
   flex: 1 0 auto;
-  border-radius: .5rem;
+
   // border: 1px solid $accent;
   padding: 0em 1em;
 
@@ -48,8 +48,8 @@ export default {
 }
 
 #boardCard {
-  margin-top: 1.5em;
-
+  margin-top: 1.2em;
+  font-size: 14px;
 }
 #boardCard:nth-child(odd) {
   margin-left: .35em;
@@ -60,16 +60,5 @@ export default {
   margin-left: -2.5em;
 }
 
-// @media screen and (max-width: 340px){
-//   #boardCard {
-//     margin-top: 2rem;
-//     height: 4.2rem;
-//     width: 3rem;
-//   }
-//   #boardCard:nth-child(even) {
-//     position: relative;
-//     top: .5rem;
-//     margin-left: -1rem;
-//   }
-// }
+
 </style>
