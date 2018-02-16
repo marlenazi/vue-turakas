@@ -156,6 +156,23 @@ io.on('connection', socket => {
       
     return gameState
   }
+  function destroyGame(id) {
+    /**
+     * For all players playing, sets game property to null
+     * Removes the game from games collection
+     */
+
+    try {
+      let game = getGame(id)
+    
+      game.state().players
+      
+      games.splice(games.findIndex(game => game.id === id), 1)
+    } catch (error) {
+      if (error) { console.log(error) }
+    }
+    
+  }
   function emitToOne(event, data = '', theOne = getUser(socket.id)) {
     // this loops over all socketIds connected to user and 
     // emits same event and data
@@ -265,7 +282,7 @@ io.on('connection', socket => {
         !getGame(getUser(userId).game)) {
       let user = getUser(socket.id)
 
-      let err = !user ? 'NO USER' 
+      let err = !user ?              'NO USER' 
                       : !user.game ? 'NO GAME SET FOR USER' 
                                    : 'GAME DOES NOT EXIST'
 
