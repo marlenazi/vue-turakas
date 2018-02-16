@@ -115,8 +115,6 @@ module.exports = function Game(gameSize = 2) {
     function isValid() {
 
       // console.log(card)
-
-      //  so lets get corresponding serverside card
       if (ix > -1) { 
         card = hands[active][ix]
 
@@ -135,8 +133,8 @@ module.exports = function Game(gameSize = 2) {
       } else if (board.length && board.length < 12) {
         if (board.some( el => el.rank === card.rank)) {
           return true
-        } else return false
-      } else return true
+        }
+      } else return false
     }
       
     if (isValid()) {
