@@ -292,8 +292,8 @@ io.on('connection', socket => {
       console.log(`User ${userId} not found @ on.getGame`)
       return
     }
-    if (!getGame(getUser(userId).game)) {
-      console.log(`Game ${user.game} not found @ on.getGame`)
+    if (getUser(userId).game && !getGame(getUser(userId).game)) {
+      console.log(`Game ${getUser(userId).game} not found @ on.getGame`)
       return
     }
 
