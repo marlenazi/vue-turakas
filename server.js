@@ -325,17 +325,18 @@ io.on('connection', socket => {
 
   })
   socket.on('getHand', userId => {
-    if (!getUser(userId)) {
-      console.log(`User ${userId} not found @ on.getGame`)
+    let user = getUser(userId)
+    
+    if (!user) {
+      console.log(`User ${userId} not found @ on.getHand`)
       emitToOne('serverError')
       return
     }
-    if (getUser(userId).game && !getGame(getUser(userId).game)) {
-      console.log(`Game ${getUser(userId).game} not found @ on.getGame`)
+    if (!user.game || !getGame(user.game)) {
+      console.log(`Game ${user.game} not found @ on.getHand`)
       return
     }
 
-    let user = getUser(userId)
     let game = getGame(user.game)
 
     emitToOne('hand', game.hand(user))
