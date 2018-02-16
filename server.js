@@ -298,8 +298,8 @@ io.on('connection', socket => {
       emitToOne('serverError')
       return
     }
-    if (!getGame(getUser(userId).game)) {
-      console.log(`Game ${user.game} not found @ on.getGame`)
+    if (getUser(userId).game && !getGame(getUser(userId).game)) {
+      console.log(`Game ${getUser(userId).game} not found @ on.getGame`)
       return
     }
 
