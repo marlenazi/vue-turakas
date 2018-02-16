@@ -169,7 +169,7 @@ io.on('connection', socket => {
       
       games.splice(games.findIndex(game => game.id === id), 1)
     } catch (error) {
-      if (error) { console.log(error) }
+      console.log(error)
     }
     
   }
@@ -186,13 +186,26 @@ io.on('connection', socket => {
       socket.emit(event, data)
     }
   }
-  function emitToMany(gameId, event, data = '') {
-    if (!getGame(gameId)) return
+  function emitToPlayers(gameId, event, data = '') {
+    /**
+     * Emits to all players who are registered to a game with provided id
+     * If a player is listed in the game, but does not have the same game id
+     *    attached any more (perhaps left and started another game), we skip
+     *    the player, not to unexpectedly throw them out of the new game
+     * If provided game id does not match any ongoing games, we return a 
+     *    GAME_NOT_FOUND error
+     */
 
-    let many = getGame(gameId).state().players
+    let game = getGame(gameId)
+    if (!game) return new Error('emitToPlayers: GAME_NOT_FOUND')
+
+    let many = game.state().players
 
     many.forEach(player => {
-      emitToOne(event, data, player)
+      if (player.game === game.id) {
+
+        emitToOne(event, data, player)
+      }
     })
   }
 
@@ -272,7 +285,7 @@ io.on('connection', socket => {
     let gameState = joinGame(gameId, userId)
 
     emitToOne('joinedGame', gameState)
-    emitToMany(gameId, 'updateGame', gameState)
+    emitToPlayers(gameId, 'updateGame', gameState)
     // emit this to remove it from the lobby
     io.emit('gameClosed', gameState.id)
   })
@@ -302,7 +315,7 @@ io.on('connection', socket => {
     emitToOne('leftGame')
 
     if (status === 'Waiting') {
-      emitToMany(gameState.id, 'updateGame', gameState)
+      emitToPlayers(gameState.id, 'updateGame', gameState)
     }
     if (status === 'Closed') {
       io.emit('gameClosed', gameState.id)
@@ -344,7 +357,7 @@ io.on('connection', socket => {
 
     let game = getGame(getUser(socket.id).game)
 
-    emitToMany(game.id, 'updateGame', game.move(card))
+    emitToPlayers(game.id, 'updateGame', game.move(card))
   })
   socket.on('pickUp', userId => {
     if (!getUser(socket.id) || !getUser(socket.id).game) {
@@ -364,7 +377,7 @@ io.on('connection', socket => {
     let user = getUser(userId)
     let game = getGame(user.game)
 
-    emitToMany('updateGame', game.pickUp(user), game.id)
+    emitToPlayers('updateGame', game.pickUp(user), game.id)
   })
   socket.on('muck', userId => {
     if (!getUser(socket.id) || !getUser(socket.id).game) {
@@ -384,7 +397,7 @@ io.on('connection', socket => {
     let user = getUser(userId)
     let game = getGame(user.game)
 
-    emitToMany('updateGame', game.muck(user), game.id)
+    emitToPlayers('updateGame', game.muck(user), game.id)
   })
 
   /**
@@ -420,7 +433,7 @@ io.on('connection', socket => {
           io.emit('gameClosed', gameState.id)
         }
         if (status === 'Playing') {
-          emitToMany('updateGame', gameState, gameState.id)
+          emitToPlayers('updateGame', gameState, gameState.id)
         }
       }
 
@@ -440,30 +453,43 @@ io.on('connection', socket => {
     if (!zzz.listeners('refresh').length) {
       zzz.on('refresh', (gameId, state) => {
         // console.log(state)
-        emitToMany(gameId, 'updateGame', state)
+        emitToPlayers(gameId, 'updateGame', state)
       })
     }
 
     if (!zzz.listeners('time').length) {
       zzz.on('time', (gameId, timePassed) => {
         // console.log(timePassed)
-        emitToMany(gameId, 'time', timePassed)
+        emitToPlayers(gameId, 'time', timePassed)
       })
     }
     
     if (!zzz.listeners('gameOver').length) {
       zzz.on('gameOver', state => {
-        emitToMany(state.id, 'gameOver', state)
+        emitToPlayers(state.id, 'gameOver', state)
       })
     }
 
     if (!zzz.listeners('closeGame').length) {
-      zzz.on('closeGame', gameId => {   
-        emitToMany(gameId, 'leftGame')
-        io.emit('gameClosed', gameId)
-        console.log(`Closing game ${gameId}`)
-        console.log(games)
-        games.splice(games.findIndex(game => game.id === gameId), 1)
+      /**
+       * Listenes for closeGame from game
+       * Emits leftGame to all players, so they are returned to the client lobby
+       * Emits to all users gameClosed, so it is removed from available games
+       */
+
+      zzz.on('closeGame', id => {
+        try {
+          console.log(`Closing game ${id}`)
+
+          emitToPlayers(id, 'leftGame')
+          io.emit('gameClosed', id)
+
+          console.log(games)
+
+          destroyGame(id)
+        } catch (error) {
+          console.log(error)
+        }
       })
     }
 

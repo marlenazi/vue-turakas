@@ -54,12 +54,12 @@ export default {
 
       this.games.push(newGame)
     },
-    gameClosed(closedGameId) {
+    gameClosed(id) {
       console.log('Game closed')
-      console.log(closedGameId)
+      console.log(id)
 
       this.games.splice(this.games.findIndex(game => 
-                                             game.id === closedGameId), 1)
+                                             game.id === id), 1)
     },
     joinedGame(state) {
       console.log('Joined game')
