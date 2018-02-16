@@ -1,33 +1,29 @@
 <template>
 <div class="gameControls">
-<transition name="fade" mode="out-in">
-  <!-- <div class="moves" v-if="$_moves === 'hero'">
-    Your Move
-  </div> -->
-</transition>
+
 <transition name="fade" mode="out-in">
   <button
     v-if="$_moves === 'hero' && $_heroIx() === defending && board"
     @click="$_pickUp">
-    Pick Up
+    <span>Pick Up</span> 
   </button>
   <button
     v-else-if="$_moves === 'hero' && $_heroIx() === attacking && board"
     @click="$_muck">
-    Finished
+    <span>End Round</span> 
   </button>
   <button
     disabled
     v-else>
   </button>
 </transition>
-  <!-- <div class="spacer" ></div> -->
+
 </div>
 </template>
 
 <script>
 export default {
-  name: 'GameControls',
+  name: 'GameControlButton',
   props: {
     heroId: String,
     active: Number,
@@ -66,28 +62,21 @@ export default {
 @import './../style/variables';
 
 .gameControls {
-  position: relative;
-  top: 0rem;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-end;
-  align-items: center;
+  position: absolute;
+  bottom: .5em;
+  left: calc(50% - 2.1em);
+  z-index: 10;
+  text-align: center;
+  height: 4.2em;
+  width: 4.2em;
 }
 
 button {
-  height: 3rem;
-  width: 5rem;
+  height: 4.2em;
+  width: 4.2em;
   color: $action;
-  font-size: 1rem;
-  border-radius: .5rem;
-  text-align: center;
-  
-}
-.moves {
-  margin: .1rem;
-  color: $accent;
-  font-weight: bold;
-  // border-bottom: 1px solid $accent;
+  font-size: 16px;
+  border-radius: 50%;
 }
 
 </style>

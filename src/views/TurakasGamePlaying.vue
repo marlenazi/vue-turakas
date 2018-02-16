@@ -15,6 +15,7 @@
     </game-board>
 
     <game-controls
+      class="controlButton"
       :active="game.active"
       :board="game.board.length"
       :attacking="game.attacking"
@@ -88,7 +89,7 @@ export default {
 @import './../style/variables';
 
 .turakasGamePlaying {
-
+  position: relative;
   flex: 1 0 auto;
   background: $bg;
   border-radius: .5rem;
@@ -98,5 +99,7 @@ export default {
   justify-content: space-between;
 
 }
+
+
 
 </style>

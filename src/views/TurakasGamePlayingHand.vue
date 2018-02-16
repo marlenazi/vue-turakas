@@ -15,7 +15,7 @@
         @click.native="$_move(card)"
         >
       </game-card>
-
+  
   </div>
 </template>
 
@@ -45,40 +45,24 @@ export default {
       let cardIx = this.hand.findIndex(el => el === card)
       let middle = cards / 2 - .5
       let pos = middle - cardIx
-      let ang = 190 / cards
-
-      let              [ scale , margin , step , angle , origin, rightPad, ] =
-          cards < 4  ? [   1   ,  0.20  ,   6  ,    5  ,   30  ,    0.8  , ] :
-          cards < 5  ? [   1   ,  0.40  ,   4  ,    5  ,   30  ,    0.8  , ] :
-          cards < 6  ? [   1   ,  0.80  ,   4  ,    5  ,   30  ,    0.8  , ] :
-          cards < 7  ? [   1   ,  1.50  ,   2  ,    6  ,   30  ,    1.2  , ] :
-          cards < 8  ? [   1   ,  1.95  ,   5  ,    5  ,   30  ,    1.9  , ] :
-          cards < 9  ? [   1   ,  2.50  ,   5  ,    8  ,   50  ,    2.5  , ] :  
-          cards < 10 ? [   1   ,  3.10  ,  18  ,   21  ,   50  ,    3.0  , ] :
-          cards < 11 ? [   1   ,  3.20  ,  18  ,   20  ,   50  ,    3.0  , ] :
-          cards < 12 ? [   1   ,  3.25  ,  18  ,   18  ,   50  ,    3.2  , ] : 
-          cards < 13 ? [   1   ,  3.32  ,  18  ,   16  ,   50  ,    3.2  , ] :
-          cards < 14 ? [   1   ,  3.40  ,  28  ,  ang  ,   50  ,    3.2  , ] :
-          cards < 15 ? [   1   ,  3.40  ,  28  ,  ang  ,   50  ,    3.2  , ] :
-          cards < 16 ? [   1   ,  3.50  ,  28  ,  ang  ,   50  ,    3.2  , ] :
-          cards < 17 ? [   1   ,  3.53  ,  28  ,  ang  ,   50  ,    3.2  , ] :
-          cards < 18 ? [   1   ,  3.57  ,  28  ,  ang  ,   50  ,    3.4  , ] : 
-          cards < 26 ? [   1   ,  3.65  ,  28  ,  ang  ,   50  ,    3.4  , ] :
-          cards < 30 ? [   1   ,  3.70  ,  48  , ang-.3,   50  ,    3.4  , ] : 
-                       [   1   ,  3.80  ,  68  , ang-.3,   50  ,    3.4  , ]
+      let ang = 185 / cards
       
-
+      let rad = ang * pos * Math.PI / 180
+      let x = (2.5 * Math.cos(rad))
+      let y = (2.5 * Math.sin(rad))
+      console.log(x, y, rad)
 
       return {
         card: {
           position: 'relative',
-          top: `${ Math.abs(pos) / step }em`,
-          transform: `scale(${scale}) rotate(${ pos * - angle }deg)`,
-          transformOrigin: `${ origin }% bottom`,
-          margin: `0 -${margin}em 0 0`
+          bottom: x + 'em',
+          right: y + 'em',
+          transform: `rotate(${ pos * -ang }deg)`,
+          transformOrigin: "50% bottom",
+          margin: `0 -4em 0 0`
         },
         hand: {
-          paddingRight: `${rightPad}em`
+          paddingRight: `4em`
         }
       }
     },
@@ -94,11 +78,13 @@ export default {
 @import './../style/variables';
 
 .gameHand {
+  // border: 1px solid $accent;
 
-  height: 9em;
-  padding: .6em 0;
+  position: relative;
+  height: 12em;
+  padding: 3.5em 0;
   overflow: hidden;
-
+  font-size: 16px;
   text-align: center;
   white-space: nowrap;
 }
@@ -106,10 +92,11 @@ export default {
 
 #playingCard {
 
-
+  // z-index: 10;
 }
 #playingCard:hover {
   z-index: 2;
+  border-radius: 0;
 }
 
 .active {
