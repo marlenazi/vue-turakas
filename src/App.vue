@@ -80,6 +80,7 @@ export default {
     serverError(err = 'something happened') {
       console.log('==== SERVER ERROR ====')
       console.log(err)
+      this.game = {}
       this.mainView = 'Welcome'
     },
   }

@@ -326,7 +326,7 @@ io.on('connection', socket => {
   })
   socket.on('getHand', userId => {
     let user = getUser(userId)
-    
+
     if (!user) {
       console.log(`User ${userId} not found @ on.getHand`)
       emitToOne('serverError')
@@ -334,6 +334,7 @@ io.on('connection', socket => {
     }
     if (!user.game || !getGame(user.game)) {
       console.log(`Game ${user.game} not found @ on.getHand`)
+      emitToOne('leftGame')
       return
     }
 

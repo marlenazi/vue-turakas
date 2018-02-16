@@ -30,9 +30,7 @@ export default {
 
 nav {
   flex: 0 0 auto;
-  // margin: .5rem;
-  // border: .2rem solid $accent;
-  border-radius: .5rem;
+  border-bottom: 1px solid $accent;
   padding: .5rem;
   display: flex;
   align-items: center;

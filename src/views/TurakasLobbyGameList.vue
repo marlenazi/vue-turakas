@@ -1,11 +1,14 @@
 <template>
   <div class="games">
+
     <game-list-item
       v-for="game in games"
       :key="game.id"
       :game="game"
-      :heroId="heroId">
+      :heroId="heroId"
+      :class="{active: game.status === 'Playing'}">
     </game-list-item>
+
   </div>
 </template>
 
@@ -49,4 +52,23 @@ export default {
   justify-content: center;
   align-content: flex-start;
 }
+
+
+.active {
+  box-shadow: 0px 0px 6px 1px $shadow;
+  animation-name: your-move;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes your-move {
+  from {
+    box-shadow: 0px 0px 8px 3px $accent;
+  }
+  to {
+    box-shadow: 0px 0px 10px 3px $action;
+  }
+}
+
 </style>

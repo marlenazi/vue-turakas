@@ -5,12 +5,13 @@
   >
     <span>Play</span>
     <div class="registeredPlayers">
+      Players:
       <div 
         class="players"
-        v-for="(player, ix) in game.players"
+        v-for="player in game.players"
         :key="player.id"
       >
-        P{{ ix += 1 }}: {{ player.name }} 
+        -- {{ player.name }} 
       </div>
     </div>
   </button>
@@ -50,6 +51,7 @@ export default {
 
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 span {
   font-size: 2rem;
@@ -59,5 +61,7 @@ span {
   font-size: 1.2rem;
   text-align: left;
 }
+
+
 
 </style>
