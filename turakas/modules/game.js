@@ -135,6 +135,7 @@ module.exports = function Game(gameSize = 2) {
           return true
         } else return false
       } else if (board.length < 12) return true
+      else return false
     }
       
     if (isValid()) {
