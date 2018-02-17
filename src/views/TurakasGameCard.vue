@@ -1,12 +1,14 @@
 <template>
   <div
     class="turakasGameCard height-1"
-    :class="cardSuit[suit]">
-      <div class="rank">
+    :class="cardSuit[suit]"
+  >
+      <div class="smallRankSuit">
         {{ cardRank[rank] }}
-        <span 
+        <span
           class="smallSuit"
-          v-html="symbol[suit]">
+          v-html="symbol[suit]"
+        >
         </span> 
       </div>
       <div class="bigRank">
@@ -80,8 +82,22 @@ export default {
   user-select: none;
   cursor: pointer;
   transition: all .2s ease-in-out;
-  transform-origin: bottom left,
+  transform-origin: 50% bottom,
 }
+
+.smallRankSuit {
+  position: absolute;
+  text-align: center;
+}
+.smallSuit {
+  display: block;
+}
+.bigRank {
+  margin: .7em auto;
+  font-size: 2.4em;
+  text-align: center;
+}
+
 .spades {
   background: rgb(51, 51, 51);
 }
@@ -97,18 +113,4 @@ export default {
 .back {
   background: $cardBack;
 }
-
-.rank {
-  display: inline-block;
-  margin-right: auto;
-  text-align: center;
-}
-.smallSuit {
-  display: block;
-}
-.bigRank {
-  font-size: 2.4em;
-  text-align: center;
-}
-
 </style>

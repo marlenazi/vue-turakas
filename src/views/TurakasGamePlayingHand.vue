@@ -51,15 +51,14 @@ export default {
       let rad = ang * pos * Math.PI / 180
       let x = (2.5 * Math.cos(rad))
       let y = (2.5 * Math.sin(rad))
-      console.log(x, y, rad)
-      console.log('scale: ' + scale)
+      // console.log(x, y, rad)
+      // console.log('scale: ' + scale)
       return {
         card: {
           position: 'relative',
           bottom: x + 'em',
           right: y + 'em',
           transform: `rotate(${ pos * -ang }deg) scale(${scale})`,
-          transformOrigin: "50% bottom",
           margin: `0 -4em 0 0`
         },
         hand: {
