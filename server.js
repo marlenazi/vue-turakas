@@ -16,6 +16,10 @@ const logo = fs.readFileSync('./dist/theFool.svg', (error, file) => {
   if (err) throw err 
   return file
 })
+const watermark = fs.readFileSync('./dist/theFoolWatermark.svg', (error, file) => {
+  if (err) throw err 
+  return file
+})
 const map = fs.readFileSync('./dist/build.js.map', (error, file) => {
   if (err) throw err 
   return file
@@ -39,10 +43,14 @@ const io = socket(http.createServer( (req, res) => {
   
     res.writeHead(200, {'Content-Type': 'text/javascript'});
     res.end(bundle);
-  }else if (req.url === '/dist/theFool.svg?691194fb28c221f6db35d9b6f1b23bdf') {
+  }else if (req.url === '/dist/theFool.svg?5861719d7334e93a1ca838dae1b6236f') {
   
     res.writeHead(200, {'Content-Type': 'image/svg+xml'});
     res.end(logo);
+  } else if (req.url === '/dist/theFoolWatermark.svg?5f7d429da9a9bf6132aa70328b2c1804') {
+  
+    res.writeHead(200, {'Content-Type': 'image/svg+xml'});
+    res.end(watermark);
   } else if (req.url === '/dist/build.js.map') {
   
     res.writeHead(200, {'Content-Type': 'text/javascript'});
@@ -475,7 +483,7 @@ io.on('connection', socket => {
        */
 
       zzz.on('time', (gameId, timePassed, limit) => {
-        console.log(timePassed, limit)
+        // console.log(timePassed, limit)
         
         emitToPlayers(gameId, 'time', {
           passed: timePassed,
