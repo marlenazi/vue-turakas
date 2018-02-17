@@ -113,7 +113,6 @@ module.exports = function Game(gameSize = 2) {
                                       pCard.rank === card.rank    )
 
     function isValid() {
-
       // console.log(card)
       if (ix > -1) { 
         card = hands[active][ix]

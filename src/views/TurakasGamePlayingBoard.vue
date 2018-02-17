@@ -45,6 +45,10 @@ export default {
 
   text-align: center;
   min-width: 280px;
+  background: url(../assets/theFoolWatermark.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
 }
 
 #boardCard {
