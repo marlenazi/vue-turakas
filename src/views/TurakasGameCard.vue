@@ -76,7 +76,7 @@ export default {
   width: 4em;
   border-radius: .2em;
   color: $action;
-  text-align: left;
+  text-align: center;
   font-size: 16px;
   
   user-select: none;
@@ -93,9 +93,11 @@ export default {
   display: block;
 }
 .bigRank {
-  margin: .7em auto;
-  font-size: 2.4em;
-  text-align: center;
+  margin: .75em auto;
+  font-size: 2.2em;
+  // align letters closer to each other, mainly for the 10 to fit
+  letter-spacing: -.15em;
+  text-indent: -.15em;
 }
 
 .spades {
