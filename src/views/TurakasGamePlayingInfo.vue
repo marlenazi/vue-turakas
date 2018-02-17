@@ -36,6 +36,10 @@
       </div>
     </div>
 
+    <game-timer
+     :time="time" 
+    />
+
 
   </div>
 </template>
@@ -43,6 +47,8 @@
 <script>
 import GameCard from './TurakasGameCard'
 import LeaveButton from './TurakasGameLeaveButton'
+import GameTimer from './TurakasGameTimer'
+
 export default {
   name: 'GameInfo',
   props: {
@@ -51,10 +57,11 @@ export default {
     deck: Number,
     players: Array,
     trump: Object,
-    active: Number
+    active: Number,
+    time: Number,
   },
   components: {
-    LeaveButton, GameCard
+    LeaveButton, GameCard, GameTimer
   },
   data() {
     return {
@@ -91,10 +98,11 @@ export default {
 @import './../style/variables';
 
 .gameInfo {
-  // border: 1px solid blue;
-  padding: .3rem;
+  border-bottom: .1em solid $accent;
+  position: relative;
+  // padding: .3em;
+  padding-bottom: .5em;
   flex: 0 1 auto;
-  border-radius: .5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -173,7 +181,7 @@ export default {
     box-shadow: 0px 0px 5px 1px $action;
   }
   to {
-    box-shadow: 0px 0px 3px 1px orangered;
+    box-shadow: 0px 0px 3px 1px $accent;
   }
 }
 

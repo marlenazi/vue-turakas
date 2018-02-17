@@ -7,7 +7,8 @@
       :deck="game.deck"
       :players="game.players"
       :trump="game.trump"
-      :active="game.active">
+      :active="game.active"
+      :time="time">
     </game-info>
 
     <game-board
@@ -54,6 +55,7 @@ export default {
     return {
       hand: [],
       heroIx: this.game.players.find(pl => pl.id === this.hero.id).ix,
+      time: 30,
     }
   },
   methods: {
@@ -75,6 +77,7 @@ export default {
       }
     },
     time(timePassed) {
+      console.log('time passed: ' + timePassed)
       this.time = timePassed
     },
     gameOver(state) {
