@@ -58,7 +58,7 @@ export default {
     players: Array,
     trump: Object,
     active: Number,
-    time: Number,
+    time: Object,
   },
   components: {
     LeaveButton, GameCard, GameTimer

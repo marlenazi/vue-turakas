@@ -257,7 +257,7 @@ module.exports = function Game(gameSize = 2) {
         
       } else {
         
-        zzz.emit('time', id, timePassed)
+        zzz.emit('time', id, timePassed, seconds)
       }
 
       timePassed += 1

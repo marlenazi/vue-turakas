@@ -55,7 +55,10 @@ export default {
     return {
       hand: [],
       heroIx: this.game.players.find(pl => pl.id === this.hero.id).ix,
-      time: 30,
+      time: {
+        limit: 30,
+        passed: 30,
+      }
     }
   },
   methods: {
@@ -76,9 +79,12 @@ export default {
         this.$socket.emit('getHand', this.hero.id)
       }
     },
-    time(timePassed) {
-      console.log('time passed: ' + timePassed)
-      this.time = timePassed
+    time(timeUpdate) {
+      console.log('time passed: ' + timeUpdate.passed + 
+                       ' limit: ' + timeUpdate.limit   )
+
+      this.time.passed = timeUpdate.passed
+      this.time.limit = timeUpdate.limit
     },
     gameOver(state) {
       console.log('Winner: ' + state.winner.name)

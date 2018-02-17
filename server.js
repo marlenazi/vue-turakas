@@ -462,9 +462,25 @@ io.on('connection', socket => {
     }
 
     if (!zzz.listeners('time').length) {
-      zzz.on('time', (gameId, timePassed) => {
-        // console.log(timePassed)
-        emitToPlayers(gameId, 'time', timePassed)
+      /**
+       * Game emits timer info.
+       * 
+       * Parameters: 
+       *    gameId: id of a game that is sending
+       *    timePassed: how many seconds have gone
+       *    limit: limit of seconds that triggers action
+       * 
+       * Sends timer info to client as a time object with properties 
+       *    passed and limit
+       */
+
+      zzz.on('time', (gameId, timePassed, limit) => {
+        console.log(timePassed, limit)
+        
+        emitToPlayers(gameId, 'time', {
+          passed: timePassed,
+          limit
+        })
       })
     }
     
