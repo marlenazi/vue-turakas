@@ -51,15 +51,14 @@ export default {
       let rad = ang * pos * Math.PI / 180
       let x = (2.5 * Math.cos(rad))
       let y = (2.5 * Math.sin(rad))
-      console.log(x, y, rad)
-      console.log('scale: ' + scale)
+      // console.log(x, y, rad)
+      // console.log('scale: ' + scale)
       return {
         card: {
           position: 'relative',
           bottom: x + 'em',
           right: y + 'em',
           transform: `rotate(${ pos * -ang }deg) scale(${scale})`,
-          transformOrigin: "50% bottom",
           margin: `0 -4em 0 0`
         },
         hand: {
@@ -96,7 +95,8 @@ export default {
 
 }
 #playingCard:hover {
-  z-index: 2;
+  z-index: 1;
+  // box-shadow: 0px 0px 10px 4px $action;
 }
 
 .active {
@@ -113,7 +113,7 @@ export default {
     box-shadow: 0px 0px 8px 3px $action;
   }
   to {
-    box-shadow: 0px 0px 6px 1px orangered;
+    box-shadow: 0px 0px 10px 2px $accent;
   }
 }
 

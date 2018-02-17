@@ -244,12 +244,12 @@ module.exports = function Game(gameSize = 2) {
     }
   }
   function _timer(seconds = 30, callback) {
-    return
-    let timePassed = seconds
+    // return
+    let timePassed = 0
 
     timer = setInterval(() => {
       // console.log(timer)
-      if (timePassed <= -1) {
+      if (timePassed > seconds) {
 
         if (callback === move) {
           callback(hands[active][Math.floor(Math.random() * hands[active].length)])
@@ -257,10 +257,10 @@ module.exports = function Game(gameSize = 2) {
         
       } else {
         
-        zzz.emit('time', id, timePassed)
+        zzz.emit('time', id, timePassed, seconds)
       }
 
-      timePassed -= 1
+      timePassed += 1
     }, 1000)
 
   }

@@ -7,7 +7,8 @@
       :deck="game.deck"
       :players="game.players"
       :trump="game.trump"
-      :active="game.active">
+      :active="game.active"
+      :time="time">
     </game-info>
 
     <game-board
@@ -54,6 +55,10 @@ export default {
     return {
       hand: [],
       heroIx: this.game.players.find(pl => pl.id === this.hero.id).ix,
+      time: {
+        limit: 30,
+        passed: 30,
+      }
     }
   },
   methods: {
@@ -74,8 +79,12 @@ export default {
         this.$socket.emit('getHand', this.hero.id)
       }
     },
-    time(timePassed) {
-      this.time = timePassed
+    time(timeUpdate) {
+      console.log('time passed: ' + timeUpdate.passed + 
+                       ' limit: ' + timeUpdate.limit   )
+
+      this.time.passed = timeUpdate.passed
+      this.time.limit = timeUpdate.limit
     },
     gameOver(state) {
       console.log('Winner: ' + state.winner.name)
