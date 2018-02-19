@@ -5,9 +5,9 @@ const itemsStore = fs.readFileSync('./turakas/items.json', (err, store) =>
   err ? err : store)
 
 /**
- * Collection of users
+ * Collection of items
  * 
- * Read the users store from file.
+ * Read the items store from file.
  * Return an object with items store closed in with following methods:
  *  -- addItem takes an object { name, id, socketId } and returns item obj
  *       if no item provided or item is not an object, throws an error
