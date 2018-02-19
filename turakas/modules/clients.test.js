@@ -1,97 +1,97 @@
-const items = require('./items')('test')
+const clients = require('./clients')()
 
 /**
- * Items returns and object with following methods:
- *    getAll  -- returns a copy of an array with all items in collection
- *    get      -- accepts: id
- *                      returns a item with matching id
- *    add      -- accepts: {name, ip, socketId}
- *                      checks if item is returning
- *                      if not returning, creates new item, 
- *                          adds new item to collection
- *                      returns the item object
+ * Clients returns and object with following methods:
+ *    getAll  -- returns a copy of an array with all clients in collection
+ *    get     -- accepts: id
+ *                   returns a client with matching id
+ *    add     -- accepts: {name, ip, socketId}
+ *                   checks if client is returning
+ *                   if not returning, creates new client, 
+ *                       adds new client to collection
+ *                   returns the client object
  */
-
 
 function add(args) {
   try {
-    return items.add(args)
+    return clients.add(args)
   } catch (error) {
     return true
   }
 } 
 function remove(args) {
   try {
-    return items.remove(args)
+    return clients.remove(args)
   } catch (error) {
     return 'true: !!!error'
   }  
 }
+console.log(typeof clients)
 console.log(`
-  Items exists: ${items}
+  Clients exists: ${clients}
   ===============================
-  ${typeof items === 'object'}: items returns an object.
-  ${Array.isArray(items.getAll())}: getAll returns an array.
-  ${ add() }: creating new item with no args throws error
-  ${ add('1') }: creating new item with bad args throws error
-  ${ remove() }: remove item with no args returns error
+  ${ typeof clients === 'object' }: clients returns an object.
+  ${ Array.isArray(clients.getAll()) }: getAll returns an array.
+  ${ add() }: creating new client with no args throws error
+  ${ add('1') }: creating new client with bad args throws error
+  ${ remove() }: remove client with no args returns error
 `)
 
 
-// Add new item
-console.log(`==== Add new item
+// Add new client
+console.log(`==== Add new client
 --- LOG`)
 
-let newItem = {
+let newClient = {
       name: 'Odin',
       ip: '192.0.0.1',
       socketId: 'm0ck1d18'
     }
-let addedItem = items.add( newItem )
-let addedItemId = addedItem.id
+let addedClient = clients.add( newClient )
+let addedClientId = addedClient.id
 
 console.log(`--- END LOG ---
-  ${typeof addedItem === 'object'}: returns a item object
-  ${typeof addedItem.id === 'string'}: item has an id (string)
-  ${typeof addedItem.ip === 'string'}: item has an ip (string)
-  ${typeof addedItem.name === 'string'}: item has an name (string)
-  ${Array.isArray(addedItem.sockets)}: item has an sockets property (array)
-  ${addedItem.sockets.length > 0}: item's sockets store is not empty
+  ${typeof addedClient === 'object'}: returns a client object
+  ${typeof addedClient.id === 'string'}: client has an id (string)
+  ${typeof addedClient.ip === 'string'}: client has an ip (string)
+  ${typeof addedClient.name === 'string'}: client has an name (string)
+  ${Array.isArray(addedClient.sockets)}: client has an sockets property (array)
+  ${addedClient.sockets.length > 0}: client's sockets store is not empty
 `)
 
-// Check if item exists
+// Check if client exists
 
-console.log(`==== Check if item exists
+console.log(`==== Check if client exists
 --- END LOG`)
 console.log(`--- END LOG ---
-  ${items.getAll().length > 0}: collection is populated
-  ${!!items.has({
+  ${clients.getAll().length > 0}: collection is populated
+  ${!!clients.match({
     name: 'Odin',
     ip: '192.0.0.1',
-  })}: item is in the collection
+  })}: client is in the collection
 `)
 
 
-// Get all items
-console.log(`==== Get all items
+// Get all clients
+console.log(`==== Get all clients
 --- LOG`)
 
-let allItems = items.getAll()
+let allClients = clients.getAll()
 
 console.log(`--- END LOG ---
-  ${Array.isArray(allItems)}: return an array
-  ${allItems.length > 0}: array is populated
+  ${Array.isArray(allClients)}: return an array
+  ${allClients.length > 0}: array is populated
 `)
 
 
-// Remove a item
-console.log(`==== Remove an item
+// Remove a client
+console.log(`==== Remove an client
 --- LOG`)
 
-let removeResult = items.remove(addedItemId)
+let removeResult = clients.remove(addedClientId)
 
 console.log(`--- END LOG ---
-  ${removeResult}: item removed
-  ${!items.remove(addedItemId)}: fail to remove from empty store
-  ${items.getAll().length === 0}: item store is empty again
+  ${removeResult}: client removed
+  ${!clients.remove(addedClientId)}: fail to remove from empty store
+  ${clients.getAll().length === 0}: client store is empty again
 `)

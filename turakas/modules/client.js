@@ -11,5 +11,6 @@ module.exports = function NewClient(client) {
     id, name, ip,
     sockets: [socketId],
     rank: 0,
+    game: null,
   }
 }
