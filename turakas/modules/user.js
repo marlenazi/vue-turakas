@@ -8,6 +8,6 @@ module.exports = function User(name, ip) {
     socketIds: [],
     game: null,
     away: null,
-    rank: '0'
+    rank: 0
   }
 }

@@ -71,9 +71,12 @@ io.on('connection', socket => {
      * We return the user object either by id or socketId
      * If we cant find neither, we return null
      */
-    return users.find(user => user.id === id) || users.find(user =>
-        user.socketIds.some(socId => socId === id)
-      ) || null;
+    if (!id) {
+      console.log('id undefined. Using socket.id to get user in getUser()')
+      return users.find(user => 
+        user.socketIds.some(socId => socId === socket.id)) || null;
+    }
+    return users.find(user => user.id === id)
   }
   function userHasParallelSockets(id) {
     
