@@ -25,7 +25,6 @@ const map = fs.readFileSync('./dist/build.js.map', (err, file) => {
   return file
 })
 
-const Client = require('./turakas/modules/client')
 const Game = require('./turakas/modules/game')
 const zzz = require('./turakas/modules/emitter')
 const clientStore = require('./turakas/modules/clients')
@@ -68,7 +67,6 @@ io.on('connection', socket => {
   function getGame(id) {
     return games.find(game => game.id === id)
   }
-
   function clientHasParallelSockets(id) {
     
     return clients.get(id).sockets.length > 1 ? true : false
@@ -88,32 +86,6 @@ io.on('connection', socket => {
 
     return playingGame.concat(availableGames).map(game => game.state())
       
-  }
-  function login(name, ip) {
-    console.log(`Logging in ${name}`)
-    // get client from clients or create a new one)
-    let client = clients.getAll().find(client => client.name === name && client.ip === ip)
-
-    if (client) {
-      console.log('Client exists')
-      /* here could check if connection is still active (ie one client, two tabs)
-      and then send a message to handle double connection */
-    } else {
-      console.log('Creating new client')
-
-      client = User(name, ip)
-      users.push(client)
-    }
-    // if not already there, assign socketId, 
-    // so we can send data to specific client
-    // as client might use different tabs, we must collect several ids
-    // when client disconnects, we remove corresponding ID from the array
-
-    if (client.socketIds.indexOf(socket.id) === -1) {
-      client.socketIds.push(socket.id)
-    }
-
-    return client
   }
   function createGame(clientId) {
 
@@ -212,20 +184,24 @@ io.on('connection', socket => {
       }
     })
   }
-
+  socket.on('test', data => {
+    console.log('got tested')
+    socket.emit('test', data)
+  })
   socket.on('login', name => {
     if (!name || typeof name !== 'string') return
     /**
      * we get connection ip and compare both name and ip to existing clients
-     * if we have a match, we return that client to the client, 
-     * if not, we create a new one and return it to the client
+     * if we have a match, we return that client obj to the client, 
+     * if not, we create a new client obj and return it to the client
      * 
      * then we check if it had a game attached and if so, emit the state
      * to all sockets that are connected to client 
      */
 
     let ip = socket.request.connection.remoteAddress
-    let client = login(name, ip, socket.id)
+    let client = clients.match({name, ip}) ||
+                 clients.add({name, ip, socketId: socket.id})
 
     emitToOne('loggedIn', client)
     console.log(client.id, client.name)
@@ -309,7 +285,7 @@ io.on('connection', socket => {
       } else {
         emitToOne('serverError')
       }     
-    return
+      return
     }
 
     let gameState = leaveGame(clientId)
