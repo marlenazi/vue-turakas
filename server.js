@@ -189,7 +189,11 @@ io.on('connection', socket => {
     socket.emit('test', data)
   })
   socket.on('login', name => {
-    if (!name || typeof name !== 'string') return
+    if (!name || typeof name !== 'string') {
+      console.log('name not provided or not string @ on.login')
+      socket.emit('error', 'name not provided or not string')
+      return
+    }
     /**
      * we get connection ip and compare both name and ip to existing clients
      * if we have a match, we return that client obj to the client, 

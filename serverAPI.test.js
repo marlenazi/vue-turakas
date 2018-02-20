@@ -59,3 +59,13 @@ test('Emit Name, get Client obj', done => {
     done()
   })
 })
+test('Emit wrong type Name, get error', done => {
+  socket.emit('login', testUser)
+
+  socket.on('error', err => {
+    expect(err).toBeDefined()
+    expect(typeof err).toBe('string')
+    console.log(err)
+    done()
+  })
+})

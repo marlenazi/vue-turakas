@@ -36,6 +36,9 @@ export default {
 
   },
   sockets: {
+    error(err) {
+      alert(err)
+    },
     loggedIn(user) {
       console.log(`Logged in ${user.name}`)
       // console.log(user)
