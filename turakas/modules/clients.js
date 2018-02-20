@@ -21,12 +21,13 @@ const fs = require("fs");
  */
 
 module.exports = () => {
-
   // read the store
-  const clients = JSON.parse(fs.readFileSync(
-    `./turakas/stores/clients.json`,
-    (err, store) => (err ? err : store)
-  ));
+  const clients = JSON.parse(
+    fs.readFileSync(
+      `./turakas/stores/clients.json`,
+      (err, store) => (err ? err : store)
+    )
+  );
 
   function addClient(client) {
     if (!client) throw new Error("No parameters provided");
@@ -49,12 +50,14 @@ module.exports = () => {
   function getClient(id) {
     if (!id) throw new Error("No parameter provided");
     console.log("Get client " + id);
-
-    return id.length > 14 ? _findSocket() : clients.find(client => client.id === id) || null;
+    // id has max length 14. Socket id is always longer
+    return id.length > 14
+      ? _findSocket()
+      : clients.find(client => client.id === id) || null;
 
     function _findSocket() {
-      if (!clients.length || !clients[0].sockets) return null
-      return clients.find(client => client.sockets.find(socId => socId === id))
+      if (!clients.length || !clients[0].sockets) return null;
+      return clients.find(client => client.sockets.find(socId => socId === id));
     }
   }
   function removeClient(id) {
@@ -81,18 +84,23 @@ module.exports = () => {
     let keys = Object.keys(parameters);
 
     return (
-      clients.find(client => keys.every(key => parameters[key] === client[key])) ||
-      null
+      clients.find(client =>
+        keys.every(key => parameters[key] === client[key])
+      ) || null
     );
   }
-  
+
   function _saveStore() {
     console.log(`Save clients store`);
 
-    fs.writeFileSync(`./turakas/stores/clients.json`, JSON.stringify(clients), err => {
-      if (err) throw err;
-      console.log(`clients.json updated`);
-    });
+    fs.writeFileSync(
+      `./turakas/stores/clients.json`,
+      JSON.stringify(clients),
+      err => {
+        if (err) throw err;
+        console.log(`clients.json updated`);
+      }
+    );
   }
 
   console.log(`==== Returning clients store ====`);
@@ -101,6 +109,6 @@ module.exports = () => {
     remove: removeClient,
     get: getClient,
     getAll: getAllClients,
-    match: matchClient,
+    match: matchClient
   };
 };
