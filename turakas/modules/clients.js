@@ -1,4 +1,3 @@
-const shortId = require("shortid");
 const NewClient = require("./client");
 const fs = require("fs");
 
@@ -21,7 +20,7 @@ const fs = require("fs");
  *       returns null if not a complete match
  */
 
-module.exports = function clients() {
+module.exports = () => {
 
   // read the store
   const clients = JSON.parse(fs.readFileSync(
@@ -51,11 +50,13 @@ module.exports = function clients() {
     if (!id) throw new Error("No parameter provided");
     console.log("Get client " + id);
 
-    function _trySockets() {
+    return id.length > 10 ? _findSocket() 
+                          : clients.find(client => client.id === id) || null;
+
+    function _findSocket() {
       if (!clients.length || !clients[0].sockets) return null
       return clients.find(client => client.sockets.find(socId => socId === id))
     }
-    return clients.find(client => client.id === id) || _trySockets() || null;
   }
   function removeClient(id) {
     if (!id) throw new Error("No parameters provided");

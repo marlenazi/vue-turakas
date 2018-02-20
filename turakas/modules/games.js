@@ -1,13 +1,11 @@
-const shortId = require("shortid");
 const NewGame = require("./game");
-const fs = require("fs");
+// const fs = require("fs");
 
 /**
  * Collection of games
  *
- * Read the games store from file.
  * Return an object with games store closed in with following methods:
- *  -- addGame takes an object { name, id, socketId } and returns game obj
+ *  -- addGame takes an game object and returns game obj
  *       if no game provided or game is not an object, throws an error
  *  -- getGame finds a user from the list matching the id and returns that obj
  *       if id does not match any game ids, returns null
@@ -66,7 +64,6 @@ module.exports = function games() {
 
     if (game) {
       games.splice(games.indexOf(game), 1);
-      _saveStore();
       return true;
     } else return false;
   }
