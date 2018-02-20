@@ -28,8 +28,10 @@ const map = fs.readFileSync('./dist/build.js.map', (err, file) => {
 const User = require('./turakas/modules/user')
 const Game = require('./turakas/modules/game')
 const zzz = require('./turakas/modules/emitter')
-// collections for users and games
-const users = []
+const clientStore = require('./turakas/modules/clients')
+
+// collections for clients and games
+const clients = clientStore()
 const games = []
 
 const io = socket(http.createServer( (req, res) => {
@@ -89,8 +91,8 @@ io.on('connection', socket => {
   }
   function login(name, ip) {
     console.log(`Logging in ${name}`)
-    // get user from users or create a new one)
-    let user = users.find(user => user.name === name && user.ip === ip)
+    // get user from clients or create a new one)
+    let user = clients.getAll().find(user => user.name === name && user.ip === ip)
 
     if (user) {
       console.log('User exists')
@@ -192,7 +194,7 @@ io.on('connection', socket => {
      * If a player is listed in the game, but does not have the same game id
      *    attached any more (perhaps left and started another game), we skip
      *    the player, not to unexpectedly throw them out of the new game.
-     *    If player is listed, but game property is null, they are new users 
+     *    If player is listed, but game property is null, they are new clients 
      *    and should get update that game has started.
      * If provided game id does not match any ongoing games, we return a 
      *    GAME_NOT_FOUND error
@@ -214,7 +216,7 @@ io.on('connection', socket => {
   socket.on('login', name => {
     if (!name || typeof name !== 'string') return
     /**
-     * we get connection ip and compare both name and ip to existing users
+     * we get connection ip and compare both name and ip to existing clients
      * if we have a match, we return that user to the client, 
      * if not, we create a new one and return it to the client
      * 
@@ -347,7 +349,7 @@ io.on('connection', socket => {
   socket.on('move', card => {
     if (!clients.get(socket.id) || !clients.get(socket.id).game) {
       console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.move`)
-      console.log(users)
+      console.log(clients.getAll())
       if (!clients.get(socket.id)) { 
         emitToOne('serverError') 
       }
@@ -366,7 +368,7 @@ io.on('connection', socket => {
   socket.on('pickUp', userId => {
     if (!clients.get(socket.id) || !clients.get(socket.id).game) {
       console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.pickUp`)
-      console.log(users)
+      console.log(clients.getAll())
       if (!clients.get(socket.id)) { 
         emitToOne('serverError') 
       }
@@ -386,7 +388,7 @@ io.on('connection', socket => {
   socket.on('muck', userId => {
     if (!clients.get(socket.id) || !clients.get(socket.id).game) {
       console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.muck`)
-      console.log(users)
+      console.log(clients.getAll())
       if (!clients.get(socket.id)) { 
         emitToOne('serverError') 
       }
@@ -494,7 +496,7 @@ io.on('connection', socket => {
       /**
        * Listenes for closeGame from game
        * Emits leftGame to all players, so they are returned to the client lobby
-       * Emits to all users gameClosed, so it is removed from available games
+       * Emits to all clients gameClosed, so it is removed from available games
        */
 
       zzz.on('closeGame', id => {
