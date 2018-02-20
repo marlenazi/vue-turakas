@@ -1,4 +1,4 @@
-const clients = require("./clients")();
+const clients = require("./clientStore")();
 let testClient = {
   name: "Tomm",
   ip: "192.0.0.1",

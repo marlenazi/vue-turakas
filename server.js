@@ -27,11 +27,11 @@ const map = fs.readFileSync('./dist/build.js.map', (err, file) => {
 
 const Game = require('./turakas/modules/game')
 const zzz = require('./turakas/modules/emitter')
-const clientStore = require('./turakas/modules/clients')
+const { clients, games } = require('./turakas/modules/stores')
 
-// collections for clients and games
-const clients = clientStore()
-const games = []
+// // collections for clients and games
+// const clients = stores.clients
+// const games = stores.games
 
 const io = socket(http.createServer( (req, res) => {
   //send index.html
@@ -248,11 +248,13 @@ io.on('connection', socket => {
       console.log(`${clientId} @ on.newGame: already registered`)
       return
     }
+
     console.log(clients.get(clientId))
 
     let gameState = createGame(clientId)
     console.log('created game: ' + gameState.id)
     emitToOne('joinedGame', gameState)
+    
     io.emit('gameCreated', {
       id: gameState.id, 
       size: gameState.size, 

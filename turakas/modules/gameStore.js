@@ -19,19 +19,21 @@ const NewGame = require("./game");
  *       returns null if not a complete match
  */
 
-module.exports = function games() {
+module.exports = clientStore => {
 
-  // read the store
+  const clients = clientStore
   const games = []
 
-  function addGame(game) {
-    if (!game) throw new Error("No parameters provided");
+  function addGame(clientId) {
+    if (!game) throw new Error("No game provided");
     if (typeof game !== "object")
-      throw new Error("Expected object got " + typeof game);
+      throw new Error("Expected game object got " + typeof game);
 
-    console.log(`Adding game to games`);
+    console.log(`Creating game and adding to gameStore`);
 
-    let newGame = NewGame(game);
+    let newGame = NewGame();
+
+    newGame.join( clients.get(clientId) )
     games.push(newGame);
 
     return newGame;
@@ -83,11 +85,17 @@ module.exports = function games() {
   }
   function getAvailableGames(clientId) {
     
-    return
+    return games.filter(game => game.status() === 'Waiting')
   }
 
-  console.log(`==== Returning games store ====`);
+  console.log('==== Setting up games store ====');
+  console.log(clients)
   return {
+    getComa() {
+      // console.log(this)
+      // console.log(clients.get('rJLzg6FwG'))
+      return clients.get('rJLzg6FwG')
+    },
     add: addGame,
     remove: removeGame,
     get: getGame,
