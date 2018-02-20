@@ -50,8 +50,7 @@ module.exports = () => {
     if (!id) throw new Error("No parameter provided");
     console.log("Get client " + id);
 
-    return id.length > 10 ? _findSocket() 
-                          : clients.find(client => client.id === id) || null;
+    return id.length > 14 ? _findSocket() : clients.find(client => client.id === id) || null;
 
     function _findSocket() {
       if (!clients.length || !clients[0].sockets) return null
@@ -90,7 +89,7 @@ module.exports = () => {
   function _saveStore() {
     console.log(`Save clients store`);
 
-    fs.writeFile(`./turakas/stores/clients.json`, JSON.stringify(clients), err => {
+    fs.writeFileSync(`./turakas/stores/clients.json`, JSON.stringify(clients), err => {
       if (err) throw err;
       console.log(`clients.json updated`);
     });
