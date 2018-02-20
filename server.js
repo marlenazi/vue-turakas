@@ -191,7 +191,7 @@ io.on('connection', socket => {
   socket.on('login', name => {
     if (!name || typeof name !== 'string') {
       console.log('name not provided or not string @ on.login')
-      socket.emit('error', 'name not provided or not string')
+      socket.emit('serverError', 'name not provided or not string')
       return
     }
     /**

@@ -40,7 +40,7 @@ test('Emit Name, get Client obj', done => {
 
   socket.on('loggedIn', clientObj => {
     client = clientObj
-    console.log(client)
+
     expect(clientObj).toBeDefined()
     expect(typeof clientObj).toBe('object')
     expect(Object.keys(clientObj)).toHaveLength(6)
@@ -62,10 +62,10 @@ test('Emit Name, get Client obj', done => {
 test('Emit wrong type Name, get error', done => {
   socket.emit('login', testUser)
 
-  socket.on('error', err => {
+  socket.on('serverError', err => {
     expect(err).toBeDefined()
     expect(typeof err).toBe('string')
-    console.log(err)
+    // console.log(err)
     done()
   })
 })

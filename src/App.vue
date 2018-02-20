@@ -36,7 +36,7 @@ export default {
 
   },
   sockets: {
-    error(err) {
+    serverError(err) {
       alert(err)
     },
     loggedIn(user) {
