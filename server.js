@@ -230,7 +230,7 @@ io.on('connection', socket => {
   socket.on('getAvailableGames', clientId => {
     if (!clients.get(clientId) || !clients.get(socket.id)) {
       console.log(`${clientId} not found @ on.getAvailableGames`)
-      emitToOne('serverError') 
+      emitToOne('serverError', `Client ${clientId} not found while fetching available games`) 
       return
     }
 
@@ -398,7 +398,7 @@ io.on('connection', socket => {
     console.log(`Socket ${socket.id} disconnected`)
     if (!clients.get(socket.id)) {
       console.log('tried to disconnect, but client was not found: socId: ' + socket.id)
-      emitToOne('serverError') 
+      socket.emit('serverError', 'Tried to disconnect, but client was not found') 
       return
     }
 

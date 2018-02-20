@@ -36,9 +36,6 @@ export default {
 
   },
   sockets: {
-    serverError(err) {
-      alert(err)
-    },
     loggedIn(user) {
       console.log(`Logged in ${user.name}`)
       // console.log(user)
@@ -78,13 +75,16 @@ export default {
       this.game = state
     },
     gameOver(state) {
+      console.log('Game is over')
       this.game = state
     },
     serverError(err = 'something happened') {
       console.log('==== SERVER ERROR ====')
       console.log(err)
-      this.game = {}
-      this.mainView = 'Welcome'
+      if (confirm(err + ' -- Do you want to go back Welcome screen?')) {
+        this.game = {}
+        this.mainView = 'Welcome'
+      }
     },
   }
 }

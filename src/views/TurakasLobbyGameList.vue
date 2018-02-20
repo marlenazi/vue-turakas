@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     $_getAvailableGames() {
+      console.log('Requesting games for gameList')
       this.$socket.emit('getAvailableGames', this.heroId)
     }
   },

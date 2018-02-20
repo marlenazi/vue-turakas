@@ -81,6 +81,10 @@ module.exports = function games() {
       null
     );
   }
+  function getAvailableGames(clientId) {
+    
+    return
+  }
 
   console.log(`==== Returning games store ====`);
   return {
@@ -89,6 +93,7 @@ module.exports = function games() {
     get: getGame,
     getAll: getAllGames,
     getWaiting: getWaitingGames,
+    getAvailable: getAvailableGames,
     match: matchGame,
   };
 };
