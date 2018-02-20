@@ -10,6 +10,7 @@ let testMatch = {
   name: "Tomm",
   ip: "192.0.0.1"
 };
+let initialLength = clients.getAll().length
 
 describe("clients", () => {
   it("should return an object", () => {
@@ -25,7 +26,7 @@ describe("clients.getAll()", () => {
 
   it("Returns an array", () => {
     expect(Array.isArray(result)).toBe(true);
-    expect(result).toHaveLength(0);
+    expect(result).toHaveLength(initialLength);
   });
 });
 
@@ -44,7 +45,7 @@ describe("clients.add()", () => {
     );
   });
   it("Added the object to store", () => {
-    expect(clients.getAll()).toHaveLength(1);
+    expect(clients.getAll()).toHaveLength(initialLength + 1);
   });
 });
 
@@ -96,6 +97,6 @@ describe("clients.remove()", () => {
     expect(clients.remove(id)).toBeTruthy();
   });
   it("Removed the object from store", () => {
-    expect(clients.getAll()).toHaveLength(0);
+    expect(clients.getAll()).toHaveLength(initialLength);
   });
 });
