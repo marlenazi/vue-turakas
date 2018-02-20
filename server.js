@@ -25,7 +25,7 @@ const map = fs.readFileSync('./dist/build.js.map', (err, file) => {
   return file
 })
 
-const User = require('./turakas/modules/user')
+const Client = require('./turakas/modules/client')
 const Game = require('./turakas/modules/game')
 const zzz = require('./turakas/modules/emitter')
 const clientStore = require('./turakas/modules/clients')
@@ -69,18 +69,18 @@ io.on('connection', socket => {
     return games.find(game => game.id === id)
   }
 
-  function userHasParallelSockets(id) {
+  function clientHasParallelSockets(id) {
     
     return clients.get(id).sockets.length > 1 ? true : false
   }
-  function getAvailableGames(user) {
+  function getAvailableGames(client) {
     let playingGame  = []
     let availableGames = []
 
-    if (user && user.game && getGame(user.game)) {
-      if (getGame(user.game).status() !== 'Waiting') {
+    if (client && client.game && getGame(client.game)) {
+      if (getGame(client.game).status() !== 'Waiting') {
 
-        playingGame = [getGame(user.game)]
+        playingGame = [getGame(client.game)]
       }
     }
 
@@ -91,68 +91,68 @@ io.on('connection', socket => {
   }
   function login(name, ip) {
     console.log(`Logging in ${name}`)
-    // get user from clients or create a new one)
-    let user = clients.getAll().find(user => user.name === name && user.ip === ip)
+    // get client from clients or create a new one)
+    let client = clients.getAll().find(client => client.name === name && client.ip === ip)
 
-    if (user) {
-      console.log('User exists')
+    if (client) {
+      console.log('Client exists')
       /* here could check if connection is still active (ie one client, two tabs)
       and then send a message to handle double connection */
     } else {
-      console.log('Creating new user')
+      console.log('Creating new client')
 
-      user = User(name, ip)
-      users.push(user)
+      client = User(name, ip)
+      users.push(client)
     }
     // if not already there, assign socketId, 
-    // so we can send data to specific user
-    // as user might use different tabs, we must collect several ids
-    // when user disconnects, we remove corresponding ID from the array
+    // so we can send data to specific client
+    // as client might use different tabs, we must collect several ids
+    // when client disconnects, we remove corresponding ID from the array
 
-    if (user.socketIds.indexOf(socket.id) === -1) {
-      user.socketIds.push(socket.id)
+    if (client.socketIds.indexOf(socket.id) === -1) {
+      client.socketIds.push(socket.id)
     }
 
-    return user
+    return client
   }
-  function createGame(userId) {
+  function createGame(clientId) {
 
-    let user = clients.get(userId)
+    let client = clients.get(clientId)
     let game = Game()
 
     games.push(game)
-    game.join(user)
+    game.join(client)
     socket.join(game.id)
 
     return game.state()
   }
-  function joinGame(gameId, userId) {
-    let user = clients.get(userId)
+  function joinGame(gameId, clientId) {
+    let client = clients.get(clientId)
     let game = getGame(gameId)
 
-    game.join(user)
+    game.join(client)
     socket.join(game.id)
 
     return game.state()
   }
-  function leaveGame(userId) {
+  function leaveGame(clientId) {
     console.log('Func leaveGame')
-    if (!clients.get(userId)) {
-      console.log('User not found @ leaveGame')
+    if (!clients.get(clientId)) {
+      console.log('Client not found @ leaveGame')
       return
     }
-    if (!getGame(clients.get(userId).game)) return
+    if (!getGame(clients.get(clientId).game)) return
 
-    let user = clients.get(userId)
-    let game = getGame(user.game)
+    let client = clients.get(clientId)
+    let game = getGame(client.game)
       
-    game.leave(user)
+    game.leave(client)
     
     let gameState = game.state()
 
     if (gameState.status === 'Closed') {
       console.log('Closing game ' + game.id)
-      user.game = null
+      client.game = null
       games.splice(games.indexOf(game), 1)
     }
       
@@ -176,14 +176,14 @@ io.on('connection', socket => {
     
   }
   function emitToOne(event, data = '', theOne = clients.get(socket.id)) {
-    // this loops over all socketIds connected to user and 
+    // this loops over all socketIds connected to client and 
     // emits same event and data
     if (theOne) {
       theOne.socketIds.forEach(socId => {
         io.to(socId).emit(event, data)
       })
     } else {
-      console.log(`user not found, sending - ${event} - to socket`)
+      console.log(`client not found, sending - ${event} - to socket`)
       console.log(data)
       socket.emit(event, data)
     }
@@ -217,55 +217,55 @@ io.on('connection', socket => {
     if (!name || typeof name !== 'string') return
     /**
      * we get connection ip and compare both name and ip to existing clients
-     * if we have a match, we return that user to the client, 
+     * if we have a match, we return that client to the client, 
      * if not, we create a new one and return it to the client
      * 
      * then we check if it had a game attached and if so, emit the state
-     * to all sockets that are connected to user 
+     * to all sockets that are connected to client 
      */
 
     let ip = socket.request.connection.remoteAddress
-    let user = login(name, ip, socket.id)
+    let client = login(name, ip, socket.id)
 
-    emitToOne('loggedIn', user)
-    console.log(user.id, user.name)
-    if (user.game && getGame(user.game)) {
-      console.log(`${user.id} resumes game: ${user.game}`)
+    emitToOne('loggedIn', client)
+    console.log(client.id, client.name)
+    if (client.game && getGame(client.game)) {
+      console.log(`${client.id} resumes game: ${client.game}`)
 
-      emitToOne('joinedGame', getGame(user.game).state())
-    } else if (user.game) {
-      console.log(`did not find game ${user.game}, user.game will be null`)
-      if (user.away) {
-        console.log('user is set as Away. Setting away to null')
-        user.away = null
+      emitToOne('joinedGame', getGame(client.game).state())
+    } else if (client.game) {
+      console.log(`did not find game ${client.game}, client.game will be null`)
+      if (client.away) {
+        console.log('client is set as Away. Setting away to null')
+        client.away = null
       }
-      user.game = null
+      client.game = null
     }
   })
-  socket.on('getAvailableGames', userId => {
-    if (!clients.get(userId) || !clients.get(socket.id)) {
-      console.log(`${userId} not found @ on.getAvailableGames`)
+  socket.on('getAvailableGames', clientId => {
+    if (!clients.get(clientId) || !clients.get(socket.id)) {
+      console.log(`${clientId} not found @ on.getAvailableGames`)
       emitToOne('serverError') 
       return
     }
 
-    let games = getAvailableGames(clients.get(userId))
+    let games = getAvailableGames(clients.get(clientId))
 
     emitToOne('availableGamesSent', games)
   })
-  socket.on('newGame', userId => {
-    if (!clients.get(userId)) {
-      console.log(`${userId} not found @ on.newGame`)
+  socket.on('newGame', clientId => {
+    if (!clients.get(clientId)) {
+      console.log(`${clientId} not found @ on.newGame`)
       emitToOne('serverError')
       return
     }
-    if (clients.get(userId).game && getGame(clients.get(userId).game)) {
-      console.log(`${userId} @ on.newGame: already registered`)
+    if (clients.get(clientId).game && getGame(clients.get(clientId).game)) {
+      console.log(`${clientId} @ on.newGame: already registered`)
       return
     }
-    console.log(clients.get(userId))
+    console.log(clients.get(clientId))
 
-    let gameState = createGame(userId)
+    let gameState = createGame(clientId)
     console.log('created game: ' + gameState.id)
     emitToOne('joinedGame', gameState)
     io.emit('gameCreated', {
@@ -275,9 +275,9 @@ io.on('connection', socket => {
       players: gameState.players, 
     })
   })
-  socket.on('joinGame', (gameId, userId) => {
-    if (!clients.get(userId)) {
-      console.log(`User ${userId} not found @ on.joinGame`)
+  socket.on('joinGame', (gameId, clientId) => {
+    if (!clients.get(clientId)) {
+      console.log(`Client ${clientId} not found @ on.joinGame`)
       emitToOne('serverError')
       return
     }
@@ -286,25 +286,25 @@ io.on('connection', socket => {
       return
     }
 
-    let gameState = joinGame(gameId, userId)
+    let gameState = joinGame(gameId, clientId)
 
     emitToOne('joinedGame', gameState)
     emitToPlayers(gameId, 'updateGame', gameState)
     // emit this to remove it from the lobby
     io.emit('gameClosed', gameState.id)
   })
-  socket.on('leaveGame', userId => {
-    if (!clients.get(userId) || 
-        !clients.get(userId).game || 
-        !getGame(clients.get(userId).game)) {
-      let user = clients.get(socket.id)
+  socket.on('leaveGame', clientId => {
+    if (!clients.get(clientId) || 
+        !clients.get(clientId).game || 
+        !getGame(clients.get(clientId).game)) {
+      let client = clients.get(socket.id)
 
-      let err = !user ?              'NO USER' 
-                      : !user.game ? 'NO GAME SET FOR USER' 
+      let err = !client ?              'NO USER' 
+                      : !client.game ? 'NO GAME SET FOR USER' 
                                    : 'GAME DOES NOT EXIST'
 
       console.log('failed @ leaveGame: ' + err) 
-      if (user) {
+      if (client) {
         emitToOne('leftGame')
       } else {
         emitToOne('serverError')
@@ -312,7 +312,7 @@ io.on('connection', socket => {
     return
     }
 
-    let gameState = leaveGame(userId)
+    let gameState = leaveGame(clientId)
     let status = gameState.status
 
     socket.leave(gameState.id)
@@ -326,29 +326,29 @@ io.on('connection', socket => {
     }
 
   })
-  socket.on('getHand', userId => {
-    let user = clients.get(userId)
+  socket.on('getHand', clientId => {
+    let client = clients.get(clientId)
 
-    if (!user) {
-      console.log(`User ${userId} not found @ on.getHand`)
+    if (!client) {
+      console.log(`Client ${clientId} not found @ on.getHand`)
       emitToOne('serverError')
       return
     }
-    if (!user.game || !getGame(user.game)) {
-      console.log(`Game ${user.game} not found @ on.getHand`)
+    if (!client.game || !getGame(client.game)) {
+      console.log(`Game ${client.game} not found @ on.getHand`)
       emitToOne('leftGame')
       return
     }
 
-    let game = getGame(user.game)
+    let game = getGame(client.game)
 
-    emitToOne('hand', game.hand(user))
+    emitToOne('hand', game.hand(client))
   })
 
   // game actions
   socket.on('move', card => {
     if (!clients.get(socket.id) || !clients.get(socket.id).game) {
-      console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.move`)
+      console.log(`Client for socketId ${socket.id} not found OR has not game attached @ on.move`)
       console.log(clients.getAll())
       if (!clients.get(socket.id)) { 
         emitToOne('serverError') 
@@ -365,9 +365,9 @@ io.on('connection', socket => {
 
     emitToPlayers(game.id, 'updateGame', game.move(card))
   })
-  socket.on('pickUp', userId => {
+  socket.on('pickUp', clientId => {
     if (!clients.get(socket.id) || !clients.get(socket.id).game) {
-      console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.pickUp`)
+      console.log(`Client for socketId ${socket.id} not found OR has not game attached @ on.pickUp`)
       console.log(clients.getAll())
       if (!clients.get(socket.id)) { 
         emitToOne('serverError') 
@@ -380,14 +380,14 @@ io.on('connection', socket => {
       return
     }
 
-    let user = clients.get(userId)
-    let game = getGame(user.game)
+    let client = clients.get(clientId)
+    let game = getGame(client.game)
 
-    emitToPlayers('updateGame', game.pickUp(user), game.id)
+    emitToPlayers('updateGame', game.pickUp(client), game.id)
   })
-  socket.on('muck', userId => {
+  socket.on('muck', clientId => {
     if (!clients.get(socket.id) || !clients.get(socket.id).game) {
-      console.log(`User for socketId ${socket.id} not found OR has not game attached @ on.muck`)
+      console.log(`Client for socketId ${socket.id} not found OR has not game attached @ on.muck`)
       console.log(clients.getAll())
       if (!clients.get(socket.id)) { 
         emitToOne('serverError') 
@@ -400,10 +400,10 @@ io.on('connection', socket => {
       return
     }
 
-    let user = clients.get(userId)
-    let game = getGame(user.game)
+    let client = clients.get(clientId)
+    let game = getGame(client.game)
 
-    emitToPlayers('updateGame', game.muck(user), game.id)
+    emitToPlayers('updateGame', game.muck(client), game.id)
   })
 
   /**
@@ -412,23 +412,23 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`)
     if (!clients.get(socket.id)) {
-      console.log('tried to disconnect, but user was not found: socId: ' + socket.id)
+      console.log('tried to disconnect, but client was not found: socId: ' + socket.id)
       emitToOne('serverError') 
       return
     }
 
-    let user = clients.get(socket.id)
-    console.log(user)
-    if (user.game) {
-      if (!getGame(user.game)) {
-        console.log('failed to get game for gameId: ' + user.game)
-        user.game = null
+    let client = clients.get(socket.id)
+    console.log(client)
+    if (client.game) {
+      if (!getGame(client.game)) {
+        console.log('failed to get game for gameId: ' + client.game)
+        client.game = null
         return
       }
       
-      if (userHasParallelSockets(user.id)) {
-        console.log(`@ disconnect: user ${user.id} has parallel connections`)
-        console.log(user.socketIds)
+      if (clientHasParallelSockets(client.id)) {
+        console.log(`@ disconnect: client ${client.id} has parallel connections`)
+        console.log(client.socketIds)
       } else {
         let gameState = leaveGame(socket.id)
         let status = gameState.status
@@ -445,7 +445,7 @@ io.on('connection', socket => {
 
     }
 
-    user.socketIds = user.socketIds.filter(id => id !== socket.id)
+    client.socketIds = client.socketIds.filter(id => id !== socket.id)
 
     
   })
@@ -527,9 +527,9 @@ io.on('connection', socket => {
  *    =================================================
  * 
  * -- Error handling is rudimentary and uses a bad pattern 
- * -- User validation should be handled smarter
+ * -- Client validation should be handled smarter
  * -- File serving must be handled. Express?
- * -- When user gets stuck, send back error event that resets the game
+ * -- When client gets stuck, send back error event that resets the game
  * -- Clicking on board cards should pick them up
  * 
  * 
