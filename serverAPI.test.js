@@ -6,8 +6,6 @@ let testUser = {
 }
 let client;
 
-
-
 beforeAll((done) => {
   socket = io.connect("http://192.168.0.103:2000", {
     "reconnectionDelay": 0,
@@ -27,14 +25,6 @@ test("Socket connection", () => {
   expect(socket.connected).toBe(true)
 });
 
-test('Emitting', done => {
-  socket.emit('test', 'testData')
-
-  socket.on('test', data => {
-    expect(data).toBe('testData')
-    done()
-  })
-})
 test('Emit Name, get Client obj', done => {
   socket.emit('login', testUser.name)
 

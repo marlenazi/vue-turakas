@@ -293,6 +293,15 @@ module.exports = function Game(gameSize = 2) {
   function _checkForEnding() {
 
     if (!deck.length) {
+      if (players.some((player, ix) => hands[ix].every(card => card.rank === '1'))) {
+        console.log(`
+        =====================
+        |   Pagunid, mofos  |
+        |                   |
+        |        666        |
+        =====================
+        `)
+      }
       if (players.some((player, ix) => !hands[ix].length)) {
         // console.log('We have a winner')
         if (timer) { 

@@ -5,7 +5,7 @@ const NewGame = require("./game");
  * Collection of games
  *
  * Return an object with games store closed in with following methods:
- *  -- addGame takes an game object and returns game obj
+ *  -- createGame takes an game object and returns game obj
  *       if no game provided or game is not an object, throws an error
  *  -- getGame finds a user from the list matching the id and returns that obj
  *       if id does not match any game ids, returns null
@@ -20,48 +20,39 @@ const NewGame = require("./game");
  */
 
 module.exports = clientStore => {
+  const clients = clientStore;
+  const games = [];
 
-  const clients = clientStore
-  const games = []
-
-  function addGame(clientId) {
-    if (!game) throw new Error("No game provided");
-    if (typeof game !== "object")
-      throw new Error("Expected game object got " + typeof game);
-
+  function createGame() {
     console.log(`Creating game and adding to gameStore`);
 
     let newGame = NewGame();
 
-    newGame.join( clients.get(clientId) )
     games.push(newGame);
 
     return newGame;
   }
   function getGame(id) {
-    if (!id) throw new Error("No parameter provided");
+    if (!id) throw new Error("No parameter (game id) provided");
     console.log("Get game " + id);
 
-    function _trySockets() {
-      if (!games.length || !games[0].sockets) return null
-      return games.find(game => game.sockets.find(socId => socId === id))
-    }
-    return games.find(game => game.id === id) || _trySockets() || null;
+    return games.find(game => game.id === id) || null;
   }
   function getWaitingGames() {
-    return games.filter(game => game.status() === 'Waiting')
+    console.log("Get games with status: Waiting");
+    return games.filter(game => game.status() === "Waiting");
   }
   function getAllGames() {
-    console.log(`Get entire games store`);
+    console.log(`Get all games`);
     return games.slice();
   }
-  
-  function removeGame(id) {
+
+  function destroyGame(id) {
     if (!id) throw new Error("No parameters provided");
     if (typeof id !== "string")
       throw new Error("Expected string got " + typeof id);
 
-    console.log(`Remove game ${id} from games`);
+    console.log(`Destroy game ${id} from games`);
     let game = getGame(id);
 
     if (game) {
@@ -69,39 +60,34 @@ module.exports = clientStore => {
       return true;
     } else return false;
   }
-  function matchGame(parameters) {
-    if (!parameters) throw new Error("No parameter provided");
-    if (typeof parameters !== "object")
-      throw new Error("Expected object got " + typeof parameters);
 
-    console.log(`Comparing parameters in games store`);
-
-    let keys = Object.keys(parameters);
-
-    return (
-      games.find(game => keys.every(key => parameters[key] === game[key])) ||
-      null
-    );
-  }
   function getAvailableGames(clientId) {
-    
-    return games.filter(game => game.status() === 'Waiting')
+    if (!clientId) {
+      console.log("No client id provided. Instead sending waiting games");
+      return getWaitingGames();
+    }
+    console.log("Get all available games");
+
+    let clientGames =
+    // if we find no matching player, try returning game with the matching id
+    // if all fails, pass empty array
+      games.filter(game =>
+        game.state().players.some(player => player.id === clientId)
+      ) ||
+      games.get(clients.get(clientId).game) ||
+      [];
+
+    return getWaitingGames().concat(clientGames);
   }
 
-  console.log('==== Setting up games store ====');
-  console.log(clients)
+  console.log("==== Setting up games store ====");
+  // console.log(clients);
   return {
-    getComa() {
-      // console.log(this)
-      // console.log(clients.get('rJLzg6FwG'))
-      return clients.get('rJLzg6FwG')
-    },
-    add: addGame,
-    remove: removeGame,
+    create: createGame,
+    destroy: destroyGame,
     get: getGame,
     getAll: getAllGames,
     getWaiting: getWaitingGames,
-    getAvailable: getAvailableGames,
-    match: matchGame,
+    getAvailable: getAvailableGames
   };
 };
