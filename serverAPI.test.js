@@ -36,12 +36,14 @@ test('Emitting', done => {
   })
 })
 test('Emit Name, get Client obj', done => {
-  socket.emit('login', testUser)
+  socket.emit('login', testUser.name)
 
   socket.on('loggedIn', clientObj => {
+    client = clientObj
+    console.log(client)
     expect(clientObj).toBeDefined()
     expect(typeof clientObj).toBe('object')
-    expect(Object.keys(clientObj)).toBeGreaterThanOrEqual(6)
+    expect(Object.keys(clientObj)).toHaveLength(6)
     expect(Object.keys(clientObj)).toContain(
       "id",
       "ip",

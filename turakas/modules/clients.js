@@ -103,7 +103,7 @@ module.exports = () => {
     );
   }
 
-  console.log(`==== Setiing up clients store ====`);
+  console.log(`==== Setting up clients store ====`);
   return {
     add: addClient,
     remove: removeClient,

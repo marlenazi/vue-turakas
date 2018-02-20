@@ -202,21 +202,26 @@ io.on('connection', socket => {
     let ip = socket.request.connection.remoteAddress
     let client = clients.match({name, ip}) ||
                  clients.add({name, ip, socketId: socket.id})
+                 
+    // all sockets that this client might have
+    // connect to a room matching clients id
+    socket.join(client.id)
 
-    emitToOne('loggedIn', client)
-    console.log(client.id, client.name)
-    if (client.game && getGame(client.game)) {
-      console.log(`${client.id} resumes game: ${client.game}`)
+    io.to(client.id).emit('loggedIn', client)
 
-      emitToOne('joinedGame', getGame(client.game).state())
-    } else if (client.game) {
-      console.log(`did not find game ${client.game}, client.game will be null`)
-      if (client.away) {
-        console.log('client is set as Away. Setting away to null')
-        client.away = null
-      }
-      client.game = null
-    }
+    // console.log(client.id, client.name)
+    // if (client.game && getGame(client.game)) {
+    //   console.log(`${client.id} resumes game: ${client.game}`)
+
+    //   emitToOne('joinedGame', getGame(client.game).state())
+    // } else if (client.game) {
+    //   console.log(`did not find game ${client.game}, client.game will be null`)
+    //   if (client.away) {
+    //     console.log('client is set as Away. Setting away to null')
+    //     client.away = null
+    //   }
+    //   client.game = null
+    // }
   })
   socket.on('getAvailableGames', clientId => {
     if (!clients.get(clientId) || !clients.get(socket.id)) {
