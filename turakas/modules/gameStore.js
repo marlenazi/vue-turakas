@@ -54,9 +54,12 @@ module.exports = clientStore => {
 
     return games.find(game => game.id === id) || null;
   }
-  function getAllGames() {
+  function getAllGames(status) {
     console.log(`Get all games`);
-    return games.slice();
+    if (!status || status === 'all') {
+      return games.slice()
+    }
+    return games.filter(game => game.status === status);
   }
 
   function destroyGame(id) {
@@ -79,11 +82,11 @@ module.exports = clientStore => {
     }
     console.log("Get all available games");
     
-    let client = clients.get(clientId)
-    let clientGame = client.game ? [getGame(client.game)] : []
+    let clientGames = getAllGames().filter(game =>
+      game.players.some(id => id === clientId)
+    );
     
-    return clientGame.concat(_getWaitingGames().filter(game => 
-      game !== clientGame[0]));
+    return clientGames.concat( _getWaitingGames() );
   }
 
   function _getWaitingGames() {

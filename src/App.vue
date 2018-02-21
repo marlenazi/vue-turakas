@@ -1,8 +1,8 @@
 <template>
 <div id="app" class="turakas">
   <transition name="fade" mode="out-in">
-    <component class="mainView"
-      :is="mainView"
+    <component class="appView"
+      :is="appView"
       :hero="hero"
       :game="game"
       :games="games"
@@ -23,7 +23,7 @@ export default {
   },
   data () {
     return {
-      mainView: 'Welcome',
+      appView: 'Welcome',
       hero: {},
       game: {},
       games: [],
@@ -41,7 +41,7 @@ export default {
       console.log(user)
 
       this.hero = user
-      this.mainView = 'Turakas'
+      this.appView = 'Turakas'
     },
     updateHero(hero) {
       console.log('Got new hero state')
@@ -88,7 +88,7 @@ export default {
       console.log(err)
       if (confirm(err + ' -- Do you want to go back Welcome screen?')) {
         this.game = {}
-        this.mainView = 'Welcome'
+        this.appView = 'Welcome'
       }
     },
   }
@@ -127,7 +127,7 @@ html, body {
   outline: none;
 }
 
-.mainView {
+.appView {
   // border: 1px solid blue;
   height: 100%;
   width: 100%;

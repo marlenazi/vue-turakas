@@ -1,5 +1,5 @@
 const gameStore = require("./gameStore");
-const { login, client, clientStore } = require("./../stores/mockStore");
+const { login, client, clientStore, gameStore } = require("./../stores/mockStore");
 
 /** ==== Test gameStore ====
  * 

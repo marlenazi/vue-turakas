@@ -91,6 +91,13 @@ io.on("connection", socket => {
       socket.join(client.id);
   
       io.to(client.id).emit("loggedIn", client);
+
+      if (client.game) {
+        let game = games.get(client.game)
+        socket.join(game.id)
+
+        io.to(client.id).emit("joinedGame", game.state());
+      }
       
     } catch (error) {
       console.log(error);
@@ -158,6 +165,8 @@ io.on("connection", socket => {
 
     try {
       let client = clients.get(clientId)
+      console.log(client)
+      console.log(client.game)
       let game = games.get(client.game)
   
       game.leave(client)

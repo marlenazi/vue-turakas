@@ -42,8 +42,10 @@ module.exports = function Game(gameSize = 2) {
     if (players.length < size) {
       players.push(user)
       // in case the user has left a game before and has 'away' attached
-      if (user.away) { user.away = false } // maybe its better to use delete?
+      if (user.away) { user.away = null } 
       user.game = id
+      console.log("======== User =======")
+      console.log(user)
     } else console.log('Game full')
 
     if (status() === 'Playing') {

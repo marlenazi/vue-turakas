@@ -127,7 +127,14 @@ module.exports = () => {
 
     fs.writeFileSync(
       `./turakas/stores/clients.json`,
-      JSON.stringify(clients),
+      JSON.stringify(
+        clients.map(client => {
+          client.game = null;
+          client.away = null;
+
+          return client;
+        })
+      ),
       err => {
         if (err) throw err;
         console.log(`clients.json updated`);
