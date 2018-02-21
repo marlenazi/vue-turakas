@@ -1,23 +1,54 @@
 const NewClient = require("./client");
 const fs = require("fs");
 
-/**
- * Collection of clients
- *
- * Read the clients store from file.
- * Return an object with clients store closed in with following methods:
- *  -- addClient takes an object { name, id, socketId } and returns client obj
- *       if no client provided or client is not an object, throws an error
- *  -- getClient finds a user from the list matching the id and returns that obj
- *       if id does not match any client ids, returns null
- *       if no id provided, throws error
- *  -- getAllClients returns a copy of clients store
- *  -- hasClient takes and object and tries to match all keys to all objects part
- *     of the collection.
- *       USE CASE: user logges in with name, check if name
- *                 and IP match to any players.
- *       returns the object if all match
- *       returns null if not a complete match
+/** ==== Client Store ====
+ * 
+ * clientStore() reads store from JSON object
+ * returns an object with methods:
+ * 
+ *    -- add( {name, ip} )
+ *       takes an object containing name and ip
+ *       name property should be string
+ *       adds a new client
+ *       saves the data to JSON   !!! should be a stream !!!
+ *       returns client
+ * 
+ *       throws error if 
+ *          client is not passed
+ *          client is wrong type
+ *          client has wrong type keys
+ * 
+ *    -- remove(id)
+ *       takes a client id (string)
+ *       requests the client object with getClient(id)  ??? unnecessary ???
+ *       removes client with matching id from the store
+ *       saves the data to JSON
+ *       returns true or false depending if operation was successful 
+ * 
+ *    -- get(id) 
+ *       takes an id of a client (string)
+ *       returns matching client
+ *       if no match, return null
+ * 
+ *       throws error if 
+ *          id is not passed
+ *          id is wrong type 
+ * 
+ *    -- getAll()
+ *       returns all clients in the store
+ *       if empty, returns an empty array
+ * 
+ *    -- match( {parameters} )
+ *       takes an object containing paramteres
+ *       compares the paramters with all clients on the store
+ *       returns first that matches all parameters
+ *       if none match, returns null
+ * 
+ * 
+ * Private methods:
+ * 
+ *    -- _saveStore()
+ *       saves the store to JSON object sync    !!! should be async !!!
  */
 
 module.exports = () => {
@@ -33,6 +64,8 @@ module.exports = () => {
     if (!client) throw new Error("No parameters provided");
     if (typeof client !== "object")
       throw new Error("Expected object got " + typeof client);
+    if (typeof client.name !== 'string')
+      throw new Error("Expected client.name to be string got " + typeof client.name);
 
     console.log(`Adding client to clients`);
 
@@ -49,16 +82,11 @@ module.exports = () => {
   }
   function getClient(id) {
     if (!id) throw new Error("No parameter provided");
+    if (typeof id !== 'string')
+      throw new Error("Expected id as string got " + typeof id);
     console.log("Get client " + id);
-    // id has max length 14. Socket id is always longer
-    return id.length > 14
-      ? _findSocket()
-      : clients.find(client => client.id === id) || null;
 
-    function _findSocket() {
-      if (!clients.length || !clients[0].sockets) return null;
-      return clients.find(client => client.sockets.find(socId => socId === id));
-    }
+    return clients.find(client => client.id === id) || null;
   }
   function removeClient(id) {
     if (!id) throw new Error("No parameters provided");
@@ -75,7 +103,7 @@ module.exports = () => {
     } else return false;
   }
   function matchClient(parameters) {
-    if (!parameters) throw new Error("No parameter provided");
+    if (!parameters) throw new Error("No parameters provided");
     if (typeof parameters !== "object")
       throw new Error("Expected object got " + typeof parameters);
 

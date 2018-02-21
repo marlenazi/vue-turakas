@@ -18,9 +18,11 @@ const NewGame = require("./game");
  *    -- get(id) 
  *       takes an id of a game and 
  *       returns matching game
+ *       if no match, return null
  * 
  *    -- getAll()
  *       returns all games in the store
+ *       if empty, return an empty array
  * 
  *    -- getAvailable(clientId)
  *       takes a client id
@@ -71,8 +73,8 @@ module.exports = clientStore => {
   }
   
   function getAvailableGames(clientId) {
-    if (!clientId) {
-      console.log("No client id provided. Instead sending waiting games");
+    if (!clientId || typeof clientId !== 'string') {
+      console.log("No client id provided or not string. Instead sending waiting games");
       return _getWaitingGames();
     }
     console.log("Get all available games");

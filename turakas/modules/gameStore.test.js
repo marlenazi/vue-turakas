@@ -19,9 +19,11 @@ const { login, client, clientStore } = require("./../stores/mockStore");
  *    -- get(id) 
  *       takes an id of a game and 
  *       returns matching game
+ *       if no match, return null
  * 
  *    -- getAll()
  *       returns all games in the store
+ *       if empty, return an empty array
  * 
  *    -- getAvailable(clientId)
  *       takes a client id

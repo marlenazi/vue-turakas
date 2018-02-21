@@ -1,4 +1,56 @@
 const clients = require("./clientStore")();
+
+/** ==== Test Client Store ====
+ * 
+ * clientStore() reads store from JSON object
+ * returns an object with methods:
+ * 
+ *    -- add( {name, ip} )
+ *       takes an object containing name and ip
+ *       name property should be string
+ *       adds a new client
+ *       saves the data to JSON   !!! should be a stream !!!
+ *       returns client
+ * 
+ *       throws error if 
+ *          client is not passed
+ *          client is wrong type
+ *          client has wrong type keys
+ * 
+ *    -- remove(id)
+ *       takes a client id (string)
+ *       requests the client object with getClient(id)  ??? unnecessary ???
+ *       removes client with matching id from the store
+ *       saves the data to JSON
+ *       returns true or false depending if operation was successful 
+ * 
+ *    -- get(id) 
+ *       takes an id of a client (string)
+ *       returns matching client
+ *       if no match, return null
+ * 
+ *       throws error if 
+ *          id is not passed
+ *          id is wrong type 
+ * 
+ *    -- getAll()
+ *       returns all clients in the store
+ *       if empty, returns an empty array
+ * 
+ *    -- match( {parameters} )
+ *       takes an object containing paramteres
+ *       compares the paramters with all clients on the store
+ *       returns first that matches all parameters
+ *       if none match, returns null
+ * 
+ * 
+ * Private methods:
+ * 
+ *    -- _saveStore()
+ *       saves the store to JSON object sync    !!! should be async !!!
+ */
+
+
 let testClient = {
   name: "Tomm",
   ip: "192.0.0.1",
@@ -73,16 +125,15 @@ describe("clients.match()", () => {
 
 describe('clients.get()', () => {
   let id = clients.match(testMatch).id;
-  let socketId = clients.match(testMatch).sockets[0];
 
   it("returns a correct object", () => {
     expect(typeof clients.get(id)).toBe("object");
     expect( clients.get(id) ).toMatchObject( testMatch )
   });
-  it("returns a correct obj when id longer than 14 chars (socket id)", () => {
-    expect(typeof clients.get(socketId)).toBe("object");
+  it("returns null when wrong id", () => {
+
     expect( clients.get('randomString10ng3n0ugh') ).toBeFalsy()
-    expect( clients.get(socketId) ).toMatchObject( testMatch )
+    expect( clients.get('r263m88ring10ngY$0u312') ).toBe( null )
   });
 })
 
