@@ -51,13 +51,16 @@ module.exports = function Game(gameSize = 2) {
         .away = false
     }
 
-    if (players.length === size && !inited) { _start() }
+    if (players.length === size && !inited) { 
+      _start() 
+    }
 
     return state()
   }
   function leave(user) {
     if (status() === 'Waiting') {
       players.splice(players.indexOf(user), 1)
+      user.game = null
     }
     if (status() === 'Playing' || status() === 'Finished') {
       // we want to leave id, so if user reconnects, they can continue
@@ -70,6 +73,8 @@ module.exports = function Game(gameSize = 2) {
         timer = false
       }
     }
+
+    return state()
   }
   function state() {
     return {

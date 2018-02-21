@@ -39,7 +39,7 @@ export default {
   methods: {
     $_move(card) {
       // console.log(card)
-      this.$socket.emit('move', card)
+      this.$socket.emit('move', this.$parent.hero.id, card)
     },
     $_style(card, scale = 1) {
       let cards = this.hand.length
