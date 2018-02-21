@@ -39,7 +39,7 @@ const fs = require("fs");
  *       if empty, returns an empty array
  * 
  *    -- match( {parameters} )
- *       takes an object containing paramteres
+ *       takes an object containing paramteres (min 2 different)
  *       compares the paramters with all clients on the store
  *       returns first that matches all parameters
  *       if none match, returns null
@@ -106,6 +106,8 @@ module.exports = () => {
     if (!parameters) throw new Error("No parameters provided");
     if (typeof parameters !== "object")
       throw new Error("Expected object got " + typeof parameters);
+    if (Object.keys(parameters).length < 2)
+      throw new Error("Expected at least 2 parameters");
 
     console.log(`Comparing parameters in clients store`);
 

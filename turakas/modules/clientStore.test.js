@@ -1,4 +1,4 @@
-const clients = require("./clientStore")();
+const clientStore = require("./clientStore")
 
 /** ==== Test Client Store ====
  * 
@@ -38,7 +38,7 @@ const clients = require("./clientStore")();
  *       if empty, returns an empty array
  * 
  *    -- match( {parameters} )
- *       takes an object containing paramteres
+ *       takes an object containing paramteres (min 2 different)
  *       compares the paramters with all clients on the store
  *       returns first that matches all parameters
  *       if none match, returns null
@@ -50,7 +50,7 @@ const clients = require("./clientStore")();
  *       saves the store to JSON object sync    !!! should be async !!!
  */
 
-
+const clients = clientStore()
 let testClient = {
   name: "Tomm",
   ip: "192.0.0.1",
@@ -102,7 +102,17 @@ describe("clients.add()", () => {
 });
 
 describe("clients.match()", () => {
+  it('Throws error if invalid parameters', () => {
+    // should throw because no parameters passed
+    expect(() => clients.match()).toThrow()
+    // should throw because invalid type of parameters
+    expect(() => clients.match(2142314)).toThrow()
+    expect(() => clients.match("2142314")).toThrow()
+    // should throw because paramters obj has too few params
+    expect(() => clients.match({})).toThrow()
+    expect(() => clients.match({name: 'Cola'})).toThrow()
 
+  })
   let testMatchFalse1 = {
     // name does not match case
     name: "tomm",
@@ -113,11 +123,10 @@ describe("clients.match()", () => {
     name: "tomm",
     ip: 192.001
   };
-
-  it("returns a correct object", () => {
+  it("Returns a correct object", () => {
     expect(typeof clients.match(testMatch)).toBe("object");
   });
-  it("returns null if not found", () => {
+  it("Returns null if not found", () => {
     expect(clients.match(testMatchFalse1)).toBeFalsy();
     expect(clients.match(testMatchFalse2)).toBe(null);
   });
