@@ -1,13 +1,11 @@
 const io = require("socket.io-client");
+const { login, client } = require("./turakas/stores/mockStore");
+const address = "http://192.168.0.103:2000"
+
 var socket;
 
-let testUser = {
-  name: 'Coma'
-}
-let client;
-
 beforeAll((done) => {
-  socket = io.connect("http://192.168.0.103:2000", {
+  socket = io.connect(address, {
     "reconnectionDelay": 0,
     "reopen delay": 0,
     "forceNew": true
@@ -25,32 +23,39 @@ test("Socket connection", () => {
   expect(socket.connected).toBe(true)
 });
 
-test('Emit Name, get Client obj', done => {
-  socket.emit('login', testUser.name)
+describe('Login process', () => {
 
-  socket.on('loggedIn', clientObj => {
-    client = clientObj
+  
+  test('Emit name, get client object', done => {
+    socket.emit('login', login.name)
+    socket.on('loggedIn', clientObj => {
 
-    expect(clientObj).toBeDefined()
-    expect(typeof clientObj).toBe('object')
-    expect(Object.keys(clientObj)).toHaveLength(6)
-    expect(Object.keys(clientObj)).toContain(
-      "id",
-      "ip",
-      "name",
-      "sockets",
-      "rank",
-      "game"
-    );
-    expect(clientObj.name).toBe(testUser.name)
-    expect(Array.isArray(clientObj.sockets)).toBe(true)
-    expect(clientObj.sockets).toHaveLength(1)
+      it('should be an object', clientObj => {
+        expect(clientObj).toBeDefined()
+        expect(typeof clientObj).toBe('object')
+      })
+      it('Should have valid properties', () => {
+        expect(Object.keys(clientObj)).toHaveLength(5)
+        expect(Object.keys(clientObj)).toContain(
+          "id",
+          "ip",
+          "name",
+          "rank",
+          "game"
+        );
+        expect(clientObj.name).toBe(login.name)
+      })
 
-    done()
+      done()
+    })
+
   })
 })
+
+
+
 test('Emit wrong type Name, get error', done => {
-  socket.emit('login', testUser)
+  socket.emit('login', client)
 
   socket.on('serverError', err => {
     expect(err).toBeDefined()
