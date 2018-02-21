@@ -48,8 +48,8 @@ module.exports = clientStore => {
     return newGame;
   }
   function getGame(id) {
-    if (!id) throw new Error("No parameter (game id) provided");
-    if (typeof id !== 'string') throw new Error(`Expected string got ${typeof id}`);
+    if (!id) throw new Error("No id passed");
+    if (typeof id !== 'string') throw new Error(`Expected string got ${typeof id} ${id}`);
     console.log("Get game " + id);
 
     return games.find(game => game.id === id) || null;
@@ -79,16 +79,11 @@ module.exports = clientStore => {
     }
     console.log("Get all available games");
     
-    let clientGames =
-    // if we find no matching player, try returning game with the matching id
-    // if all fails, pass empty array
-    games.filter(game =>
-      game.state().players.some(player => player.id === clientId)
-    ) ||
-    games.get(clients.get(clientId).game) ||
-    [];
+    let client = clients.get(clientId)
+    let clientGame = client.game ? [getGame(client.game)] : []
     
-    return _getWaitingGames().concat(clientGames);
+    return clientGame.concat(_getWaitingGames().filter(game => 
+      game !== clientGame[0]));
   }
 
   function _getWaitingGames() {

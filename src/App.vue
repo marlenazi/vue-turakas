@@ -38,14 +38,19 @@ export default {
   sockets: {
     loggedIn(user) {
       console.log(`Logged in ${user.name}`)
-      // console.log(user)
+      console.log(user)
 
       this.hero = user
       this.mainView = 'Turakas'
     },
+    updateHero(hero) {
+      console.log('Got new hero state')
+      console.log(hero)
+      this.hero = hero
+    },
     availableGamesSent(newGames) {
       console.log('Received an array of games')
-      // console.log(newGames)
+      console.log(newGames)
       this.games = newGames
     },
     gameCreated(newGame) {
@@ -63,7 +68,7 @@ export default {
     },
     joinedGame(state) {
       console.log('Joined game')
-      // console.log(state)
+      console.log(state)
       this.game = state
     },
     leftGame() {

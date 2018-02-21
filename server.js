@@ -74,11 +74,7 @@ io.on("connection", socket => {
   console.log(`Socket ${socket.id} connected`);
 
   socket.on("login", name => {
-    if (!name || typeof name !== "string") {
-      console.log(`tried to log in ${name} ${typeof name}`);
-      socket.emit("serverError", `tried to log in ${name} ${typeof name}`);
-      return;
-    }
+    console.log('Logging in ' + name)
     /**
      * we get connection ip and compare both name and ip to existing clients
      * if we have a match, we return that client obj to the client,
@@ -87,254 +83,148 @@ io.on("connection", socket => {
      * then we check if it had a game attached and if so, emit the state
      * to all sockets that are connected to client
      */
-    let ip = socket.request.connection.remoteAddress;
 
-    let client =
-      clients.match({ name, ip }) ||
-      clients.add({ name, ip });
-    // all sockets that this client might have,
-    // connect to a room matching clients id
-    socket.join(client.id);
-
-    io.to(client.id).emit("loggedIn", client);
-
-    // console.log(client.id, client.name)
-    // if (client.game && getGame(client.game)) {
-    //   console.log(`${client.id} resumes game: ${client.game}`)
-
-    //   emitToOne('joinedGame', getGame(client.game).state())
-    // } else if (client.game) {
-    //   console.log(`did not find game ${client.game}, client.game will be null`)
-    //   if (client.away) {
-    //     console.log('client is set as Away. Setting away to null')
-    //     client.away = null
-    //   }
-    //   client.game = null
-    // }
+    try {
+      let ip = socket.request.connection.remoteAddress;
+      let client = clients.match({ name, ip }) || clients.add({ name, ip });
+  
+      socket.join(client.id);
+  
+      io.to(client.id).emit("loggedIn", client);
+      
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
+    }
   });
   socket.on("getAvailableGames", clientId => {
-    if (!clients.get(clientId)) {
-      console.log(`${clientId} not found @ on.getAvailableGames`);
-
-      io.to(clientId)
-        .emit(
-          "serverError",
-          `Client ${clientId} not found while fetching available games`
-        );
-      return;
+    try {
+      let availableGames = games.getAvailable(clientId)
+      io.to(clientId).emit("availableGamesSent", availableGames);
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
     }
-
-    io.to(clientId).emit("availableGamesSent", games.getAvailable(clientId));
   });
   socket.on("newGame", clientId => {
-    console.log(`Creating new game for ${clientId}`)
+    console.log(`Creating new game for ${clientId}`);
 
-    let client = clients.get(clientId)
-    if (!client) {
-      console.log(`${clientId} not found @ on.newGame`);
-      io.to(clientId).emit("serverError", `${clientId} not found @ on.newGame`);
-      return;
+    try {
+      let client = clients.get(clientId);
+      let game = games.create().join(client);
+
+      socket.join(game.id);
+
+      console.log("Created game: " + game.id + " and joined " + clientId);
+
+      io.to(clientId).emit("joinedGame", game);
+      io.emit("gameCreated", {
+        id: game.id,
+        size: game.size,
+        status: game.status,
+        players: game.players
+      });
+
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
     }
-    if (client.game && games.get(client.game)) {
-      // here should send option to resume or opt out
-      console.log(`${clientId} @ on.newGame: already registered`);
-      io
-        .to(clientId)
-        .emit("serverError", `${clientId} already registered to a game`);
-      return;
-    }
-
-    // creates a game, returns it
-    // joins client to game, returns game state
-    let game = games.create()
-      .join(client);
-    // join client to room game.id
-    socket.join(game.id)
-
-    console.log("Created game: " + game.id + " and joined " + clientId);
-
-    io.to(clientId).emit("joinedGame", game);
-    io.emit("gameCreated", {
-      id: game.id,
-      size: game.size,
-      status: game.status,
-      players: game.players
-    });
   });
+  
   socket.on("joinGame", (clientId, gameId) => {
-    console.log(`Joining ${clientId} to game ${gameId}`)
+    console.log(`Joining ${clientId} to game ${gameId}`);
 
-    let client = clients.get(clientId)
-    if (!client) {
-      console.log(`Client ${clientId} not found @ on.joinGame`);
-      io.to(clientId).emit("serverError");
-      return;
-    }
-    let game = games.get(gameId)
-    if (!game) {
-      console.log(`Game ${gameId} not found @ on.joinGame`);
-      return;
-    }
+    try {
+      let client = clients.get(clientId);
+      let game = games.get(gameId);
+      let gameState = game.join(client);
 
-    game.join(client);
+      socket.join(game.id)
 
-    io.to(clientId).emit("joinedGame", game);
-    io.to(gameId, "updateGame", game);
-    // emit this to all remove it from the lobby
-    if (game.status() === 'Playing') {
-      io.emit("gameClosed", game.id);
+      io.to(clientId).emit("joinedGame", gameState);
+      io.to(gameId).emit("updateGame", gameState);
+      // emit this to all remove it from the lobby
+      if (game.status() === "Playing") {
+        io.emit("gameClosed", game.id);
+      }
+
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error);
     }
   });
   socket.on("leaveGame", clientId => {
     console.log(`leaving game for ${clientId}`)
 
-    let client = clients.get(clientId)
-
-    if (!client) {
-      let err = `On leaveGame client ${clientId} not found`
-      console.log(err);
-
-      io.to(clientId)
-        .emit("serverError", err)
-
-      return
-    }
-    if (!client.game) {
-      let err = `On leaveGame client ${clientId} no game assigned`
-      console.log(err);
-
-      io.to(clientId)
-        .emit("serverError", err)
-
-      return
-    }
-
-    let game = games.get(client.game)
-
-    if (!game) {
-      let err = `On leaveGame client ${client.game} game not found`
-      console.log(err);
-
-      io.to(clientId)
-        .emit("serverError", err)
-
-      return
-    }
-
-    game.leave(client)
-    socket.leave(game.id);
-    
-    
-    io.to(clientId).emit("leftGame");
-    if (game.status() === "Playing") {
-      io.to(game.id).emit("updateGame", game.state());
-    }
-    if (game.status() === "Closed") {
-      io.emit("gameClosed", game.id);
+    try {
+      let client = clients.get(clientId)
+      let game = games.get(client.game)
+  
+      game.leave(client)
+      socket.leave(game.id);
+      
+      io.to(clientId).emit("leftGame");
+      if (game.status() === "Playing") {
+        io.to(game.id).emit("updateGame", game.state());
+      }
+      if (game.status() === "Closed") {
+        io.emit("gameClosed", game.id);
+      }
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
     }
   });
   socket.on("getHand", clientId => {
-    console.log(`returning hand to player &{clientId}`)
-    let client = clients.get(clientId);
+    console.log(`returning hand to player ${clientId}`)
 
-    if (!client) {
-      let err = `Client ${clientId} not found @ on.getHand`
-      console.log(err);
-      io.to(clientId).emit("serverError", err);
-      return;
+    try {
+      let client = clients.get(clientId);
+      let game = games.get(client.game);
+
+      io.to(clientId).emit("hand", game.hand(client));
+
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
     }
-    if (!client.game) {
-      let err = `Game for ${clientId} not assigned`
-      console.log(err);
-      io.to(clientId).emit("serverError", err);
-      return;
-    }
-
-    let game = games.get(client.game);
-
-    if (!game) {
-      let err = `Game ${client.game} not found`
-      console.log(err);
-      io.to(clientId).emit("leftGame");
-      io.to(clientId).emit("serverError", err);
-      return;
-    }
-
-
-    io.to(clientId).emit("hand", game.hand(client));
   });
 
   // game actions
   socket.on("move", (clientId, card) => {
-    if (!clients.get(clientId) || !clients.get(clientId).game) {
-      console.log(
-        `Client for socketId ${
-          clientId
-        } not found OR has not game attached @ on.move`
-      );
-      console.log(clients.getAll());
-      if (!clients.get(clientId)) {
-        io.to(clientId).emit("serverError");
-      }
-      return;
+    try {
+      let game = games.get(clients.get(clientId).game);
+  
+      io.to(game.id).emit("updateGame", game.move(card));
+      
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
     }
-    if (!games.get(clients.get(clientId).game)) {
-      console.log(`Game ${clients.get(clientId).game} not found @ on.move`);
-      console.log(games);
-      return;
-    }
-
-    let game = games.get(clients.get(clientId).game);
-
-    io.to(game.id, "updateGame", game.move(card));
   });
   socket.on("pickUp", clientId => {
-    if (!clients.get(clientId) || !clients.get(clientId).game) {
-      console.log(
-        `Client for socketId ${
-          clientId
-        } not found OR has not game attached @ on.pickUp`
-      );
-      console.log(clients.getAll());
-      if (!clients.get(clientId)) {
-        io.to(clientId).emit("serverError");
-      }
-      return;
+    try {
+      let client = clients.get(clientId);
+      let game = games.get(client.game);
+  
+      io.to(game.id).emit("updateGame", game.pickUp(client));
+      
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error);
     }
-    if (!games.get(clients.get(clientId).game)) {
-      console.log(`Game ${clients.get(clientId).game} not found @ on.pickUp`);
-      console.log(games);
-      return;
-    }
-
-    let client = clients.get(clientId);
-    let game = games.get(client.game);
-
-    io.to(game.id).emit("updateGame", game.pickUp(client), game.id);
   });
   socket.on("muck", clientId => {
-    if (!clients.get(clientId) || !clients.get(clientId).game) {
-      console.log(
-        `Client for socketId ${
-          clientId
-        } not found OR has not game attached @ on.muck`
-      );
-      console.log(clients.getAll());
-      if (!clients.get(clientId)) {
-        io.to(clientId).emit("serverError");
-      }
-      return;
+    try {
+      let client = clients.get(clientId);
+      let game = games.get(client.game);
+  
+      io.to(game.id).emit("updateGame", game.muck(client));
+      
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
     }
-    if (!games.get(clients.get(clientId).game)) {
-      console.log(`Game ${clients.get(clientId).game} not found @ on.muck`);
-      console.log(games);
-      return;
-    }
-
-    let client = clients.get(clientId);
-    let game = games.get(client.game);
-
-    io.to(game.id).emit("updateGame", game.muck(client), game.id);
   });
 
   /**
@@ -373,7 +263,7 @@ io.on("connection", socket => {
       zzz.on("time", (gameId, timePassed, limit) => {
         // console.log(timePassed, limit)
 
-        io.to(gameId).emit(gameId, "time", {
+        io.to(gameId).emit("time", {
           passed: timePassed,
           limit
         });

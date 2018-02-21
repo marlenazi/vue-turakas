@@ -11,5 +11,6 @@ module.exports = function NewClient(client) {
     id, name, ip,
     rank: 0,
     game: null,
+    away: null,
   }
 }

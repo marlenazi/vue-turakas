@@ -90,7 +90,7 @@ module.exports = function Game(gameSize = 2) {
       attackerCard,
       winner,
       turakas,
-      players: (() => players.map(player => {
+      players: ( () => players.map(player => {
         if (inited) {
           return {
             id: player.id,
@@ -104,7 +104,9 @@ module.exports = function Game(gameSize = 2) {
             id: player.id,
             name: player.name,
             socketIds: player.socketIds,
-      }}}))(),
+          }
+        }
+      }) )(),
     }
   }
   function hand(user) {
