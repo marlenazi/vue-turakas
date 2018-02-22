@@ -101,7 +101,7 @@ io.on("connection", socket => {
       
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error)
+      socket.emit("serverError", error.message)
     }
   });
   socket.on("getAvailableGames", clientId => {
@@ -110,7 +110,7 @@ io.on("connection", socket => {
       io.to(clientId).emit("availableGamesSent", availableGames);
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error)
+      socket.emit("serverError", error.message)
     }
   });
   socket.on("newGame", clientId => {

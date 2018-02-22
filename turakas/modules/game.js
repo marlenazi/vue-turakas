@@ -7,15 +7,11 @@ module.exports = function Game(gameSize = 2) {
   let inited = false
   let status = () => {
     if (inited) {
-      // console.log('====================')
-      // console.log(players)
-      if (players.every(player => 
-            player.away === true)) { return 'Closed'   }
-      if (_checkForEnding()      ) { return 'Finished' }
-      if (players.length === size) { return 'Playing'  }
+      if (_checkForEnding())        { return 'Finished' }
+      if (players.length === size)  { return 'Playing'  }
     } else {
-      if (players.length  >   0  ) { return 'Waiting'  }
-      else                         { return 'Closed'   }
+      if (players.length  >   0  )  { return 'Waiting'  }
+      else                          { return 'Closed'   }
     }
   }
 
@@ -37,23 +33,20 @@ module.exports = function Game(gameSize = 2) {
 
   let winner, turakas
 
-  function join(user) {
+  function join(client) {
 
     if (players.length < size) {
-      players.push(user)
-      // in case the user has left a game before and has 'away' attached
-      if (user.away) { user.away = null } 
-      user.game = id
-      console.log("======== User =======")
-      console.log(user)
-    } else console.log('Game full')
+      players.push({
+        id: client.id,
+        name: client.name,
+        rank: client.rank,
+        away: false,
+      })
 
-    if (status() === 'Playing') {
-      players.find(player => player.id === user.id)
-        .away = false
-    }
+      client.game = id
+    } else return false
 
-    if (players.length === size && !inited) { 
+    if (players.length === size && !inited) {
       _start() 
     }
 
@@ -92,28 +85,12 @@ module.exports = function Game(gameSize = 2) {
       attackerCard,
       winner,
       turakas,
-      players: ( () => players.map(player => {
-        if (inited) {
-          return {
-            id: player.id,
-            ix: player.ix,
-            name: player.name,
-            socketIds: player.socketIds,
-            hand: hands[player.ix].length,
-          }
-        } else {
-          return {
-            id: player.id,
-            name: player.name,
-            socketIds: player.socketIds,
-          }
-        }
-      }) )(),
+      players,
     }
   }
   function hand(user) {
     
-    return inited ? hands[players.findIndex(player => player.id === user.id)] : []
+    return players.find(player => player.id === user.id).hand 
   }
   function move(card) {
     
@@ -186,18 +163,16 @@ module.exports = function Game(gameSize = 2) {
 
   function _start() {
     console.log('Starting game ' + id)
-
-    deck.forEach(card => {
+    
+    deck.map(card => {
       if (card.suit === trump.suit) {
-        card.value += 10
-    }})
+        card.value += 10;
+      }
+    });
 
-    players.forEach((player, ix) => {
-      player.ix = ix
-      hands.push(deck.splice(0, 6))
-    })
+    players.map(player => player.hand = deck.splice(0, 6))
 
-    _setTimerToActive(30)
+    // _setTimerToActive(30)
 
     inited = true
   }
@@ -300,37 +275,7 @@ module.exports = function Game(gameSize = 2) {
 
   }
   function _checkForEnding() {
-
-    if (!deck.length) {
-      if (active === attacking && 
-          hands[active].every(card => card.rank === '1')) {
-
-        console.log(`
-        =====================
-        |   Pagunid, mofos  |
-        |                   |
-        |        666        |
-        =====================
-        `)
-        console.log(hands[active])
-      }
-      if (players.some((player, ix) => !hands[ix].length)) {
-        // console.log('We have a winner')
-        if (timer) { 
-          // console.log('clearing timer')
-          clearInterval(timer)
-          timer = false
-        }
-
-        winner = players.find((player, ix) => !hands[ix].length)
-        turakas = players.find(player => player !== winner)
-
-        _closeGame()
-        
-        return true
-      }
-    }
-    return false
+    return
   }
   function _closeGame() {
     players.forEach(player => player.away = null)

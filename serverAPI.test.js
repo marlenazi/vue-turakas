@@ -9,12 +9,16 @@ const { login1, login2, client } = require("./turakas/stores/mockStore");
 const address = "http://192.168.0.103:2000";
 
 var socket;
+
 var firstClient;
 var secondClient;
+
 var firstClientGame;
 var secondClientGame;
+
 var firstClientHand
 var secondClientHand
+
 var availableGames;
 
 beforeAll(done => {
@@ -67,14 +71,13 @@ describe("Login process", () => {
     socket.on("serverError", err => {
       expect(err).toBeDefined();
       expect(typeof err).toBe("string");
-      // console.log(err)
       done();
     });
   });
 });
 
 describe("Getting available games", () => {
-  test('Emit "getAvailableGames"', done => {
+  test('Emit "getAvailableGames", get back an array of games', done => {
     socket.emit("getAvailableGames", firstClient.id);
 
     socket.on("availableGamesSent", games => {
@@ -165,6 +168,7 @@ describe('Receiving a hand for first player', () => {
     socket.emit("getHand", firstClient.id);
 
     socket.on("hand", hand => {
+      console.log(hand)
       expect(hand).toBeDefined();
       expect(Array.isArray(hand)).toBe(true);
 

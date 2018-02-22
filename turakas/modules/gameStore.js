@@ -83,7 +83,7 @@ module.exports = clientStore => {
     console.log("Get all available games");
     
     let clientGames = getAllGames().filter(game =>
-      game.players.some(id => id === clientId)
+      game.state().players.some(id => id === clientId)
     );
     
     return clientGames.concat( _getWaitingGames() );

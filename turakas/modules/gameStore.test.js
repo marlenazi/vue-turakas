@@ -1,5 +1,5 @@
 const gameStore = require("./gameStore");
-const { login, client, clientStore, gameStore } = require("./../stores/mockStore");
+const { login, client, clientStoreMock, gameStoreMock } = require("./../stores/mockStore");
 
 /** ==== Test gameStore ====
  * 
@@ -36,7 +36,7 @@ const { login, client, clientStore, gameStore } = require("./../stores/mockStore
 
 
 // initialize the store with mock clientStore
-const games = gameStore(clientStore)
+const games = gameStore(clientStoreMock)
 
 let testId = client.id;
 let testGameId;
