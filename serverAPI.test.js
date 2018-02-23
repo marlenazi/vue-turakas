@@ -1,11 +1,12 @@
 /** 
- * Should be ran on fresh server 
+ * Have to be careful for socket listeners not to overwrite properties, because
+ *    already run tests still hear and react to previous socket action.
  * 
 */
 
 
 const io = require("socket.io-client");
-const { login1, login2, client } = require("./turakas/stores/mockStore");
+const { logins, client } = require("./turakas/stores/mockStore");
 const address = "http://192.168.0.103:2000";
 
 var socket;
@@ -13,11 +14,11 @@ var socket;
 var firstClient;
 var secondClient;
 
-var firstClientGame;
-var secondClientGame;
+var firstGame;
+var secondGame;
 
-var firstClientHand
-var secondClientHand
+var firstHand
+var secondHand
 
 var availableGames;
 
@@ -42,10 +43,13 @@ test("Socket connection", () => {
 
 describe("Login process", () => {
   test("Emit name, get client object", done => {
-    socket.emit("login", login1.name);
+    socket.emit("login", logins[0].name);
 
     socket.on("loggedIn", clientObj => {
-      firstClient = clientObj;
+      if (clientObj.name === 'Miki') {
+        
+        firstClient = clientObj
+      }
       done();
     });
   });
@@ -62,7 +66,7 @@ describe("Login process", () => {
       "rank",
       "game"
     );
-    expect(firstClient.name).toBe(login1.name);
+    expect(firstClient.name).toBe(logins[0].name);
   });
 
   test("Emit wrong type Name, get error", done => {
@@ -78,9 +82,11 @@ describe("Login process", () => {
 
 describe("Getting available games", () => {
   test('Emit "getAvailableGames", get back an array of games', done => {
+    console.log(socket.connected)
     socket.emit("getAvailableGames", firstClient.id);
 
     socket.on("availableGamesSent", games => {
+
       expect(games).toBeDefined();
       expect(Array.isArray(games)).toBe(true);
 
@@ -102,7 +108,7 @@ describe("Starting a new game and observing game being created", () => {
       expect(gameState).toBeDefined();
       expect(typeof gameState).toBe('object');
 
-      firstClientGame = gameState;
+      firstGame = gameState;
     });
 
     socket.on("gameCreated", gameState => {
@@ -118,7 +124,7 @@ describe("Starting a new game and observing game being created", () => {
 
 describe("Login process for second player", () => {
   test("Emit name, get client object", done => {
-    socket.emit("login", login2.name);
+    socket.emit("login", logins[1].name);
 
     socket.on("loggedIn", clientObj => {
       secondClient = clientObj;
@@ -138,7 +144,7 @@ describe("Login process for second player", () => {
       "rank",
       "game"
     );
-    expect(secondClient.name).toBe(login2.name);
+    expect(secondClient.name).toBe(logins[1].name);
   });
 });
 
@@ -149,14 +155,14 @@ describe('Joining a waiting game', () => {
   
     // For client, event 'joinedGame' is sent together with game state
     // Server also sends all players an update that a game has been closed
-    socket.emit("joinGame", secondClient.id, firstClientGame.id);
+    socket.emit("joinGame", secondClient.id, firstGame.id);
 
     socket.on("joinedGame", gameState => {
       expect(gameState).toBeDefined();
       expect(typeof gameState).toBe('object');
-      expect(gameState.id).toBe(firstClientGame.id)
+      expect(gameState.id).toBe(firstGame.id)
 
-      secondClientGame = gameState;
+      secondGame = gameState;
       
       done();
     });
@@ -168,11 +174,13 @@ describe('Receiving a hand for first player', () => {
     socket.emit("getHand", firstClient.id);
 
     socket.on("hand", hand => {
-      console.log(hand)
+      // console.log(hand)
       expect(hand).toBeDefined();
-      expect(Array.isArray(hand)).toBe(true);
+      expect(typeof hand).toBe('object');
 
-      firstClientHand = hand;
+      if (hand.name === 'Miki') {
+        firstHand = hand
+      }
       
       done();
     });
@@ -184,12 +192,41 @@ describe('Receiving a hand for second player', () => {
     socket.emit("getHand", secondClient.id);
 
     socket.on("hand", hand => {
+      // console.log(hand)
       expect(hand).toBeDefined();
-      expect(Array.isArray(hand)).toBe(true);
+      expect(typeof hand).toBe('object');
 
-      secondClientHand = hand;
+      secondHand = hand;
       
       done();
     });
   });
+})
+
+describe('Moving a card to board', () => {
+  test('Both clients should have same state', () => {
+    expect(firstGame).toEqual(secondGame)
+  })
+  test('Board is empty', () => {
+    expect(firstGame.board).toHaveLength(0)
+  })
+  it('Emits move(id, card) and moves a card to board', done => {
+    let id = firstGame.players[firstGame.active].id
+    let card = firstGame.active === 0 ? firstHand.hand[1] : secondHand.hand[1]
+
+    // console.log(firstClient.name, secondClient.name)
+    // console.log(firstGame.active, secondGame.active)
+    // console.log(firstHand)
+    // console.log(secondHand)
+    // console.log(card)
+    socket.emit("move", id, card);
+
+    socket.on('updateGame', state => {
+      // firstGame = state
+
+      expect(state.board).toHaveLength(1)
+      expect(state.board[0]).toEqual(card)
+      done()
+    })
+  })
 })

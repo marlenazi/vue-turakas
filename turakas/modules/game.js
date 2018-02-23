@@ -22,14 +22,14 @@ module.exports = function Game(gameSize = 2) {
   const board = []
   const hands = []
   const mucked = []
-  const timers = {}
+
   const players = []
 
   let attacking = Math.floor(Math.random() * size)
   let defending = attacking === (size - 1) ? 0 : attacking + 1
   let active = attacking
   let attackerCard = null
-  let timer, actionTimer
+  let timer
 
   let winner, turakas
 
@@ -40,10 +40,12 @@ module.exports = function Game(gameSize = 2) {
         id: client.id,
         name: client.name,
         rank: client.rank,
+        hand: [],
         away: false,
       })
 
       client.game = id
+      console.log(client)
     } else return false
 
     if (players.length === size && !inited) {
@@ -85,23 +87,29 @@ module.exports = function Game(gameSize = 2) {
       attackerCard,
       winner,
       turakas,
-      players,
+      players: players.map(player => ({
+        id: player.id, 
+        name: player.name,
+        rank: player.rank,
+        away: player.away,
+        hand: player.hand.length,
+      })),
     }
   }
   function hand(user) {
     
-    return players.find(player => player.id === user.id).hand 
+    return players.find(player => player.id === user.id)
   }
   function move(card) {
     
-    let ix = hands[active].findIndex( pCard => 
-                                      pCard.suit === card.suit && 
-                                      pCard.rank === card.rank    )
+    let ix = players[active].hand.findIndex(pCard => 
+      pCard.suit === card.suit && 
+      pCard.rank === card.rank);
 
     function isValid() {
       // console.log(card)
       if (ix > -1) { 
-        card = hands[active][ix]
+        card = players[active].hand[ix]
 
       } else return false
       // console.log(card)
@@ -125,7 +133,7 @@ module.exports = function Game(gameSize = 2) {
       
     if (isValid()) {
       // console.log('Was valid')
-      board.push(...hands[active].splice(ix, 1))
+      board.push(...players[active].hand.splice(ix, 1))
       _nextActive()
     }
     
@@ -135,7 +143,7 @@ module.exports = function Game(gameSize = 2) {
   function pickUp(user) {
 
     if (inited && players[active].id === user.id && defending === active) {
-      hands[active].push(...board.splice(0))
+      players[active].hand.push(...board.splice(0))
 
       attackerCard = null
 
@@ -216,13 +224,13 @@ module.exports = function Game(gameSize = 2) {
     // replenishing should go in the order that the last round was played
 
     players.forEach((player, ix) => {
-      if (hands[ix].length < 6 && deck.length && ix !== defending) {
-        hands[ix].push(...deck.splice(0, 6 - hands[ix].length))
+      if (player.hand.length < 6 && deck.length && ix !== defending) {
+        player.hand.push(...deck.splice(0, 6 - hands[ix].length))
       }
     })
 
     // we skipped the killer and it gets replenished last
-    let hand = hands[defending]
+    let hand = players[defending].hand
     if (hand.length < 6 && deck.length) {
       hand.push(...deck.splice(0, 6 - hand.length))
     }
@@ -236,7 +244,8 @@ module.exports = function Game(gameSize = 2) {
       if (timePassed > seconds) {
 
         if (callback === move) {
-          callback(hands[active][Math.floor(Math.random() * hands[active].length)])
+          let hand = players[active].hand
+          callback(hand[Math.floor(Math.random() * hand.length)])
         } else { callback(players[active]) }
         
       } else {
@@ -277,18 +286,18 @@ module.exports = function Game(gameSize = 2) {
   function _checkForEnding() {
     return
   }
-  function _closeGame() {
-    players.forEach(player => player.away = null)
+  // function _closeGame() {
+  //   players.forEach(player => player.away = null)
 
-    setTimeout(() => {
-      players.forEach(player => {
-        if (player.game === id) {
-          player.game = null
-        }
-      })
-      zzz.emit('closeGame', id)
-    }, 1000 * 30)
-  }
+  //   setTimeout(() => {
+  //     players.forEach(player => {
+  //       if (player.game === id) {
+  //         player.game = null
+  //       }
+  //     })
+  //     zzz.emit('closeGame', id)
+  //   }, 1000 * 30)
+  // }
 
   return {
     id,

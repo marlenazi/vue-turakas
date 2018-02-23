@@ -34,8 +34,8 @@ const NewGame = require("./game");
  *   All passed ids are strings
  */
 
-module.exports = clientStore => {
-  const clients = clientStore;
+module.exports = () => {
+
   const games = [];
 
   function createGame() {
@@ -86,7 +86,16 @@ module.exports = clientStore => {
       game.state().players.some(id => id === clientId)
     );
     
-    return clientGames.concat( _getWaitingGames() );
+    return clientGames.concat(_getWaitingGames()).map(game => {
+      let state = game.state();
+
+      return { 
+        id: state.id,
+        size: state.size,
+        status: state.status,
+        players: state.players
+      };
+    });
   }
 
   function _getWaitingGames() {

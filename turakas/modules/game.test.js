@@ -15,7 +15,7 @@ test("Joining first client", () => {
   let state = game1.join(hups);
 
   expect(typeof state.players[0]).toBe("object");
-  expect(state.players[0]).toEqual({
+  expect(state.players[0]).toMatchObject({
     id:   hups.id,
     name: hups.name,
     rank: hups.rank,
@@ -32,12 +32,18 @@ test("Joining second client", () => {
     rank: tups.rank,
     away: false,
   });
-  expect(state.players[0].hand).toBeDefined()
-  expect(state.players[1].hand).toBeDefined() 
   expect(game1.status()).toBe('Playing')
 });
-test('Joining third client to a two player game', () => {
+test('Joining third client to a two player game returns false', () => {
   let answer = game1.join(lups)
 
   expect(answer).toBe(false)
+})
+
+test('Game state', () => {
+  let state = game1.state()
+  // console.log(typeof game1.state())
+  // console.log(typeof state)
+  expect(typeof state).toBe('object')
+  expect(state.players).toHaveLength(state.size)
 })

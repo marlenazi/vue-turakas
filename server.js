@@ -190,25 +190,28 @@ io.on("connection", socket => {
     try {
       let client = clients.get(clientId);
       let game = games.get(client.game);
+      let hand = game.hand(client)
 
-      io.to(clientId).emit("hand", game.hand(client));
+      io.to(clientId).emit("hand", hand);
 
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error)
+      socket.emit("serverError", error.message)
     }
   });
 
   // game actions
   socket.on("move", (clientId, card) => {
     try {
-      let game = games.get(clients.get(clientId).game);
+      let client = clients.get(clientId)
+      console.log(client)
+      let game = games.get(client.game);
   
       io.to(game.id).emit("updateGame", game.move(card));
       
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error)
+      socket.emit("serverError", error.message)
     }
   });
   socket.on("pickUp", clientId => {

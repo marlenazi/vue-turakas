@@ -9,6 +9,7 @@ module.exports = function NewClient(client) {
   console.log('Create new client: ' + client.name)
   return {
     id, name, ip,
+    status: 'idle',
     rank: 0,
     game: null,
     away: null,

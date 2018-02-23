@@ -2,7 +2,7 @@
   <div class="turakasGamePlaying">
 
     <game-info
-      :heroIx="heroIx"
+      :heroIx="$_heroIx"
       :heroId="hero.id"
       :deck="game.deck"
       :players="game.players"
@@ -26,8 +26,8 @@
     </game-controls>
 
     <game-hand
-      :active="game.active === heroIx"
-      :hand="hand">
+      :active="game.active === $_heroIx"
+      :player="player">
     </game-hand>
 
     <!-- {{ hand }} -->
@@ -53,7 +53,11 @@ export default {
   },
   data() {
     return {
-      hand: [],
+      player: {
+        id: this.hero.id,
+        name: this.hero.name,
+        hand: []
+      },
       heroIx: this.game.players.find(pl => pl.id === this.hero.id).ix,
       time: {
         limit: 30,
@@ -63,6 +67,11 @@ export default {
   },
   methods: {
   },
+  computed: {
+    $_heroIx() {
+      return this.game.players.findIndex(player => player.id === this.hero.id)
+    }
+  },
   mounted() {
     if (this.game.status === 'Playing') {
       this.$socket.emit('getHand', this.hero.id)
@@ -71,7 +80,7 @@ export default {
   sockets: {
     hand(hand) {
       console.log('Got hand?')
-      this.hand = hand
+      this.player = hand
     },
     updateGame(game) {
       if (game.status === 'Playing' || game.status === 'Finished') {
