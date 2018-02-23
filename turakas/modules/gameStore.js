@@ -75,18 +75,20 @@ module.exports = () => {
     } else return false;
   }
   
-  function getAvailableGames(clientId) {
+  function getGameList(clientId) {
     if (!clientId || typeof clientId !== 'string') {
       console.log("No client id provided or not string. Instead sending waiting games");
       return _getWaitingGames();
     }
     console.log("Get all available games");
     
-    let clientGames = getAllGames().filter(game =>
-      game.state().players.some(id => id === clientId)
-    );
+    // let clientGames = getAllGames().filter(game =>
+    //   game.state().players.some(id => id === clientId)
+    // );
     
-    return clientGames.concat(_getWaitingGames()).map(game => {
+    // MODIFIED
+    // clientGames.concat(_getWaitingGames()).map(...
+    return getAllGames().map(game => {
       let state = game.state();
 
       return { 
@@ -110,6 +112,6 @@ module.exports = () => {
     destroy: destroyGame,
     get: getGame,
     getAll: getAllGames,
-    getAvailable: getAvailableGames
+    getAvailable: getGameList
   };
 };

@@ -3,8 +3,8 @@
   
   <transition name="fade" mode="out-in">
     <component 
-      :is="activeView"
-      :heroId="hero.id"
+      :is="turakasView"
+
       :hero="hero"
       :game="game"
       :games="games">
@@ -31,26 +31,23 @@ export default {
   },
   data() {
     return {
-      activeView: 'TurakasLobby',
+      turakasView: 'TurakasLobby',
     }
   },
-  methods: {
-
-  },
-  computed: {
-
-  },
   created() {
-    if (this.game.status) {
-      this.activeView = 'TurakasGame'
+    if (this.game.status === 'playing') {
+      console.log('Found ongoing game: ' + this.game.id)
+      this.turakasView = 'TurakasGame'
     }
   },
   sockets: {
-    joinedGame(state) {
-      this.activeView = 'TurakasGame'
+    joinedGame() {
+      console.log('Joined a game. Switching turakasView to Game')
+      this.turakasView = 'TurakasGame'
     },
     leftGame() {
-      this.activeView = 'TurakasLobby'
+      console.log('Left the game. Switching turakasView to Lobby')
+      this.turakasView = 'TurakasLobby'
     },
   }
 }

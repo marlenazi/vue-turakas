@@ -47,7 +47,7 @@ export default {
       this.$socket.emit('muck', this.heroId)
     },
     $_heroIx() {
-      return this.players.find(player => player.id === this.heroId).ix
+      return this.players.findIndex(player => player.id === this.heroId)
     }
   },
   computed: {

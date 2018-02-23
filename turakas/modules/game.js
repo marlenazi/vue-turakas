@@ -7,11 +7,11 @@ module.exports = function Game(gameSize = 2) {
   let inited = false
   let status = () => {
     if (inited) {
-      if (_checkForEnding())        { return 'Finished' }
-      if (players.length === size)  { return 'Playing'  }
+      if ( _checkGameEnding()      )  { return 'Finished' }
+      if ( players.length === size )  { return 'Playing'  }
     } else {
-      if (players.length  >   0  )  { return 'Waiting'  }
-      else                          { return 'Closed'   }
+      if ( players.length  >   0   )  { return 'Waiting'  }
+      else                            { return 'Closed'   }
     }
   }
 
@@ -45,7 +45,7 @@ module.exports = function Game(gameSize = 2) {
       })
 
       client.game = id
-      console.log(client)
+
     } else return false
 
     if (players.length === size && !inited) {
@@ -59,11 +59,11 @@ module.exports = function Game(gameSize = 2) {
       players.splice(players.indexOf(user), 1)
       user.game = null
     }
-    if (status() === 'Playing' || status() === 'Finished') {
+    if (status() === 'playing' || status() === 'Finished') {
       // we want to leave id, so if user reconnects, they can continue
       let leavingPlayer = players.find(player => player.id === user.id)
       leavingPlayer.away = true
-      console.log(`${user.name} has left the game`)
+      console.log(`${leavingPlayer.name} has left the game`)
 
       if (status() === 'Closed' && timer) {
         clearInterval(timer)
@@ -87,6 +87,7 @@ module.exports = function Game(gameSize = 2) {
       attackerCard,
       winner,
       turakas,
+      pagunidPossible: _checkPagunid(players[active]),
       players: players.map(player => ({
         id: player.id, 
         name: player.name,
@@ -197,10 +198,12 @@ module.exports = function Game(gameSize = 2) {
     _setTimerToActive(30)
     zzz.emit('refresh', id, state())
 
-    if (deck.length < 6) { 
-      if (_checkForEnding()) {
+    if (deck.length <= 6) { 
+      if (_checkGameEnding()) {
 
-        zzz.emit('gameOver', state())
+        _closeGame()
+
+        zzz.emit('gameFinished', state())
       }
     }
   }
@@ -255,7 +258,6 @@ module.exports = function Game(gameSize = 2) {
 
       timePassed += 1
     }, 1000)
-
   }
   function _setTimerToActive(seconds = 30) {
     // console.log('setting timer to active. Sec: ' + seconds)
@@ -283,21 +285,41 @@ module.exports = function Game(gameSize = 2) {
     }
 
   }
-  function _checkForEnding() {
-    return
-  }
-  // function _closeGame() {
-  //   players.forEach(player => player.away = null)
+  function _checkPagunid(player) {
+    if (deck.length) return false
 
-  //   setTimeout(() => {
-  //     players.forEach(player => {
-  //       if (player.game === id) {
-  //         player.game = null
-  //       }
-  //     })
-  //     zzz.emit('closeGame', id)
-  //   }, 1000 * 30)
-  // }
+    if (player.hand.length <= 4 && 
+        player.hand.every(card => card.value === '1')) {
+      return true
+
+    } else return false
+  }
+  function _checkEmptyHand() {
+    
+    return players.some(player => player.hand.length === 0)
+  }
+  function _checkGameEnding() {
+    if (deck.length) return false
+
+    if (_checkEmptyHand()) {
+      winner = players.find(player => player.hand.length === 0).id
+      turakas = players.find(player => player.id !== winner.id).id
+      return true
+
+    } else return false
+  }
+  function _closeGame() {
+    
+    setTimeout(() => {
+  
+      zzz.emit('closeGame', {
+        id,
+        players,
+        winner,
+        turakas,
+      })
+    }, 1000 * 10)
+  }
 
   return {
     id,

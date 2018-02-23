@@ -29,7 +29,7 @@ beforeAll(done => {
     forceNew: true
   });
   socket.on("connect", function() {
-    console.log("Connected");
+    // console.log("Connected");
     done();
   });
   socket.on("disconnect", function() {
@@ -45,7 +45,7 @@ describe("Login process", () => {
   test("Emit name, get client object", done => {
     socket.emit("login", logins[0].name);
 
-    socket.on("loggedIn", clientObj => {
+    socket.on("updateHero", clientObj => {
       if (clientObj.name === 'Miki') {
         
         firstClient = clientObj
@@ -81,11 +81,11 @@ describe("Login process", () => {
 });
 
 describe("Getting available games", () => {
-  test('Emit "getAvailableGames", get back an array of games', done => {
-    console.log(socket.connected)
-    socket.emit("getAvailableGames", firstClient.id);
+  test('Emit "getGameList", get back an array of games', done => {
+    // console.log(socket.connected)
+    socket.emit("getGameList", firstClient.id);
 
-    socket.on("availableGamesSent", games => {
+    socket.on("gameList", games => {
 
       expect(games).toBeDefined();
       expect(Array.isArray(games)).toBe(true);
@@ -104,14 +104,14 @@ describe("Starting a new game and observing game being created", () => {
     // Server also sends all players an update that a game has been created
     socket.emit("newGame", firstClient.id);
 
-    socket.on("joinedGame", gameState => {
+    socket.on("updateGame", gameState => {
       expect(gameState).toBeDefined();
       expect(typeof gameState).toBe('object');
 
       firstGame = gameState;
     });
 
-    socket.on("gameCreated", gameState => {
+    socket.on("updateGameList", gameState => {
       expect(gameState).toBeDefined();
       expect(typeof gameState).toBe('object');
       
@@ -126,7 +126,7 @@ describe("Login process for second player", () => {
   test("Emit name, get client object", done => {
     socket.emit("login", logins[1].name);
 
-    socket.on("loggedIn", clientObj => {
+    socket.on("updateHero", clientObj => {
       secondClient = clientObj;
       done();
     });
@@ -157,7 +157,7 @@ describe('Joining a waiting game', () => {
     // Server also sends all players an update that a game has been closed
     socket.emit("joinGame", secondClient.id, firstGame.id);
 
-    socket.on("joinedGame", gameState => {
+    socket.on("updateGame", gameState => {
       expect(gameState).toBeDefined();
       expect(typeof gameState).toBe('object');
       expect(gameState.id).toBe(firstGame.id)

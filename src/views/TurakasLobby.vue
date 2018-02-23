@@ -12,12 +12,13 @@
       </div>
       <new-game 
         class="newGameButton"
-        :heroId="heroId"/>
+        :heroId="hero.id"
+      />
     </div>
 
     <game-list
       :games="games"
-      :heroId="heroId">
+      :heroId="hero.id">
     </game-list>
 
   </div>
@@ -31,7 +32,6 @@ import GameList from './TurakasLobbyGameList'
 export default {
   name: 'TurakasLobby',
   props: {
-    heroId: String,
     hero: Object,
     game: Object,
     games: Array

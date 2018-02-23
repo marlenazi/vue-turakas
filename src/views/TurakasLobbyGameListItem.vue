@@ -1,9 +1,11 @@
 <template>
   <button 
     class="game"
+    :disabled="game.status !== 'waiting'"
     @click="$_joinGame(game.id)"
   >
     <span>Play</span>
+    {{ game.status }}
     <div class="registeredPlayers">
       Players:
       <div 

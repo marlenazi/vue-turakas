@@ -36,57 +36,59 @@ export default {
 
   },
   sockets: {
-    loggedIn(user) {
-      console.log(`Logged in ${user.name}`)
-      console.log(user)
+    loggedIn(client) {
+      console.log(`Logged in ${client.name}`)
+      console.log(client)
 
-      this.hero = user
       this.appView = 'Turakas'
     },
-    updateHero(hero) {
-      console.log('Got new hero state')
-      console.log(hero)
-      this.hero = hero
+    updateHero(client) {
+      console.log('Got fresh hero state')
+      console.log(client)
+      this.hero = client
     },
-    availableGamesSent(newGames) {
+    gameList(newGames) {
       console.log('Received an array of games')
       console.log(newGames)
-      this.games = newGames
+      // reverse it so newer are first
+      this.games = newGames.reverse()
     },
-    gameCreated(newGame) {
-      console.log('New game created')
-      // console.log(newGame)
+    updateGameList(state) {
+      console.log('Update game list')
+      console.log(state)
 
-      this.games.push(newGame)
-    },
-    gameClosed(id) {
-      console.log('Game closed')
-      console.log(id)
+      let game = this.games.find(game => game.id === state.id)
 
-      this.games.splice(this.games.findIndex(game => 
-                                             game.id === id), 1)
+      if (game) {
+        console.log('updating game: ' + game.id)
+        game = state
+        console.log(this.games)
+      } else {
+        console.log('add new game to list')
+        this.games.unshift(state)
+      }
     },
-    joinedGame(state) {
-      console.log('Joined game')
+    // leftGame() {
+    //   console.log('leftGame from App')
+    //   this.game = {}
+    // },
+    updateGame(state) {
+      console.log('Updating game')
       console.log(state)
       this.game = state
     },
-    leftGame() {
-      console.log('leftGame from App')
-      this.game = {}
-    },
-    updateGame(state) {
-      console.log('Updating game')
-      this.game = state
-    },
-    gameOver(state) {
-      console.log('Game is over')
-      this.game = state
+    // gameOver(state) {
+    //   console.log('Game is over')
+    //   this.game = state
+    // },
+    serverMessage(msg) {
+      console.log(msg)
+      alert(msg)
     },
     serverError(err = 'something happened') {
       console.log('==== SERVER ERROR ====')
       console.log(err)
-      if (confirm(err + ' -- Do you want to go back Welcome screen?')) {
+      if (confirm(err + ' -- Back to Welcome screen?')) {
         this.game = {}
         this.appView = 'Welcome'
       }

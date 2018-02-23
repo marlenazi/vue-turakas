@@ -5,13 +5,21 @@ module.exports = function NewClient(client) {
   
   let {name, ip } = client
   let id = shortId.generate()
-  
-  console.log('Create new client: ' + client.name)
+  let game = null
+  let status = () => game ? 'playing' : 'idle'
+  let rank = 0
+
+  function addRank() {
+    rank++
+  }
+  console.log('Creating new client: ' + client.name)
   return {
-    id, name, ip,
-    status: 'idle',
-    rank: 0,
-    game: null,
-    away: null,
+    id, 
+    name, 
+    ip,
+    rank,
+    game,
+    status: status(),
+    addRank: addRank(),
   }
 }

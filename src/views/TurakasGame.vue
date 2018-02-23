@@ -3,7 +3,7 @@
 
     <transition name="fade" mode="out-in">
       <component
-        :is="activeView"
+        :is="gameView"
         :hero="hero"
         :game="game">
       </component>
@@ -25,11 +25,6 @@ export default {
   components: {
     GameWaiting, GamePlaying, GameFinished
   },
-  data() {
-    return {
-      
-    }
-  },
   methods: {
     $_leaveGame() {
       console.log('Leaving game')
@@ -38,8 +33,9 @@ export default {
     }
   },
   computed: {
-    activeView() {
-      return 'Game' + this.game.status
+    gameView() {
+
+      return 'game' + this.game.status
     }
   }
 }
