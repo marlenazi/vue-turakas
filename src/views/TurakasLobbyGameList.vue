@@ -1,5 +1,6 @@
 <template>
   <div class="games">
+  {{ games.length }}
 
     <game-list-item
       v-for="game in games"
@@ -11,7 +12,6 @@
 
   </div>
 </template>
-
 <script>
 import GameListItem from "./TurakasLobbyGameListItem";
 
@@ -29,14 +29,8 @@ export default {
       title: "Games",
     };
   },
-  methods: {
-    $_getAvailableGames() {
-      console.log('Requesting games for gameList')
-      this.$socket.emit('getGameList', this.hero.id)
-    }
-  },
   created() {
-    this.$_getAvailableGames()
+    this.$socket.emit('getGameList', this.hero.id)
   }
 };
 </script>

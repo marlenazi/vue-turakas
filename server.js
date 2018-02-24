@@ -89,6 +89,8 @@ io.on("connection", socket => {
       let client = clients.match({ name, ip }) || clients.add({ name, ip });
   
       socket.join(client.id);
+      // remember the client, so on disconnect we have access
+      socket.$_client = client.id
   
       io.to(client.id).emit("loggedIn", {
         id: client.id,
@@ -99,7 +101,7 @@ io.on("connection", socket => {
       if (client.game) {
         let game = games.get(client.game)
         socket.join(game.id)
-        // remember the game room so on disconnect we have access
+        // remember the game so on disconnect we have access
         socket._rooms.push(game.id)
 
         io.to(client.id).emit("joinedGame");
@@ -302,7 +304,16 @@ io.on("connection", socket => {
    */
   socket.on("disconnect", () => {
     console.log(`Socket ${socket.id} disconnected`);
-    console.log(socket._rooms);
+    try {
+      let client = clients.get(socket.$_client)
+
+      socket._rooms.map(id => {
+        let response = games.get(id).leave(client)
+        io.emit('updateGameList', response.state)
+      })
+    } catch (error) {
+      console.log(error)
+    }
     
   });
 
@@ -344,16 +355,18 @@ io.on("connection", socket => {
     if (!zzz.listeners("gameFinished").length) {
       zzz.on("gameFinished", state => {
         try {
+
           state.players.map(player => {
             let client = clients.get(player.id)
+            client.game = null
+
             if (state.winner.id === client.id) {
-              
               client.rank++
-
-              io.to(client.id).emit('updateHero', client)
             }
-          })
 
+            io.to(client.id).emit('updateHero', client)
+          })
+          
           io.to(state.id).emit("updateGame", state);
           io.emit('updateGameList', state)
         } catch (error) {

@@ -134,15 +134,8 @@ export default {
   margin-right: -2.6em;
   height: 3rem;
   width: 4rem;
-
-}
-
-#deck {
 }
 .villain {
-  // border: 1px solid blue;
-  // position: relative;
-  // top: 1rem;
   margin-left: auto;
   flex: 0 0 5rem;
   width: 7.5rem;
