@@ -133,7 +133,7 @@ export default {
 }
 
 #deck {
-  
+  color: $action;
 }
 .villain {
   // border: 1px solid blue;

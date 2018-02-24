@@ -113,7 +113,7 @@ export default {
     box-shadow: 0px 0px 8px 3px $action;
   }
   to {
-    box-shadow: 0px 0px 10px 2px $accent;
+    box-shadow: 0px 0px 10px 2px $shadow;
   }
 }
 
