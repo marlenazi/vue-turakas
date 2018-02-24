@@ -89,8 +89,8 @@ export default {
       }
     },
     time(timeUpdate) {
-      console.log('time passed: ' + timeUpdate.passed + 
-                       ' limit: ' + timeUpdate.limit   )
+      // console.log('time passed: ' + timeUpdate.passed + 
+      //                  ' limit: ' + timeUpdate.limit   )
 
       this.time.passed = timeUpdate.passed
       this.time.limit = timeUpdate.limit

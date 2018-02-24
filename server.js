@@ -134,6 +134,7 @@ io.on("connection", socket => {
       let game = games.create()
       let response = game.join(client);
       console.log(response.msg)
+
       switch (response.msg) {
       case "Closed":
         io.to(clientId)
@@ -180,15 +181,15 @@ io.on("connection", socket => {
         break
       case 'Joined':
       case 'Resumed':
-        console.log("Joined " + clientId + " to game: " + game.id);
-        console.log(response.state)
-        client.game = game.id
+        console.log(`${client.id} ${client.name} ${response.msg} game ${game.id}`);
+        
+        client.game = gameId
         socket.join(game.id);
         socket._rooms.push(game.id)
         
         io.to(client.id).emit("joinedGame");
         io.to(client.id).emit('updateHero', client)
-        io.to(client.id).emit("updateGame", response.state);
+        io.to(game.id).emit("updateGame", response.state);
 
         io.emit("updateGameList", {
           id: response.state.id,
@@ -197,7 +198,12 @@ io.on("connection", socket => {
           players: response.state.players
         });
         break
-      }
+      case 'Viewed':
+        console.log(`${client.id} ${client.name} ${response.msg} game ${game.id}`);
+        
+        io.to(client.id).emit("joinedGame");
+        io.to(client.id).emit("updateGame", response.state);
+      } 
 
     } catch (error) {
       console.log(error);
@@ -209,20 +215,25 @@ io.on("connection", socket => {
 
     try {
       let client = clients.get(clientId)
-      let game = games.get(client.game)
-  
-      let gameState = game.leave(client)
-      socket.leave(game.id);
-      
-      io.to(clientId).emit("leftGame");
-      io.to(client.id).emit('updateHero', client)
-      if (gameState.status === 'Closed') {
-        console.log(`Client: ${clientId} left game: ${game.id}`)
-        io.emit('updateGameList', gameState)
+
+      if (client.game) {
+        let game = games.get(client.game)
+        let response = game.leave(client)
+
+        socket.leave(game.id);
+        io.to(client.id).emit('updateHero', client)
+        
+        if (response.state.status === 'Closed') {
+          console.log(`Client: ${clientId} left game: ${game.id}`)
+          io.emit('updateGameList', response.state)
+        }
       }
+  
+      io.to(clientId).emit("leftGame");
+
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error)
+      socket.emit("serverError", error.message)
     }
   });
   socket.on("getHand", clientId => {

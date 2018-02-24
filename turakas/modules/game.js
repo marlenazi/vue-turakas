@@ -63,30 +63,28 @@ module.exports = function Game(gameSize = 2) {
         away: false
       });
 
+      // When full, start the game
+      if (players.length === size && !inited) {
+        _start() 
+      }
+
       return _response('Joined')
     }
-    
     if (status() === 'Playing' && clientRegistered()) {
       return _response('Resumed')
     }
-    
-    // When full, start the game
-    if (players.length === size && !inited) {
-      _start() 
+    if (status() === 'Finished') {
+      return _response('Viewed')
     }
-
+    
     return state()
   }
   function leave(user) {
     // console.log(`Player ${user.name} ${user.id} wants to leave`);
-    // console.log("Status is " + status());
 
     // we want to leave id, so if user reconnects, they can continue
     let leavingPlayer = players.find(player => player.id === user.id);
     leavingPlayer.away = true;
-    // console.log(`${leavingPlayer.name} has left the game`);
-    // console.log(players);
-    // console.log(status());
 
     if (status() === "Closed") {
       clearInterval(timer);
@@ -94,7 +92,7 @@ module.exports = function Game(gameSize = 2) {
       _closeGame(0);
     }
 
-    return state();
+    return _response('Left')
   }
   function hand(user) {
     
@@ -337,7 +335,7 @@ module.exports = function Game(gameSize = 2) {
 
     } else return false
   }
-  function _closeGame(seconds = 10) {
+  function _closeGame(seconds = 1000) {
     clearInterval(timer)
     timer = false
     setTimeout(() => {

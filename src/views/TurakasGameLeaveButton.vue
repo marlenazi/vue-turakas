@@ -35,7 +35,8 @@ export default {
 .leaveGameButton {
   flex: 0 0 auto;
   border-radius: 50%;
-  margin: .8rem;
+  margin-left: .8rem;
+  margin-right: auto;
   height: 3rem; 
   width: 3rem;
   font-size: 2.4rem;

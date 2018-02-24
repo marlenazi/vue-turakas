@@ -1,9 +1,7 @@
 <template>
   <button 
     class="game"
-    :disabled="
-      (game.status === 'Playing' || game.status === 'Finished' )
-      && game.id !== hero.game"
+    :disabled="game.status === 'Playing' && game.id !== hero.game"
     @click="$_joinGame(game.id)"
   >
     <span>Play</span>
