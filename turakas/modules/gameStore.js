@@ -76,28 +76,29 @@ module.exports = () => {
   }
   
   function getGameList(clientId) {
-    if (!clientId || typeof clientId !== 'string') {
+    if (!clientId || typeof clientId !== "string") {
       console.log("No client id provided or not string. Instead sending waiting games");
       return _getWaitingGames();
     }
     console.log("Get all available games");
-    
+
     // let clientGames = getAllGames().filter(game =>
     //   game.state().players.some(id => id === clientId)
     // );
-    
+
     // MODIFIED
     // clientGames.concat(_getWaitingGames()).map(...
-    return getAllGames().map(game => {
-      let state = game.state();
+    return getAllGames()
+      .map(game => {
+        let state = game.state();
 
-      return { 
-        id: state.id,
-        size: state.size,
-        status: state.status,
-        players: state.players
-      };
-    });
+        return { 
+          id: state.id, 
+          size: state.size, 
+          status: state.status, 
+          players: state.players };
+      })
+      .filter(game => game.status !== "Closed");
   }
 
   function _getWaitingGames() {

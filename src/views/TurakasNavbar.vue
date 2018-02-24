@@ -1,10 +1,16 @@
 <template>
   <nav>
     <img class="avatar" src="../assets/theFool.svg" alt="turakas logo">
-    <div 
-      class="name"
-      v-bind:style="{fontSize: $_fontSize + 'rem'}">
-      {{ hero.name }}
+    <div class="rank-name">
+      <div class="rank">
+        {{ hero.rank }} <span class="rankLabel">wins</span>
+      </div>
+      <div 
+        class="name"
+        v-bind:style="{fontSize: $_fontSize + 'rem'}"
+      >
+        {{ hero.name }}
+      </div>
     </div>
   </nav>
 </template>
@@ -27,20 +33,28 @@ export default {
 
 <style lang="scss" scoped>
 @import './../style/variables';
-
 nav {
   flex: 0 0 auto;
   border-bottom: 1px solid $accent;
-  padding: .5rem;
+  padding-bottom: .5rem;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 nav img {
-  height: 4rem;
+  height: 5rem;
+  margin-left: 0em;
 }
-.name {
-  margin-left: 1rem;
-  font-size: 2rem;
+.rank-name {
+
+}
+.rank {
+  color: $accent;
+  font-size: 1.5rem;
+}
+
+.rankLabel {
+  color: $title;
+  font-size: 1rem;
 }
 
 </style>

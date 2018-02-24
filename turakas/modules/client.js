@@ -10,7 +10,10 @@ module.exports = function NewClient(client) {
   let rank = 0
 
   function addRank() {
-    rank++
+    console.log('Bump up the rank')
+    rank = rank + 1
+
+    return
   }
   console.log('Creating new client: ' + client.name)
   return {
@@ -20,6 +23,6 @@ module.exports = function NewClient(client) {
     rank,
     game,
     status: status(),
-    addRank: addRank(),
+    addRank,
   }
 }

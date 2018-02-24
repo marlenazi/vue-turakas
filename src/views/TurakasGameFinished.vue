@@ -18,7 +18,7 @@
       </h2>
       <!-- <p>All hail the dummy!</p> -->
       <br><br>
-      <strong>Winner:</strong>
+      <strong>Winner</strong>
       <game-card
         id="winnerCards"
         v-for="card in [game.board[game.board.length - 1]]"

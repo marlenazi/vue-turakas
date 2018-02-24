@@ -65,7 +65,6 @@ export default {
   },
   data() {
     return {
-
       trumpCard: {rank: this.trump.rank, suit: this.trump.suit},
       deckCard: {rank: this.deck, suit: 'b'},
     }
@@ -133,7 +132,7 @@ export default {
 }
 
 #deck {
-  
+  margin-right: .5em;
 }
 .villain {
   // border: 1px solid blue;

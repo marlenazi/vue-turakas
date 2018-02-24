@@ -6,14 +6,25 @@ module.exports = function Game(gameSize = 2) {
   
   let inited = false
   let status = () => {
-    if (inited) {
-      if ( _checkGameEnding()      )  { return 'Finished' }
-      if ( players.length === size )  { return 'Playing'  }
-    } else {
-      if ( players.length  >   0   )  { return 'Waiting'  }
-      else                            { return 'Closed'   }
+    // // console.log(`Logging status players ${players.length}`)
+    if (players.length && players.every(player => player.away === true)) { 
+      return "Closed" 
     }
-  }
+
+    if (inited) {
+      if (_checkGameEnding()) {
+        return "Finished";
+      }
+      if (players.length === size) {
+        return "Playing";
+      }
+    } else {
+      if (players.length < size) {
+        return "Waiting";
+      }
+      
+    }
+  };
 
   const id = shortId.generate()
   const size = gameSize
@@ -34,20 +45,32 @@ module.exports = function Game(gameSize = 2) {
   let winner, turakas
 
   function join(client) {
-
-    if (players.length < size) {
+    // console.log(`Joining ${client.name} ${client.id} to ${status()} game ${id}`)
+    
+    if (status() === 'Closed') {
+      return _response('Closed')
+    }
+    
+    const clientRegistered = () => players.some(player => player.id === client.id)
+    
+    if (status() === "Waiting" && players.length < size && !clientRegistered()) {
+      
       players.push({
         id: client.id,
         name: client.name,
         rank: client.rank,
         hand: [],
-        away: false,
-      })
+        away: false
+      });
 
-      client.game = id
-
-    } else return false
-
+      return _response('Joined')
+    }
+    
+    if (status() === 'Playing' && clientRegistered()) {
+      return _response('Resumed')
+    }
+    
+    // When full, start the game
     if (players.length === size && !inited) {
       _start() 
     }
@@ -55,47 +78,23 @@ module.exports = function Game(gameSize = 2) {
     return state()
   }
   function leave(user) {
-    if (status() === 'Waiting') {
-      players.splice(players.indexOf(user), 1)
-      user.game = null
-    }
-    if (status() === 'playing' || status() === 'Finished') {
-      // we want to leave id, so if user reconnects, they can continue
-      let leavingPlayer = players.find(player => player.id === user.id)
-      leavingPlayer.away = true
-      console.log(`${leavingPlayer.name} has left the game`)
+    // console.log(`Player ${user.name} ${user.id} wants to leave`);
+    // console.log("Status is " + status());
 
-      if (status() === 'Closed' && timer) {
-        clearInterval(timer)
-        timer = false
-      }
+    // we want to leave id, so if user reconnects, they can continue
+    let leavingPlayer = players.find(player => player.id === user.id);
+    leavingPlayer.away = true;
+    // console.log(`${leavingPlayer.name} has left the game`);
+    // console.log(players);
+    // console.log(status());
+
+    if (status() === "Closed") {
+      clearInterval(timer);
+      timer = false;
+      _closeGame(0);
     }
 
-    return state()
-  }
-  function state() {
-    return {
-      id,
-      status: status(),
-      size,
-      deck: deck.length,
-      board,
-      trump,
-      attacking,
-      defending,
-      active,
-      attackerCard,
-      winner,
-      turakas,
-      pagunidPossible: _checkPagunid(players[active]),
-      players: players.map(player => ({
-        id: player.id, 
-        name: player.name,
-        rank: player.rank,
-        away: player.away,
-        hand: player.hand.length,
-      })),
-    }
+    return state();
   }
   function hand(user) {
     
@@ -108,13 +107,13 @@ module.exports = function Game(gameSize = 2) {
       pCard.rank === card.rank);
 
     function isValid() {
-      // console.log(card)
+      // // console.log(card)
       if (ix > -1) { 
         card = players[active].hand[ix]
 
       } else return false
-      // console.log(card)
-      // console.log(attackerCard)
+      // // console.log(card)
+      // // console.log(attackerCard)
       if (attackerCard) {
         // when there is an attackerCard check if our card is:
         // -- same suit or trump
@@ -133,7 +132,7 @@ module.exports = function Game(gameSize = 2) {
     }
       
     if (isValid()) {
-      // console.log('Was valid')
+      // // console.log('Was valid')
       board.push(...players[active].hand.splice(ix, 1))
       _nextActive()
     }
@@ -169,9 +168,33 @@ module.exports = function Game(gameSize = 2) {
 
     return state()
   }
+  function state() {
+    return {
+      id,
+      status: status(),
+      size,
+      deck: deck.length,
+      board,
+      trump,
+      attacking,
+      defending,
+      active,
+      attackerCard,
+      winner,
+      turakas,
+      pagunidPossible: _checkPagunid(players[active]),
+      players: players.map(player => ({
+        id: player.id, 
+        name: player.name,
+        rank: player.rank,
+        away: player.away,
+        hand: player.hand.length,
+      })),
+    }
+  }
 
   function _start() {
-    console.log('Starting game ' + id)
+    // console.log('Starting game ' + id)
     
     deck.map(card => {
       if (card.suit === trump.suit) {
@@ -181,7 +204,7 @@ module.exports = function Game(gameSize = 2) {
 
     players.map(player => player.hand = deck.splice(0, 6))
 
-    // _setTimerToActive(30)
+    _setTimerToActive(30)
 
     inited = true
   }
@@ -243,7 +266,7 @@ module.exports = function Game(gameSize = 2) {
     let timePassed = 0
 
     timer = setInterval(() => {
-      // console.log(timer)
+      // // console.log(timer)
       if (timePassed > seconds) {
 
         if (callback === move) {
@@ -260,10 +283,10 @@ module.exports = function Game(gameSize = 2) {
     }, 1000)
   }
   function _setTimerToActive(seconds = 30) {
-    // console.log('setting timer to active. Sec: ' + seconds)
+    // // console.log('setting timer to active. Sec: ' + seconds)
 
     if (timer) { 
-      // console.log('clearing timer')
+      // // console.log('clearing timer')
       clearInterval(timer)
       timer = false
     }
@@ -285,14 +308,20 @@ module.exports = function Game(gameSize = 2) {
     }
 
   }
-  function _checkPagunid(player) {
+  function _checkPagunid() {
+    // console.log('Checking paguneid');
+    
     if (deck.length) return false
 
-    if (player.hand.length <= 4 && 
-        player.hand.every(card => card.value === '1')) {
-      return true
-
-    } else return false
+    // console.log(players[active].hand.length <= 4);
+    // console.log(players[active].hand.every(card => card.rank === '1'));
+    
+    
+    if (active === attacking && 
+        players[active].hand.length <= 4 && 
+        players[active].hand.every(card => card.rank === "1")) {
+      return true;
+    } else return false;
   }
   function _checkEmptyHand() {
     
@@ -301,24 +330,26 @@ module.exports = function Game(gameSize = 2) {
   function _checkGameEnding() {
     if (deck.length) return false
 
-    if (_checkEmptyHand()) {
-      winner = players.find(player => player.hand.length === 0).id
-      turakas = players.find(player => player.id !== winner.id).id
+    if ( _checkEmptyHand() ) {
+      winner = players.find(player => player.hand.length === 0)
+      turakas = players.find(player => player.id !== winner.id)
       return true
 
     } else return false
   }
-  function _closeGame() {
-    
+  function _closeGame(seconds = 10) {
+    clearInterval(timer)
+    timer = false
     setTimeout(() => {
-  
-      zzz.emit('closeGame', {
-        id,
-        players,
-        winner,
-        turakas,
-      })
-    }, 1000 * 10)
+      status = () => 'Closed'
+      zzz.emit('closeGame', state())
+    }, 1000 * seconds)
+  }
+  function _response(message) {
+    return {
+      msg: message,
+      state: state()
+    }
   }
 
   return {

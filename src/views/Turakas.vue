@@ -59,6 +59,7 @@ export default {
 .turakas {
   display: flex;
   flex-flow: column nowrap;
+  padding: .5em;
 }
 
 </style>

@@ -30,7 +30,7 @@
       :player="player">
     </game-hand>
 
-    <!-- {{ hand }} -->
+    {{ game.pagunidPossible }}
   </div>
 </template>
 

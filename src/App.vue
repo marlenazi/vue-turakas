@@ -47,6 +47,11 @@ export default {
       console.log(client)
       this.hero = client
     },
+    updateGame(state) {
+      console.log('Updating game')
+      console.log(state)
+      this.game = state
+    },
     gameList(newGames) {
       console.log('Received an array of games')
       console.log(newGames)
@@ -55,32 +60,27 @@ export default {
     },
     updateGameList(state) {
       console.log('Update game list')
-      console.log(state)
 
       let game = this.games.find(game => game.id === state.id)
 
       if (game) {
         console.log('updating game: ' + game.id)
-        game = state
-        console.log(this.games)
+        console.log(state)
+        Object.keys(state).map(key => {
+          
+          game[key] = state[key]
+        })
+        if (game.status === 'Closed') {
+          console.log('splicing');
+          
+          this.games.splice(this.games.findIndex(game => 
+            game.id === state.id), 1)
+        }
       } else {
         console.log('add new game to list')
         this.games.unshift(state)
       }
     },
-    // leftGame() {
-    //   console.log('leftGame from App')
-    //   this.game = {}
-    // },
-    updateGame(state) {
-      console.log('Updating game')
-      console.log(state)
-      this.game = state
-    },
-    // gameOver(state) {
-    //   console.log('Game is over')
-    //   this.game = state
-    // },
     serverMessage(msg) {
       console.log(msg)
       alert(msg)

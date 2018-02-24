@@ -1,10 +1,14 @@
 <template>
   <button 
     class="game"
-    :disabled="game.status !== 'waiting'"
+    :disabled="
+      (game.status === 'Playing' || game.status === 'Finished' )
+      && game.id !== hero.game"
     @click="$_joinGame(game.id)"
   >
     <span>Play</span>
+    {{ game.id }}<br>
+    {{ hero.game }}<br>
     {{ game.status }}
     <div class="registeredPlayers">
       Players:
@@ -12,7 +16,7 @@
         class="players"
         v-for="player in game.players"
         :key="player.id"
-      >
+      > 
         -- {{ player.name }} 
       </div>
     </div>
@@ -22,10 +26,10 @@
 <script>
 
 export default {
-  name: 'GameList',
+  name: 'GameListItem',
   props: {
     game: Object,
-    heroId: String
+    hero: Object
   },
   data() {
     return {
@@ -35,7 +39,7 @@ export default {
   methods: {
     $_joinGame(id) {
       console.log('Joining game: ' + id)
-      this.$socket.emit('joinGame', this.heroId, id)
+      this.$socket.emit('joinGame', this.hero.id, id)
     },
   },
 }
