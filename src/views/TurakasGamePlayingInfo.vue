@@ -26,6 +26,7 @@
     <div class="trumpAndDeck">
       <game-card
         id="trumpCard"
+        class="height-1"
         :rank="$_trumpRank"
         :suit="trump.suit"
         :bigRank="'blank'">
@@ -114,6 +115,7 @@ export default {
 }
 
 #deck {
+  margin-right: .5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,17 +124,20 @@ export default {
   height: 4rem;
   width: 3rem;
   background: $cardBack;
+  color: $action;
   font-size: 1.5rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 
+              0 3px 6px rgba(0,0,0,0.23);
 }
 #trumpCard {
   margin-top: .3rem;
   margin-right: -2.6em;
   height: 3rem;
   width: 4rem;
+
 }
 
 #deck {
-  margin-right: .5em;
 }
 .villain {
   // border: 1px solid blue;
@@ -165,6 +170,8 @@ export default {
   width: 1.4rem;
   margin: 0 -.3rem;
   overflow: hidden;
+  box-shadow: 0 2px 1px rgb(218, 218, 218), 
+              0 0px 1px rgba(255, 255, 255, 0.22);
   
 }
 .active {
