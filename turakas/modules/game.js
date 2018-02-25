@@ -1,5 +1,5 @@
 const shortId = require('shortid')
-const Cards = require('./cards')
+const NewCards = require('./cards')
 const zzz = require('./emitter')
 
 module.exports = function Game(gameSize = 2) {
@@ -28,7 +28,7 @@ module.exports = function Game(gameSize = 2) {
 
   const id = shortId.generate()
   const size = gameSize
-  const deck = Cards()
+  const deck = NewCards()
   const trump = deck.slice(-1)[0]
   const board = []
   const hands = []
@@ -221,10 +221,7 @@ module.exports = function Game(gameSize = 2) {
 
     if (deck.length <= 6) { 
       if (_checkGameEnding()) {
-
-        _closeGame()
-
-        zzz.emit('gameFinished', state())
+        _finishGame()
       }
     }
   }
@@ -308,13 +305,7 @@ module.exports = function Game(gameSize = 2) {
   }
   function _checkPagunid() {
     // console.log('Checking paguneid');
-    
     if (deck.length) return false
-
-    // console.log(players[active].hand.length <= 4);
-    // console.log(players[active].hand.every(card => card.rank === '1'));
-    
-    
     if (active === attacking && 
         players[active].hand.length <= 4 && 
         players[active].hand.every(card => card.rank === "1")) {
@@ -335,11 +326,23 @@ module.exports = function Game(gameSize = 2) {
 
     } else return false
   }
-  function _closeGame(seconds = 1000) {
+  function _finishGame() {
+    console.log(`Finishing game ${id}`)
+
+    status = () => 'Finished'
+    _closeGame(30)
+
+    zzz.emit('gameFinished', state())
+  }
+  function _closeGame(seconds = 30) {
     clearInterval(timer)
     timer = false
+
     setTimeout(() => {
+      console.log(`Closing game ${id}`)
+
       status = () => 'Closed'
+      
       zzz.emit('closeGame', state())
     }, 1000 * seconds)
   }

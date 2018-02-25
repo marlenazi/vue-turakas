@@ -4,10 +4,7 @@
     :disabled="game.status === 'Playing' && game.id !== hero.game"
     @click="$_joinGame(game.id)"
   >
-    <span>Play</span>
-    {{ game.id }}<br>
-    {{ hero.game }}<br>
-    {{ game.status }}
+    <span>{{ actionText[game.status] }}</span>
     <div class="registeredPlayers">
       Players:
       <div 
@@ -15,7 +12,7 @@
         v-for="player in game.players"
         :key="player.id"
       > 
-        -- {{ player.name }} 
+        -- {{ player.name }}
       </div>
     </div>
   </button>
@@ -31,7 +28,11 @@ export default {
   },
   data() {
     return {
-      title: 'Games'
+      actionText: {
+        Waiting: 'Play',
+        Playing: 'Closed',
+        Finished: 'Watch'
+      }
     }
   },
   methods: {

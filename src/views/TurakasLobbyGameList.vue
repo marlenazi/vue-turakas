@@ -1,6 +1,5 @@
 <template>
   <div class="games">
-  {{ games.length }}
 
     <game-list-item
       v-for="game in games"

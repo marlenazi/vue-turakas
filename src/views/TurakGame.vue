@@ -92,7 +92,7 @@ export default {
       this.hand = hand
     },
     updateGame(game) {
-      if (game.status === 'Playing' || game.status === 'Finished') {
+      if (game.status === 'Playing') {
         console.log('asking for a hand')
         this.$socket.emit('getHand', this.hero.id)
       }

@@ -378,7 +378,7 @@ io.on("connection", socket => {
 
     if (!zzz.listeners("closeGame").length) {
       /**
-       * Listenes for closeGame from game
+       * Listens for closeGame from game
        * Emits leftGame to all players, so they are returned to the client lobby
        * Emits gamelist update to all clients
        */
