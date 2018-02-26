@@ -137,7 +137,7 @@ module.exports = function Game(gameSize = 2) {
     }
       
     if (isValid()) {
-      // // console.log('Was valid')
+      // console.log('Was valid')
       board.push(...players[active].hand.splice(ix, 1))
       _nextActive()
     }
@@ -219,8 +219,7 @@ module.exports = function Game(gameSize = 2) {
     if (active === 0) { active += 1 } 
     else              { active -= 1 }
 
-    attackerCard = (board.length % 2 === 0) ? null
-                                            : board[board.length - 1]
+    attackerCard = board.length % 2 === 0 ? null : board[board.length - 1];
 
     
 
@@ -327,42 +326,10 @@ module.exports = function Game(gameSize = 2) {
   function _checkGameEnding() {
     if (deck.length) return false
 
-<<<<<<< HEAD
-    if (!deck.length) {
-      if ( active === attacking && hands[active].every(card => card.rank === '1') ) {
-
-        console.log(`
-        =====================
-        |   Pagunid, mofos  |
-        |                   |
-        |        666        |
-        =====================
-        `)
-        console.log(hands[active])
-      }
-
-      if (players.some((player, ix) => !hands[ix].length)) {
-        // console.log('We have a winner')
-        if (timer) { 
-          // console.log('clearing timer')
-          clearInterval(timer)
-          timer = false
-        }
-||||||| merged common ancestors
-    if (!deck.length) {
-      if (players.some((player, ix) => !hands[ix].length)) {
-        // console.log('We have a winner')
-        if (timer) { 
-          // console.log('clearing timer')
-          clearInterval(timer)
-          timer = false
-        }
-=======
     if ( _checkEmptyHand() ) {
       winner = players.find(player => player.hand.length === 0)
       turakas = players.find(player => player.id !== winner.id)
       return true
->>>>>>> refactor
 
     } else return false
   }

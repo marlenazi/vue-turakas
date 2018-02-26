@@ -135,18 +135,10 @@ export default {
   height: 3rem;
   width: 4rem;
 }
-<<<<<<< HEAD
 
 #deck {
   color: $action;
 }
-||||||| merged common ancestors
-
-#deck {
-  
-}
-=======
->>>>>>> refactor
 .villain {
   margin-left: auto;
   flex: 0 0 5rem;
