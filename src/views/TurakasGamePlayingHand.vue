@@ -73,8 +73,8 @@ export default {
       let ang = 185 / cards
       
       let rad = ang * pos * Math.PI / 180
-      let x = (2.5 * Math.cos(rad))
-      let y = (2.5 * Math.sin(rad))
+      let x = (2.8 * Math.cos(rad))
+      let y = (2.6 * Math.sin(rad))
       // console.log(x, y, rad)
       // console.log('scale: ' + scale)
       return {
