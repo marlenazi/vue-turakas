@@ -29,9 +29,9 @@ export default {
   data() {
     return {
       actionText: {
-        Waiting: 'Play',
-        Playing: 'Closed',
-        Finished: 'Watch'
+        Waiting: 'Join',
+        Playing: 'Playing',
+        Finished: 'Finished'
       }
     }
   },

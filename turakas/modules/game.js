@@ -33,6 +33,7 @@ module.exports = function Game(gameSize = 2) {
   const board = []
   const hands = []
   const mucked = []
+  const pagunid = []
 
   const players = []
 
@@ -60,7 +61,8 @@ module.exports = function Game(gameSize = 2) {
         name: client.name,
         rank: client.rank,
         hand: [],
-        away: false
+        away: false,
+        pagunid: [],
       });
 
       // When full, start the game
@@ -89,7 +91,7 @@ module.exports = function Game(gameSize = 2) {
     if (status() === "Closed") {
       clearInterval(timer);
       timer = false;
-      _closeGame(0);
+      _finishGame(0);
     }
 
     return _response('Left')
@@ -99,6 +101,11 @@ module.exports = function Game(gameSize = 2) {
     return players.find(player => player.id === user.id)
   }
   function move(card) {
+    if (card === 'pagunid') {
+      pagunid.push(...players[active].hand.splice(0))
+      console.log(pagunid)
+      _nextActive()
+    }
     
     let ix = players[active].hand.findIndex(pCard => 
       pCard.suit === card.suit && 
@@ -180,6 +187,7 @@ module.exports = function Game(gameSize = 2) {
       attackerCard,
       winner,
       turakas,
+      pagunid,
       pagunidPossible: _checkPagunid(players[active]),
       players: players.map(player => ({
         id: player.id, 
@@ -221,7 +229,7 @@ module.exports = function Game(gameSize = 2) {
 
     if (deck.length <= 6) { 
       if (_checkGameEnding()) {
-        _finishGame()
+        _finishGame(50)
       }
     }
   }
@@ -326,11 +334,11 @@ module.exports = function Game(gameSize = 2) {
 
     } else return false
   }
-  function _finishGame() {
-    console.log(`Finishing game ${id}`)
+  function _finishGame(seconds = 30) {
+    console.log(`Game ${id}: Finishing game`)
 
     status = () => 'Finished'
-    _closeGame(30)
+    _closeGame(seconds)
 
     zzz.emit('gameFinished', state())
   }
@@ -339,10 +347,10 @@ module.exports = function Game(gameSize = 2) {
     timer = false
 
     setTimeout(() => {
-      console.log(`Closing game ${id}`)
+      console.log(`Game ${id}: Closing game`)
 
       status = () => 'Closed'
-      
+
       zzz.emit('closeGame', state())
     }, 1000 * seconds)
   }

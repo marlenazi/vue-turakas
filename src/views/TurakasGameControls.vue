@@ -13,6 +13,11 @@
     <span>End Round</span> 
   </button>
   <button
+    v-else-if="pagunidPossible"
+    @click="$_doPagunid">
+    <span>Rank'em!</span> 
+  </button>
+  <button
     disabled
     v-else>
   </button>
@@ -31,6 +36,7 @@ export default {
     board: Number,
     attacking: Number,
     defending: Number,
+    pagunidPossible: Boolean,
   },
   data() {
     return {
@@ -46,9 +52,12 @@ export default {
       console.log('Mucking')
       this.$socket.emit('muck', this.heroId)
     },
+    $_doPagunid() {
+      this.$socket.emit('move', this.heroId, 'pagunid')
+    },
     $_heroIx() {
       return this.players.findIndex(player => player.id === this.heroId)
-    }
+    },
   },
   computed: {
     $_moves() {

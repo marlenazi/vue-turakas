@@ -21,6 +21,7 @@
       :board="game.board.length"
       :attacking="game.attacking"
       :defending="game.defending"
+      :pagunidPossible="game.pagunidPossible"
       :players="game.players"
       :heroId="hero.id">
     </game-controls>
@@ -80,6 +81,7 @@ export default {
   sockets: {
     hand(hand) {
       console.log('Got hand?')
+      // hand is actually a player object with {id, name, hand}
       this.player = hand
     },
     updateGame(game) {

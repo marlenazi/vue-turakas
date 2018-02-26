@@ -355,12 +355,13 @@ io.on("connection", socket => {
     if (!zzz.listeners("gameFinished").length) {
       zzz.on("gameFinished", state => {
         try {
-
           state.players.map(player => {
             let client = clients.get(player.id)
-            client.game = null
-
-            if (state.winner.id === client.id) {
+            if (state.id === client.game) {
+              client.game = null
+            }
+            // check if we have a winner or maybe game was closed before it started
+            if (state.winner && state.winner.id === client.id) {
               client.rank++
             }
 
@@ -385,20 +386,18 @@ io.on("connection", socket => {
 
       zzz.on("closeGame", state => {
         try {
-          console.log(`Closing game ${state.id}`);
-          
+          console.log(`Server: closing game ${state.id}`);     
+
           state.players.map(player => {
             let client = clients.get(player.id)
-            client.game = null
-            io.to(client.id).emit('updateHero', client)
+            // if client has not started a new game, they might still be lingering 
+            // in the closing game. So lets throw them out.
+            if (!client.game) {
+              io.to(client.id).emit("leftGame")
+            }
           })
 
-          io.to(state.id).emit("leftGame");
           io.emit("updateGameList", state);
-
-          console.log(state.status);
-
-          // games.destroy(state.id);
         } catch (error) {
           console.log(error);
           socket.emit(error.message)

@@ -60,7 +60,8 @@ export default {
 
       if (game) {
         console.log("updating game: " + game.id);
-        if (game.status === "Closed") {
+        console.log(state.status)
+        if (state.status === "Closed") {
           console.log("splicing");
           let ix = this.games.findIndex(game => game.id === state.id);
 
@@ -131,7 +132,7 @@ body {
 }
 
 ul {
-  list-style-type: none;
+  // list-style-type: none;
   padding: 0;
 }
 .height-0 {
