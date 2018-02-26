@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       msg: "Looks like this one is finished",
-      cards: this.game.pagunid ? this.game.pagunid : [this.game.board[this.game.board.length - 1]]
+      cards: this.game.pagunid.length ? this.game.pagunid : [this.game.board[this.game.board.length - 1]]
     }
   }
 }
