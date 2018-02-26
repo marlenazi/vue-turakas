@@ -12,12 +12,13 @@
       </div>
       <new-game 
         class="newGameButton"
-        :heroId="heroId"/>
+        :heroId="hero.id"
+      />
     </div>
 
     <game-list
       :games="games"
-      :heroId="heroId">
+      :hero="hero">
     </game-list>
 
   </div>
@@ -31,7 +32,6 @@ import GameList from './TurakasLobbyGameList'
 export default {
   name: 'TurakasLobby',
   props: {
-    heroId: String,
     hero: Object,
     game: Object,
     games: Array
@@ -53,8 +53,8 @@ export default {
 
 .lobby {
   flex: 1 0 auto;
-  margin: .5rem;
-  padding: .5rem;
+  // margin: .5rem;
+  // padding: .5rem;
   // border: .2rem solid $accent;
   border-radius: .5rem;
   display: flex;

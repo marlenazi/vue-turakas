@@ -5,20 +5,19 @@
       v-for="game in games"
       :key="game.id"
       :game="game"
-      :heroId="heroId"
-      :class="{active: game.status === 'Playing'}">
+      :hero="hero"
+      :class="{active: game.status === 'Playing' && game.id === hero.game}">
     </game-list-item>
 
   </div>
 </template>
-
 <script>
 import GameListItem from "./TurakasLobbyGameListItem";
 
 export default {
   name: "GameList",
   props: {
-    heroId: String,
+    hero: Object,
     games: Array
   },
   components: {
@@ -29,13 +28,8 @@ export default {
       title: "Games",
     };
   },
-  methods: {
-    $_getAvailableGames() {
-      this.$socket.emit('getAvailableGames', this.heroId)
-    }
-  },
   created() {
-    this.$_getAvailableGames()
+    this.$socket.emit('getGameList', this.hero.id)
   }
 };
 </script>

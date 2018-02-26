@@ -26,6 +26,7 @@
     <div class="trumpAndDeck">
       <game-card
         id="trumpCard"
+        class="height-1"
         :rank="$_trumpRank"
         :suit="trump.suit"
         :bigRank="'blank'">
@@ -65,7 +66,6 @@ export default {
   },
   data() {
     return {
-
       trumpCard: {rank: this.trump.rank, suit: this.trump.suit},
       deckCard: {rank: this.deck, suit: 'b'},
     }
@@ -115,6 +115,7 @@ export default {
 }
 
 #deck {
+  margin-right: .5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -123,7 +124,10 @@ export default {
   height: 4rem;
   width: 3rem;
   background: $cardBack;
+  color: $action;
   font-size: 1.5rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 
+              0 3px 6px rgba(0,0,0,0.23);
 }
 #trumpCard {
   margin-top: .3rem;
@@ -131,14 +135,19 @@ export default {
   height: 3rem;
   width: 4rem;
 }
+<<<<<<< HEAD
 
 #deck {
   color: $action;
 }
+||||||| merged common ancestors
+
+#deck {
+  
+}
+=======
+>>>>>>> refactor
 .villain {
-  // border: 1px solid blue;
-  // position: relative;
-  // top: 1rem;
   margin-left: auto;
   flex: 0 0 5rem;
   width: 7.5rem;
@@ -166,6 +175,8 @@ export default {
   width: 1.4rem;
   margin: 0 -.3rem;
   overflow: hidden;
+  box-shadow: 0 2px 1px rgb(218, 218, 218), 
+              0 0px 1px rgba(255, 255, 255, 0.22);
   
 }
 .active {

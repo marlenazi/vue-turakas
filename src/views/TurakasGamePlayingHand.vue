@@ -5,7 +5,7 @@
       <game-card
         id="playingCard"
         tabindex="1"
-        v-for="card in hand"
+        v-for="card in player.hand"
         :class="{ active: active }"
         :style="$_style(card).card"
         :key="card.rank + card.suit"
@@ -25,25 +25,23 @@ import GameCard from './TurakasGameCard'
 export default {
   name: 'GameHand',
   props: {
-    hand: Array,
+    player: Object,
     active: Boolean,
-  },
-  data() {
-    return {
-
-    }
   },
   components: {
     GameCard
   },
   methods: {
     $_move(card) {
-      // console.log(card)
-      this.$socket.emit('move', card)
+      console.log(card)
+      console.log(this.player.id)
+      this.$socket.emit('move', this.player.id, card)
     },
     $_style(card, scale = 1) {
-      let cards = this.hand.length
-      let cardIx = this.hand.findIndex(el => el === card)
+      console.log(this.player)
+      console.log(this.player.hand.length)
+      let cards = this.player.hand.length
+      let cardIx = this.player.hand.findIndex(el => el === card)
       let middle = cards / 2 - .5
       let pos = middle - cardIx
       let ang = 185 / cards
@@ -67,9 +65,6 @@ export default {
       }
     },
   },
-  computed: {
-
-  }
 }
 
 </script>

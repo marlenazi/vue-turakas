@@ -2,7 +2,7 @@
   <div class="turakasGamePlaying">
 
     <game-info
-      :heroIx="heroIx"
+      :heroIx="$_heroIx"
       :heroId="hero.id"
       :deck="game.deck"
       :players="game.players"
@@ -21,16 +21,17 @@
       :board="game.board.length"
       :attacking="game.attacking"
       :defending="game.defending"
+      :pagunidPossible="game.pagunidPossible"
       :players="game.players"
       :heroId="hero.id">
     </game-controls>
 
     <game-hand
-      :active="game.active === heroIx"
-      :hand="hand">
+      :active="game.active === $_heroIx"
+      :player="player">
     </game-hand>
 
-    <!-- {{ hand }} -->
+    <!-- {{ game.pagunidPossible }} -->
   </div>
 </template>
 
@@ -53,7 +54,11 @@ export default {
   },
   data() {
     return {
-      hand: [],
+      player: {
+        id: this.hero.id,
+        name: this.hero.name,
+        hand: []
+      },
       heroIx: this.game.players.find(pl => pl.id === this.hero.id).ix,
       time: {
         limit: 30,
@@ -63,6 +68,11 @@ export default {
   },
   methods: {
   },
+  computed: {
+    $_heroIx() {
+      return this.game.players.findIndex(player => player.id === this.hero.id)
+    }
+  },
   mounted() {
     if (this.game.status === 'Playing') {
       this.$socket.emit('getHand', this.hero.id)
@@ -71,17 +81,18 @@ export default {
   sockets: {
     hand(hand) {
       console.log('Got hand?')
-      this.hand = hand
+      // hand is actually a player object with {id, name, hand}
+      this.player = hand
     },
     updateGame(game) {
-      if (game.status === 'Playing' || game.status === 'Finished') {
+      if (game.status === 'Playing') {
         console.log('asking for a hand')
         this.$socket.emit('getHand', this.hero.id)
       }
     },
     time(timeUpdate) {
-      console.log('time passed: ' + timeUpdate.passed + 
-                       ' limit: ' + timeUpdate.limit   )
+      // console.log('time passed: ' + timeUpdate.passed + 
+      //                  ' limit: ' + timeUpdate.limit   )
 
       this.time.passed = timeUpdate.passed
       this.time.limit = timeUpdate.limit

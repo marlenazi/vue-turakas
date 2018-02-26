@@ -18,15 +18,17 @@
       </h2>
       <!-- <p>All hail the dummy!</p> -->
       <br><br>
-      <strong>Winner:</strong>
-      <game-card
-        id="winnerCards"
-        v-for="card in [game.board[game.board.length - 1]]"
-        :key="card.rank + card.suit"
-        :rank="card.rank"
-        :suit="card.suit"
-        :bigRank="card.rank">
-      </game-card>
+      <strong>Winner</strong>
+      <div class="winnerCards">
+        <game-card
+          id="lastCards"
+          v-for="card in cards"
+          :key="card.rank + card.suit"
+          :rank="card.rank"
+          :suit="card.suit"
+          :bigRank="card.rank"
+        />
+      </div>
 
 
       <strong class="winnerName">{{ game.winner.name }}</strong>
@@ -51,7 +53,8 @@ export default {
   },
   data() {
     return {
-      msg: "Looks like this one is finished"
+      msg: "Looks like this one is finished",
+      cards: this.game.pagunid ? this.game.pagunid : [this.game.board[this.game.board.length - 1]]
     }
   }
 }
@@ -95,7 +98,10 @@ img {
 .winnerName {
   color: $accent;
 }
-#winnerCards {
-  margin: .5em 0;
+.winnerCards {
+  display: flex;
+}
+#lastCards {
+  margin: .5em;
 }
 </style>

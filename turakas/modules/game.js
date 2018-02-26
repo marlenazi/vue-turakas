@@ -1,125 +1,124 @@
 const shortId = require('shortid')
-const Cards = require('./cards')
+const NewCards = require('./cards')
 const zzz = require('./emitter')
 
 module.exports = function Game(gameSize = 2) {
   
   let inited = false
   let status = () => {
-    if (inited) {
-      // console.log('====================')
-      // console.log(players)
-      if (players.every(player => 
-            player.away === true)) { return 'Closed'   }
-      if (_checkForEnding()      ) { return 'Finished' }
-      if (players.length === size) { return 'Playing'  }
-    } else {
-      if (players.length  >   0  ) { return 'Waiting'  }
-      else                         { return 'Closed'   }
+    // // console.log(`Logging status players ${players.length}`)
+    if (players.length && players.every(player => player.away === true)) { 
+      return "Closed" 
     }
-  }
+
+    if (inited) {
+      if (_checkGameEnding()) {
+        return "Finished";
+      }
+      if (players.length === size) {
+        return "Playing";
+      }
+    } else {
+      if (players.length < size) {
+        return "Waiting";
+      }
+      
+    }
+  };
 
   const id = shortId.generate()
   const size = gameSize
-  const deck = Cards()
+  const deck = NewCards()
   const trump = deck.slice(-1)[0]
   const board = []
   const hands = []
   const mucked = []
-  const timers = {}
+  const pagunid = []
+
   const players = []
 
   let attacking = Math.floor(Math.random() * size)
   let defending = attacking === (size - 1) ? 0 : attacking + 1
   let active = attacking
   let attackerCard = null
-  let timer, actionTimer
+  let timer
 
   let winner, turakas
 
-  function join(user) {
-
-    if (players.length < size) {
-      players.push(user)
-      // in case the user has left a game before and has 'away' attached
-      if (user.away) { user.away = false } // maybe its better to use delete?
-      user.game = id
-    } else console.log('Game full')
-
-    if (status() === 'Playing') {
-      players.find(player => player.id === user.id)
-        .away = false
+  function join(client) {
+    // console.log(`Joining ${client.name} ${client.id} to ${status()} game ${id}`)
+    
+    if (status() === 'Closed') {
+      return _response('Closed')
     }
+    
+    const clientRegistered = () => players.some(player => player.id === client.id)
+    
+    if (status() === "Waiting" && players.length < size && !clientRegistered()) {
+      
+      players.push({
+        id: client.id,
+        name: client.name,
+        rank: client.rank,
+        hand: [],
+        away: false,
+        pagunid: [],
+      });
 
-    if (players.length === size && !inited) { _start() }
+      // When full, start the game
+      if (players.length === size && !inited) {
+        _start() 
+      }
 
+      return _response('Joined')
+    }
+    if (status() === 'Playing' && clientRegistered()) {
+      return _response('Resumed')
+    }
+    if (status() === 'Finished') {
+      return _response('Viewed')
+    }
+    
     return state()
   }
   function leave(user) {
-    if (status() === 'Waiting') {
-      players.splice(players.indexOf(user), 1)
-    }
-    if (status() === 'Playing' || status() === 'Finished') {
-      // we want to leave id, so if user reconnects, they can continue
-      let leavingPlayer = players.find(player => player.id === user.id)
-      leavingPlayer.away = true
-      console.log(`${user.name} has left the game`)
+    // console.log(`Player ${user.name} ${user.id} wants to leave`);
 
-      if (status() === 'Closed' && timer) {
-        clearInterval(timer)
-        timer = false
-      }
+    // we want to leave id, so if user reconnects, they can continue
+    let leavingPlayer = players.find(player => player.id === user.id);
+    leavingPlayer.away = true;
+
+    if (status() === "Closed") {
+      clearInterval(timer);
+      timer = false;
+      _finishGame(0);
     }
-  }
-  function state() {
-    return {
-      id,
-      status: status(),
-      size,
-      deck: deck.length,
-      board,
-      trump,
-      attacking,
-      defending,
-      active,
-      attackerCard,
-      winner,
-      turakas,
-      players: (() => players.map(player => {
-        if (inited) {
-          return {
-            id: player.id,
-            ix: player.ix,
-            name: player.name,
-            socketIds: player.socketIds,
-            hand: hands[player.ix].length,
-          }
-        } else {
-          return {
-            id: player.id,
-            name: player.name,
-            socketIds: player.socketIds,
-      }}}))(),
-    }
+
+    return _response('Left')
   }
   function hand(user) {
     
-    return inited ? hands[players.findIndex(player => player.id === user.id)] : []
+    return players.find(player => player.id === user.id)
   }
   function move(card) {
+    if (card === 'pagunid') {
+      pagunid.push(...players[active].hand.splice(0))
+      console.log(pagunid)
+      _nextActive()
+    }
     
-    let ix = hands[active].findIndex( pCard => 
-                                      pCard.suit === card.suit && 
-                                      pCard.rank === card.rank    )
+    let ix = players[active].hand.findIndex(pCard => 
+      pCard.suit === card.suit && 
+      pCard.rank === card.rank);
 
     function isValid() {
-      // console.log(card)
+      // // console.log(card)
       if (ix > -1) { 
-        card = hands[active][ix]
+        card = players[active].hand[ix]
 
       } else return false
-      // console.log(card)
-      // console.log(attackerCard)
+      // // console.log(card)
+      // // console.log(attackerCard)
       if (attackerCard) {
         // when there is an attackerCard check if our card is:
         // -- same suit or trump
@@ -138,8 +137,8 @@ module.exports = function Game(gameSize = 2) {
     }
       
     if (isValid()) {
-      // console.log('Was valid')
-      board.push(...hands[active].splice(ix, 1))
+      // // console.log('Was valid')
+      board.push(...players[active].hand.splice(ix, 1))
       _nextActive()
     }
     
@@ -149,7 +148,7 @@ module.exports = function Game(gameSize = 2) {
   function pickUp(user) {
 
     if (inited && players[active].id === user.id && defending === active) {
-      hands[active].push(...board.splice(0))
+      players[active].hand.push(...board.splice(0))
 
       attackerCard = null
 
@@ -174,19 +173,42 @@ module.exports = function Game(gameSize = 2) {
 
     return state()
   }
+  function state() {
+    return {
+      id,
+      status: status(),
+      size,
+      deck: deck.length,
+      board,
+      trump,
+      attacking,
+      defending,
+      active,
+      attackerCard,
+      winner,
+      turakas,
+      pagunid,
+      pagunidPossible: _checkPagunid(players[active]),
+      players: players.map(player => ({
+        id: player.id, 
+        name: player.name,
+        rank: player.rank,
+        away: player.away,
+        hand: player.hand.length,
+      })),
+    }
+  }
 
   function _start() {
-    console.log('Starting game ' + id)
-
-    deck.forEach(card => {
+    // console.log('Starting game ' + id)
+    
+    deck.map(card => {
       if (card.suit === trump.suit) {
-        card.value += 10
-    }})
+        card.value += 10;
+      }
+    });
 
-    players.forEach((player, ix) => {
-      player.ix = ix
-      hands.push(deck.splice(0, 6))
-    })
+    players.map(player => player.hand = deck.splice(0, 6))
 
     _setTimerToActive(30)
 
@@ -205,10 +227,9 @@ module.exports = function Game(gameSize = 2) {
     _setTimerToActive(30)
     zzz.emit('refresh', id, state())
 
-    if (deck.length < 6) { 
-      if (_checkForEnding()) {
-
-        zzz.emit('gameOver', state())
+    if (deck.length <= 6) { 
+      if (_checkGameEnding()) {
+        _finishGame(50)
       }
     }
   }
@@ -232,13 +253,13 @@ module.exports = function Game(gameSize = 2) {
     // replenishing should go in the order that the last round was played
 
     players.forEach((player, ix) => {
-      if (hands[ix].length < 6 && deck.length && ix !== defending) {
-        hands[ix].push(...deck.splice(0, 6 - hands[ix].length))
+      if (player.hand.length < 6 && deck.length && ix !== defending) {
+        player.hand.push(...deck.splice(0, 6 - hands[ix].length))
       }
     })
 
     // we skipped the killer and it gets replenished last
-    let hand = hands[defending]
+    let hand = players[defending].hand
     if (hand.length < 6 && deck.length) {
       hand.push(...deck.splice(0, 6 - hand.length))
     }
@@ -248,11 +269,12 @@ module.exports = function Game(gameSize = 2) {
     let timePassed = 0
 
     timer = setInterval(() => {
-      // console.log(timer)
+      // // console.log(timer)
       if (timePassed > seconds) {
 
         if (callback === move) {
-          callback(hands[active][Math.floor(Math.random() * hands[active].length)])
+          let hand = players[active].hand
+          callback(hand[Math.floor(Math.random() * hand.length)])
         } else { callback(players[active]) }
         
       } else {
@@ -262,13 +284,12 @@ module.exports = function Game(gameSize = 2) {
 
       timePassed += 1
     }, 1000)
-
   }
   function _setTimerToActive(seconds = 30) {
-    // console.log('setting timer to active. Sec: ' + seconds)
+    // // console.log('setting timer to active. Sec: ' + seconds)
 
     if (timer) { 
-      // console.log('clearing timer')
+      // // console.log('clearing timer')
       clearInterval(timer)
       timer = false
     }
@@ -290,8 +311,23 @@ module.exports = function Game(gameSize = 2) {
     }
 
   }
-  function _checkForEnding() {
+  function _checkPagunid() {
+    // console.log('Checking paguneid');
+    if (deck.length) return false
+    if (active === attacking && 
+        players[active].hand.length <= 4 && 
+        players[active].hand.every(card => card.rank === "1")) {
+      return true;
+    } else return false;
+  }
+  function _checkEmptyHand() {
+    
+    return players.some(player => player.hand.length === 0)
+  }
+  function _checkGameEnding() {
+    if (deck.length) return false
 
+<<<<<<< HEAD
     if (!deck.length) {
       if ( active === attacking && hands[active].every(card => card.rank === '1') ) {
 
@@ -312,28 +348,49 @@ module.exports = function Game(gameSize = 2) {
           clearInterval(timer)
           timer = false
         }
+||||||| merged common ancestors
+    if (!deck.length) {
+      if (players.some((player, ix) => !hands[ix].length)) {
+        // console.log('We have a winner')
+        if (timer) { 
+          // console.log('clearing timer')
+          clearInterval(timer)
+          timer = false
+        }
+=======
+    if ( _checkEmptyHand() ) {
+      winner = players.find(player => player.hand.length === 0)
+      turakas = players.find(player => player.id !== winner.id)
+      return true
+>>>>>>> refactor
 
-        winner = players.find((player, ix) => !hands[ix].length)
-        turakas = players.find(player => player !== winner)
-
-        _closeGame()
-        
-        return true
-      }
-    }
-    return false
+    } else return false
   }
-  function _closeGame() {
-    players.forEach(player => player.away = null)
+  function _finishGame(seconds = 30) {
+    console.log(`Game ${id}: Finishing game`)
+
+    status = () => 'Finished'
+    _closeGame(seconds)
+
+    zzz.emit('gameFinished', state())
+  }
+  function _closeGame(seconds = 30) {
+    clearInterval(timer)
+    timer = false
 
     setTimeout(() => {
-      players.forEach(player => {
-        if (player.game === id) {
-          player.game = null
-        }
-      })
-      zzz.emit('closeGame', id)
-    }, 1000 * 30)
+      console.log(`Game ${id}: Closing game`)
+
+      status = () => 'Closed'
+
+      zzz.emit('closeGame', state())
+    }, 1000 * seconds)
+  }
+  function _response(message) {
+    return {
+      msg: message,
+      state: state()
+    }
   }
 
   return {
