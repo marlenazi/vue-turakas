@@ -13,7 +13,7 @@
     <span>End Round</span> 
   </button>
   <button
-    v-else-if="pagunidPossible"
+    v-else-if="pagunidPossible && $_moves ==='hero'"
     @click="$_doPagunid">
     <span>Rank'em!</span> 
   </button>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'GameControlButton',
   props: {

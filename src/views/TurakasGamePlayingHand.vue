@@ -116,7 +116,7 @@ export default {
 
 }
 #playingCard:hover {
-  z-index: 1;
+  z-index: 3;
   // box-shadow: 0px 0px 10px 4px $action;
 }
 

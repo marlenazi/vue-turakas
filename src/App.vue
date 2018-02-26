@@ -119,7 +119,7 @@ body {
   width: 100%;
   max-height: 500px;
   max-width: 320px;
-  // border: 1px solid $accent;
+  border: 1px solid $accent;
 }
 #app *:focus {
   outline: none;
@@ -180,6 +180,17 @@ button:disabled {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: height 0.2s ease-in-out;
+}
+.slide-enter {
+  height: 0;
+}
+.slide-leave-to {
+  height: 0;
 }
 
 @keyframes your-move {

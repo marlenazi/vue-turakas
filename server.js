@@ -299,6 +299,11 @@ io.on("connection", socket => {
     }
   });
 
+  socket.on('sendChat', chat => {
+    console.log(chat.message)
+    io.to(chat.gameId).emit('getChat', chat)
+  })
+
   /**
    * When socket disconnects, remove it from the player
    */
@@ -355,16 +360,35 @@ io.on("connection", socket => {
     if (!zzz.listeners("gameFinished").length) {
       zzz.on("gameFinished", state => {
         try {
+
+          if (state.winner) {
+
+            let winner = clients.get(state.winner.id)
+            let turakas = clients.get(state.turakas.id)
+  
+            winner.rank++
+            turakas.turakas++
+            
+            if (state.pagunid.length) {
+  
+              winner.madePagunid.push({
+                to: turakas.id,
+                cards: state.pagunid
+              });    
+              turakas.pagunid.push({
+                from: winner.id,
+                cards: state.pagunid
+              });
+  
+            }
+          }
+
+
           state.players.map(player => {
             let client = clients.get(player.id)
             if (state.id === client.game) {
               client.game = null
             }
-            // check if we have a winner or maybe game was closed before it started
-            if (state.winner && state.winner.id === client.id) {
-              client.rank++
-            }
-
             io.to(client.id).emit('updateHero', client)
           })
           

@@ -43,6 +43,9 @@ module.exports = function Game(gameSize = 2) {
   let attackerCard = null
   let timer
 
+  let turnDuration = 45
+  let closingDelay = 30
+
   let winner, turakas
 
   function join(client) {
@@ -210,7 +213,7 @@ module.exports = function Game(gameSize = 2) {
 
     players.map(player => player.hand = deck.splice(0, 6))
 
-    _setTimerToActive(30)
+    _setTimerToActive(turnDuration)
 
     inited = true
   }
@@ -223,12 +226,12 @@ module.exports = function Game(gameSize = 2) {
 
     
 
-    _setTimerToActive(30)
+    _setTimerToActive(turnDuration)
     zzz.emit('refresh', id, state())
 
     if (deck.length <= 6) { 
       if (_checkGameEnding()) {
-        _finishGame(50)
+        _finishGame(closingDelay)
       }
     }
   }

@@ -59,7 +59,7 @@ export default {
   flex-flow: column nowrap;
 }
 .status-message {
-  margin-top: 2em;
+  margin: 2em 0em 2em 1em;
   flex: 1 1 auto;
   display: flex;
   flex-flow: column nowrap;

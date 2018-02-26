@@ -25,13 +25,16 @@
       :players="game.players"
       :heroId="hero.id">
     </game-controls>
-
+    
     <game-hand
       :active="game.active === $_heroIx"
       :player="player"
       :game="game">
     </game-hand>
 
+    <game-chat
+      :hero="hero"
+      :gameId="game.id"></game-chat>
     <!-- {{ game.pagunidPossible }} -->
   </div>
 </template>
@@ -43,6 +46,7 @@ import GameInfo from './TurakasGamePlayingInfo'
 import GameBoard from './TurakasGamePlayingBoard'
 import GameControls from './TurakasGameControls'
 import GameHand from './TurakasGamePlayingHand'
+import GameChat from './GameChat'
 
 export default {
   name: 'TurakasGamePlaying',
@@ -51,7 +55,7 @@ export default {
     game: Object
   },
   components: {
-    LeaveButton, GameInfo, GameBoard, GameControls, GameHand
+    LeaveButton, GameInfo, GameBoard, GameControls, GameHand, GameChat
   },
   data() {
     return {

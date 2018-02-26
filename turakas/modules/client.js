@@ -8,13 +8,10 @@ module.exports = function NewClient(client) {
   let game = null
   let status = () => game ? 'playing' : 'idle'
   let rank = 0
+  let turakas = 0
+  let pagunid = []
+  let madePagunid = []
 
-  function addRank() {
-    console.log('Bump up the rank')
-    rank = rank + 1
-
-    return
-  }
   console.log('Creating new client: ' + client.name)
   return {
     id, 
@@ -23,6 +20,8 @@ module.exports = function NewClient(client) {
     rank,
     game,
     status: status(),
-    addRank,
+    pagunid,
+    turakas,
+    madePagunid,
   }
 }
