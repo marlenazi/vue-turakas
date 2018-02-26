@@ -184,10 +184,10 @@ button:disabled {
 
 @keyframes your-move {
   from {
-    box-shadow: 0px 0px 8px 3px $action;
+    box-shadow: 0px 0px 8px 3px $shadow;
   }
   to {
-    box-shadow: 0px 0px 6px 1px orangered;
+    box-shadow: 0px 0px 6px 3px rgb(0, 255, 0);
   }
 }
 

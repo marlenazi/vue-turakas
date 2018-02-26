@@ -6,7 +6,7 @@
         id="playingCard"
         tabindex="1"
         v-for="card in player.hand"
-        :class="[{ active: active }, {validMove: $_filterValid(card)}]"
+        :class="[{ active: active }, {validMove: $_filterValid(card) && active}]"
         :style="$_style(card).card"
         :key="card.rank + card.suit"
         :rank="card.rank"
@@ -126,19 +126,20 @@ export default {
 
 }
 .validMove {
+  z-index: 2;
   animation-name: your-move;
-  animation-duration: 1s;
+  animation-duration: .6s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
-@keyframes your-move {
-  from {
-    box-shadow: 0px 0px 8px 3px $action;
-  }
-  to {
-    box-shadow: 0px 0px 10px 2px $shadow;
-  }
-}
+// @keyframes your-move {
+//   from {
+//     box-shadow: 0px 0px 8px 3px $action;
+//   }
+//   to {
+//     box-shadow: 0px 0px 10px 2px rgb(0, 255, 0);
+//   }
+// }
 
 
 .border {
