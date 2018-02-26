@@ -6,7 +6,7 @@
         id="playingCard"
         tabindex="1"
         v-for="card in player.hand"
-        :class="{ active: active }"
+        :class="[{ active: active }, {validMove: $_filterValid(card)}]"
         :style="$_style(card).card"
         :key="card.rank + card.suit"
         :rank="card.rank"
@@ -36,6 +36,31 @@ export default {
       console.log(card)
       console.log(this.player.id)
       this.$socket.emit('move', this.player.id, card)
+    },
+    $_filterValid(card) {
+
+      const { attackerCard, board, trump } = this.game
+
+      function isValid(card) {
+
+        if (attackerCard) {
+
+          if (
+            card.value > attackerCard.value &&
+            (card.suit === attackerCard.suit || card.suit === trump.suit)
+          ) {
+            return true;
+          } else return false;
+          // if there is no attacker, card (new attacker) can go on the board
+        } else if (board.length && board.length < 12) {
+          if (board.some(el => el.rank === card.rank)) {
+            return true;
+          } else return false;
+        } else if (board.length < 12) return true;
+        else return false;
+      }
+
+      return isValid(card);
     },
     $_style(card, scale = 1) {
       console.log(this.player)
@@ -97,12 +122,14 @@ export default {
 .active {
   box-shadow: 0px 0px 8px 3px $shadow;
         // inset 0px 0px 1px 1px $shadow;
+
+}
+.validMove {
   animation-name: your-move;
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
-
 @keyframes your-move {
   from {
     box-shadow: 0px 0px 8px 3px $action;
