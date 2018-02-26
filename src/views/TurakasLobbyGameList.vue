@@ -1,6 +1,8 @@
 <template>
   <div class="games">
-
+    <transition-group 
+      class="gameListTransitionGroup"
+      name="fade" mode="out-in">
     <game-list-item
       v-for="game in games"
       :key="game.id"
@@ -8,7 +10,7 @@
       :hero="hero"
       :class="{active: game.status === 'Playing' && game.id === hero.game}">
     </game-list-item>
-
+    </transition-group>
   </div>
 </template>
 <script>
@@ -54,6 +56,13 @@ export default {
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+.gameListTransitionGroup {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: flex-start;
 }
 
 @keyframes your-move {

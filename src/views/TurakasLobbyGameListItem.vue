@@ -1,6 +1,7 @@
 <template>
   <button 
     class="game"
+    :class="{'height-1': game.status === 'Finished'}"
     :disabled="game.status === 'Playing' && game.id !== hero.game"
     @click="$_joinGame(game.id)"
   >
