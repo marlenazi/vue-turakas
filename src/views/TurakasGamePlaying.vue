@@ -34,7 +34,8 @@
 
     <game-chat
       :hero="hero"
-      :gameId="game.id"></game-chat>
+      :gameId="game.id">
+    </game-chat>
     <!-- {{ game.pagunidPossible }} -->
   </div>
 </template>

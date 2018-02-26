@@ -38,13 +38,15 @@ export default {
 @import './../style/variables';
 
 .gameBoard {
-  flex: 1 0 auto;
+  flex: 1 0 100%;
 
   // border: 1px solid $accent;
   padding: 0em 1em;
 
   text-align: center;
   min-width: 280px;
+  min-height: 13.5rem;
+  
   background: url(../assets/theFoolWatermark.svg);
   background-repeat: no-repeat;
   background-size: cover;

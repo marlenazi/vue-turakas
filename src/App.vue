@@ -182,17 +182,6 @@ button:disabled {
   opacity: 0;
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: height 0.2s ease-in-out;
-}
-.slide-enter {
-  height: 0;
-}
-.slide-leave-to {
-  height: 0;
-}
-
 @keyframes your-move {
   from {
     box-shadow: 0px 0px 8px 3px $shadow;
