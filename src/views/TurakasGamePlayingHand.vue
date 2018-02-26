@@ -26,6 +26,7 @@ export default {
   name: 'GameHand',
   props: {
     player: Object,
+    game: Object,
     active: Boolean,
   },
   components: {

@@ -28,7 +28,8 @@
 
     <game-hand
       :active="game.active === $_heroIx"
-      :player="player">
+      :player="player"
+      :game="game">
     </game-hand>
 
     <!-- {{ game.pagunidPossible }} -->
