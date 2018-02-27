@@ -300,7 +300,7 @@ io.on("connection", socket => {
   });
 
   socket.on('sendChat', chat => {
-    console.log(chat.message)
+    console.log(chat.body)
     io.to(chat.gameId).emit('getChat', chat)
   })
 
