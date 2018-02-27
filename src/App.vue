@@ -119,7 +119,7 @@ body {
   width: 100%;
   max-height: 500px;
   max-width: 320px;
-  border: 1px solid $accent;
+  // border: 1px solid $accent;
 }
 #app *:focus {
   outline: none;

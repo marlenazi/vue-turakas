@@ -26,9 +26,9 @@
         :class="{'visible': chatOpen}"
         ref="chatField"
         type="text"
-        
         placeholder="Say..."
         v-model="chatMessage"
+        @blur="chatOpen = false"
       />
     </form>
 
@@ -158,6 +158,9 @@ export default {
   border-radius: 0.5em .5em 0 0.5em;
   background: rgba(255, 255, 255, .5);
   transition: all .2s ease-in-out;
+}
+.chatField:focus {
+  border-width: 2px;
 }
 
 .visible {
