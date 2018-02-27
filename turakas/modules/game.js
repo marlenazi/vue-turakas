@@ -31,6 +31,7 @@ module.exports = function Game(gameSize = 2) {
   const deck = NewCards()
   const trump = deck.slice(-1)[0]
   const board = []
+  const added = []
   const hands = []
   const mucked = []
   const pagunid = []
@@ -41,9 +42,11 @@ module.exports = function Game(gameSize = 2) {
   let defending = attacking === (size - 1) ? 0 : attacking + 1
   let active = attacking
   let attackerCard = null
+  let addingRound = false
   let timer
 
   let turnDuration = 45
+  let addDuration = 10
   let closingDelay = 30
 
   let winner, turakas
@@ -107,8 +110,9 @@ module.exports = function Game(gameSize = 2) {
   function move(card) {
     if (card === 'pagunid') {
       pagunid.push(...players[active].hand.splice(0))
-      console.log(pagunid)
+      // console.log(pagunid)
       _nextActive()
+      return state()
     }
     
     let ix = players[active].hand.findIndex(pCard => 
@@ -139,7 +143,23 @@ module.exports = function Game(gameSize = 2) {
       } else if (board.length < 12) return true
       else return false
     }
-      
+    function isValidAdd(card) {
+      if (board.some(boardCard => boardCard.rank === card.rank)) {
+        return true
+      }
+    }  
+
+    if (addingRound) {
+      console.log('Moving and is addingRound')
+      if (isValidAdd(card)) {
+        console.log('adding ' + card);
+        
+        added.push(...players[active].hand.splice(ix, 1))
+      }
+
+      return state()
+    }
+
     if (isValid()) {
       // console.log('Was valid')
       board.push(...players[active].hand.splice(ix, 1))
@@ -152,11 +172,12 @@ module.exports = function Game(gameSize = 2) {
   function pickUp(user) {
 
     if (inited && players[active].id === user.id && defending === active) {
-      players[active].hand.push(...board.splice(0))
+      // players[active].hand.push(...board.splice(0))
 
       attackerCard = null
 
-      _replenish()
+      addingRound = true
+      // _replenish()
       _nextActive()
     }
 
@@ -177,6 +198,18 @@ module.exports = function Game(gameSize = 2) {
 
     return state()
   }
+  function finishAdding() {
+    console.log('Waited for added cards. Enough!')
+    addingRound = false
+    _nextActive()
+    console.log(players[active].name)
+    players[active].hand.push(...board.splice(0))
+    players[active].hand.push(...added.splice(0))
+    _replenish()
+    _nextActive()
+
+    return state()
+  }
   function state() {
     return {
       id,
@@ -192,6 +225,8 @@ module.exports = function Game(gameSize = 2) {
       winner,
       turakas,
       pagunid,
+      added,
+      addingRound,
       pagunidPossible: _checkPagunid(players[active]),
       players: players.map(player => ({
         id: player.id, 
@@ -225,8 +260,6 @@ module.exports = function Game(gameSize = 2) {
 
     attackerCard = board.length % 2 === 0 ? null : board[board.length - 1];
 
-    
-
     _setTimerToActive(turnDuration)
     zzz.emit('refresh', id, state())
 
@@ -250,6 +283,7 @@ module.exports = function Game(gameSize = 2) {
       defending -= 1
     }
   }
+  
   function _replenish() {
 
     // killer is replenished last
@@ -299,6 +333,12 @@ module.exports = function Game(gameSize = 2) {
 
     if (players[active].away) { seconds = 2 }
 
+    if (addingRound) {
+      console.log('Adding round starts now')
+      _timer(addDuration, finishAdding)
+
+      return
+    }
     if (active === attacking && board.length > 0) {
       
       _timer(seconds, muck)
@@ -374,5 +414,6 @@ module.exports = function Game(gameSize = 2) {
     move,
     pickUp,
     muck,
+    finishAdding,
   }
 }

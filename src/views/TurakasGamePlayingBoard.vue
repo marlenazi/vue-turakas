@@ -1,7 +1,7 @@
 <template>
   <div class="gameBoard">
     
-    <transition-group name="fade" mode="out-in">
+    <transition-group name="fade" mode="out-in" class="boardCards" tag="div">
       <game-card
         id="boardCard"
         v-for="card in board"
@@ -10,8 +10,25 @@
         :suit="card.suit"
         :bigRank="card.rank">
       </game-card>
+      <game-card
+        id="addedCard"
+        v-for="card in added"
+        :key="card.rank + card.suit"
+        :rank="card.rank"
+        :suit="card.suit"
+        :bigRank="card.rank">
+      </game-card>
     </transition-group>
-
+    <!-- <transition-group name="fade" mode="out-in" class="addedCards" tag="div">
+      <game-card
+        id="addedCard"
+        v-for="card in added"
+        :key="card.rank + card.suit"
+        :rank="card.rank"
+        :suit="card.suit"
+        :bigRank="card.rank">
+      </game-card>
+    </transition-group> -->
   </div>
 </template>
 
@@ -20,7 +37,8 @@ import GameCard from './TurakasGameCard'
 export default {
   name: 'GameBoard',
   props: {
-    board: Array
+    board: Array,
+    added: Array,
   },
   components: {
     GameCard
@@ -52,10 +70,21 @@ export default {
   background-size: cover;
   background-position: center center;
 }
-
-#boardCard {
-  margin-top: 1.2em;
+#addedCard {
+  // border: 1px solid orangered;
+  margin: 1em .5em .5em .5em;
+  margin-right: -2em;
   font-size: 15px;
+}
+#addedCard:nth-child(even) {
+  margin-left: 2em;
+}
+#boardCard {
+  margin-top: 1em;
+  font-size: 15px;
+}
+.boardCards {
+  border: 1px solid red;
 }
 #boardCard:nth-child(odd) {
   margin-left: .35em;

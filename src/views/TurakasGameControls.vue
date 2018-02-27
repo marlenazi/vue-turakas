@@ -3,7 +3,12 @@
 
 <transition name="fade" mode="out-in">
   <button
-    v-if="$_moves === 'hero' && $_heroIx() === defending && board"
+    v-if="$_moves === 'hero' && addingRound"
+    @click="$_finishAdding">
+    <span>That's all</span> 
+  </button>
+  <button
+    v-else-if="$_moves === 'hero' && $_heroIx() === defending && board"
     @click="$_pickUp">
     <span>Pick Up</span> 
   </button>
@@ -15,7 +20,7 @@
   <button
     v-else-if="pagunidPossible && $_moves ==='hero'"
     @click="$_doPagunid">
-    <span>Rank'em!</span> 
+    <span>Rank 'em!</span> 
   </button>
   <button
     disabled
@@ -38,6 +43,7 @@ export default {
     attacking: Number,
     defending: Number,
     pagunidPossible: Boolean,
+    addingRound: Boolean,
   },
   data() {
     return {
@@ -48,6 +54,10 @@ export default {
     $_pickUp() {
       console.log('Picking up')
       this.$socket.emit('pickUp', this.heroId)
+    },
+    $_finishAdding() {
+      console.log('Finished adding')
+      this.$socket.emit('finishAdding', this.heroId)
     },
     $_muck() {
       console.log('Mucking')

@@ -12,7 +12,8 @@
     </game-info>
 
     <game-board
-      :board="game.board">
+      :board="game.board"
+      :added="game.added">
     </game-board>
 
     <game-controls
@@ -22,6 +23,7 @@
       :attacking="game.attacking"
       :defending="game.defending"
       :pagunidPossible="game.pagunidPossible"
+      :addingRound="game.addingRound"
       :players="game.players"
       :heroId="hero.id">
     </game-controls>
@@ -36,7 +38,8 @@
       :hero="hero"
       :gameId="game.id">
     </game-chat>
-    <!-- {{ game.pagunidPossible }} -->
+    {{ game.addingRound }}
+    {{game.added}}
   </div>
 </template>
 

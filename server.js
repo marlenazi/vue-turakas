@@ -298,6 +298,21 @@ io.on("connection", socket => {
       socket.emit("serverError", error)
     }
   });
+  socket.on('finishAdding', clientId => {
+    try {
+      let client = clients.get(clientId);
+      let game = games.get(client.game);
+      let state = game.finishAdding(client)
+
+      console.log(state.pagunidPossible)
+
+      io.to(game.id).emit("updateGame", state);
+      
+    } catch (error) {
+      console.log(error);
+      socket.emit("serverError", error)
+    }
+  })
 
   socket.on('sendChat', chat => {
     console.log(chat.body)
