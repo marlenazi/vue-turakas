@@ -76,6 +76,7 @@ module.exports = function Game(gameSize = 2) {
       return _response('Joined')
     }
     if (status() === 'Playing' && clientRegistered()) {
+      players.find(player => player.id === client.id).away = false
       return _response('Resumed')
     }
     if (status() === 'Finished') {
