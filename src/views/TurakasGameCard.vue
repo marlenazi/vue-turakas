@@ -82,7 +82,9 @@ export default {
   user-select: none;
   cursor: pointer;
   transition: all .2s ease-in-out;
-  transform-origin: 50% bottom,
+  transform-origin: 50% bottom;
+
+  z-index: 5;
 }
 
 .smallRankSuit {

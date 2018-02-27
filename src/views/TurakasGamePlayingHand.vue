@@ -116,7 +116,7 @@ export default {
 
 }
 #playingCard:hover {
-  z-index: 3;
+  z-index: 7;
   // box-shadow: 0px 0px 10px 4px $action;
 }
 
@@ -126,20 +126,12 @@ export default {
 
 }
 .validMove {
-  z-index: 2;
+  z-index: 6;
   animation-name: your-move;
   animation-duration: .6s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
-// @keyframes your-move {
-//   from {
-//     box-shadow: 0px 0px 8px 3px $action;
-//   }
-//   to {
-//     box-shadow: 0px 0px 10px 2px rgb(0, 255, 0);
-//   }
-// }
 
 
 .border {

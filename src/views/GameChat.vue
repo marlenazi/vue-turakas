@@ -28,7 +28,6 @@
         type="text"
         placeholder="Say..."
         v-model="chatMessage"
-        @blur="chatOpen = false"
       />
     </form>
 
@@ -62,15 +61,7 @@ export default {
     return {
       chatOpen: false,
       chatMessage: "",
-      messages: [
-        {"id": '1', "sender":"Asdj","senderId": this.hero.id,"gameId":"ByW2u-fuz","body":"Esimene Mida ma ütleks?"},
-        {"id": '2', "sender":"Asdj","senderId":"BykGr-fuf","gameId":"ByW2u-fuz","body":"Midagi kolmandat"},
-        // {"sender":"asdf","senderId":this.hero.id,"gameId":"ByW2u-fuz","body":"tere on alati hea variant"},
-        // {"sender":"Asdj","senderId":"SJaTV-z_f","gameId":"ByW2u-fuz","body":"Midagi kolmandat"},
-        // {"sender":"asdf","senderId":"SJaTV-z_f","gameId":"ByW2u-fuz","body":"tere on alati hea variant"},
-        // {"sender":"Asdj","senderId":this.hero.id,"gameId":"ByW2u-fuz","body":"Midagi teist kolmandat"},
-        // {"sender":"asdf","senderId":"SJaTV-z_f","gameId":"ByW2u-fuz","body":"tere on alati hea variant"},
-      ]
+      messages: []
     };
   },
   methods: {
@@ -91,8 +82,11 @@ export default {
     },
     $_openChat() {
       if (this.chatOpen) {
+        console.log('on -> off')
         this.chatOpen = false
+        
       } else {
+        console.log("off -> on");
         this.chatOpen = true
         this.$refs.chatField.focus()
       }
