@@ -56,7 +56,7 @@ export default {
   name: 'TurakasGamePlaying',
   props: {
     hero: Object,
-    game: Object
+    game: Object,
   },
   components: {
     LeaveButton, GameInfo, GameBoard, GameControls, GameHand, GameChat

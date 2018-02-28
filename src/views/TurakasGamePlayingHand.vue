@@ -34,13 +34,13 @@ export default {
   },
   methods: {
     $_move(card) {
-      console.log(card)
-      console.log(this.player.id)
+      // console.log(card)
+      // console.log(this.player.id)
       this.$socket.emit('move', this.player.id, card)
     },
     $_filterValid(card) {
 
-      const { attackerCard, board, trump } = this.game
+      const { attackerCard, board, added, trump } = this.game
 
       function isValid(card) {
 
@@ -60,12 +60,20 @@ export default {
         } else if (board.length < 12) return true;
         else return false;
       }
+      function isValidAdd(card) {
+        console.log('Valid add ----------------------');
+        
+        if ( board.some(boardCard => boardCard.rank === card.rank) 
+        &&  (board.length - 1) / 2 + 1 + added.length < 6 ) {
+          return true
+        }
+      }
 
-      return isValid(card);
+      return this.game.addingRound ? isValidAdd(card) : isValid(card)
     },
     $_style(card, scale = 1) {
-      console.log(this.player)
-      console.log(this.player.hand.length)
+      // console.log(this.player)
+      // console.log(this.player.hand.length)
       let cards = this.player.hand.length
       let cardIx = this.player.hand.findIndex(el => el === card)
       let middle = cards / 2 - .5

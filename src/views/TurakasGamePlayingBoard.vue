@@ -64,6 +64,7 @@ export default {
   text-align: center;
   min-width: 280px;
   min-height: 13.5rem;
+  max-height: 13.5rem;
   
   background: url(../assets/theFoolWatermark.svg);
   background-repeat: no-repeat;
@@ -71,14 +72,14 @@ export default {
   background-position: center center;
 }
 #addedCard {
-  // border: 1px solid orangered;
+  // border: 2px solid orangered;
+  position: relative;
+  top: -.8rem;
   margin: 1em .5em .5em .5em;
-  margin-right: -2em;
+  margin-left: -2.8em;
   font-size: 15px;
 }
-#addedCard:nth-child(even) {
-  margin-left: 2em;
-}
+
 #boardCard {
   margin-top: 1em;
   font-size: 15px;

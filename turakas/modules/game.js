@@ -144,10 +144,11 @@ module.exports = function Game(gameSize = 2) {
       else return false
     }
     function isValidAdd(card) {
-      if (board.some(boardCard => boardCard.rank === card.rank)) {
+      if ( board.some(boardCard => boardCard.rank === card.rank) 
+      &&  (board.length - 1) / 2 + 1 + added.length <= 6 ) {
         return true
       }
-    }  
+    }
 
     if (addingRound) {
       console.log('Moving and is addingRound')

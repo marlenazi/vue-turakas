@@ -84,6 +84,7 @@ export default {
     $_openChat() {
       if (this.chatOpen) {
         console.log('on -> off')
+        this.$_sendMessage()
         this.chatOpen = false
         
       } else {
@@ -121,7 +122,7 @@ export default {
   flex-flow: column nowrap;
   justify-content: flex-end;
   align-items: flex-end;
-  z-index: 7;
+  z-index: 2;
   overflow: hidden;
 }
 
