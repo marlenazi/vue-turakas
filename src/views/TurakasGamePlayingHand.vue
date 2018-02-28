@@ -110,11 +110,6 @@ export default {
   white-space: nowrap;
 }
 
-
-#playingCard {
-
-
-}
 #playingCard:hover {
   z-index: 7;
   // box-shadow: 0px 0px 10px 4px $action;
@@ -126,7 +121,7 @@ export default {
 
 }
 .validMove {
-  z-index: 6;
+  // z-index: 6;
   animation-name: your-move;
   animation-duration: .6s;
   animation-iteration-count: infinite;

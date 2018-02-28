@@ -290,8 +290,9 @@ module.exports = function Game(gameSize = 2) {
     // replenishing should go in the order that the last round was played
 
     players.forEach((player, ix) => {
-      if (player.hand.length < 6 && deck.length && ix !== defending) {
-        player.hand.push(...deck.splice(0, 6 - hands[ix].length))
+      let hand = player.hand
+      if (hand.length < 6 && deck.length && ix !== defending) {
+        hand.push(...deck.splice(0, 6 - hand.length))
       }
     })
 

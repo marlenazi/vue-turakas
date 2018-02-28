@@ -38,8 +38,8 @@
       :hero="hero"
       :gameId="game.id">
     </game-chat>
-    {{ game.addingRound }}
-    {{game.added}}
+    <!-- {{ game.addingRound }} -->
+    <!-- {{game.added}} -->
   </div>
 </template>
 

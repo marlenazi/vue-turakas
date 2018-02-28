@@ -84,7 +84,7 @@ export default {
   font-size: 15px;
 }
 .boardCards {
-  border: 1px solid red;
+  // border: 1px solid red;
 }
 #boardCard:nth-child(odd) {
   margin-left: .35em;
