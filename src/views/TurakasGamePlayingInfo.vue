@@ -142,7 +142,7 @@ export default {
   color: $action;
 }
 .villain {
-  margin-left: auto;
+  // margin-left: auto;
   flex: 0 0 5rem;
   width: 7.5rem;
   display: flex;

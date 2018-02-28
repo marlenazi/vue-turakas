@@ -84,6 +84,7 @@ export default {
     serverError(err = "something happened") {
       console.log("==== SERVER ERROR ====");
       console.log(err);
+
       if (confirm(err + " -- Back to Welcome screen?")) {
         this.game = {};
         this.appView = "Welcome";
@@ -153,7 +154,8 @@ button {
   border: none;
   background: $btn;
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
-
+  user-select: none;
+  
   transition: all 0.1s ease-in-out;
 }
 button:focus,

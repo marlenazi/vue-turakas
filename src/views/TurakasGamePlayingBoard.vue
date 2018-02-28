@@ -83,8 +83,8 @@ export default {
   margin-top: 1em;
   font-size: 15px;
 }
-.boardCards {
-  // border: 1px solid red;
+#boardCard, #addedCard {
+  z-index: 1;
 }
 #boardCard:nth-child(odd) {
   margin-left: .35em;

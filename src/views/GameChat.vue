@@ -40,6 +40,7 @@
       :class="{toggleChatBtnOpen: chatOpen}"
       @click.prevent="$_openChat"
     >
+    <img src="../assets/buttons/chat1.svg"/>
     </button>
 
   </div>
@@ -120,7 +121,7 @@ export default {
   flex-flow: column nowrap;
   justify-content: flex-end;
   align-items: flex-end;
-  z-index: 0;
+  z-index: 7;
   overflow: hidden;
 }
 
@@ -150,7 +151,7 @@ export default {
   padding: 0 0.5em;
   width: 12rem;
   border-radius: 0.5em .5em 0 0.5em;
-  background: rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, .85);
   transition: all .2s ease-in-out;
 }
 .chatField:focus {
@@ -159,7 +160,7 @@ export default {
 
 .visible {
   opacity: 1;
-  z-index: 0;
+  z-index: 7;
 }
 
 .appear-enter {

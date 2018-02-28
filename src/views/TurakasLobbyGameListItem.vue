@@ -54,7 +54,7 @@ export default {
 
   height: 8rem;
   max-width: 18rem;
-
+  user-select: none;
   display: flex;
   justify-content: space-around;
   align-items: center;
