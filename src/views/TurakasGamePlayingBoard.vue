@@ -1,6 +1,6 @@
 <template>
   <div class="gameBoard">
-    
+
     <transition-group name="fade" mode="out-in" class="boardCards" tag="div">
       <game-card
         id="boardCard"
@@ -19,21 +19,13 @@
         :bigRank="card.rank">
       </game-card>
     </transition-group>
-    <!-- <transition-group name="fade" mode="out-in" class="addedCards" tag="div">
-      <game-card
-        id="addedCard"
-        v-for="card in added"
-        :key="card.rank + card.suit"
-        :rank="card.rank"
-        :suit="card.suit"
-        :bigRank="card.rank">
-      </game-card>
-    </transition-group> -->
+
   </div>
 </template>
 
 <script>
 import GameCard from './TurakasGameCard'
+
 export default {
   name: 'GameBoard',
   props: {
@@ -41,7 +33,7 @@ export default {
     added: Array,
   },
   components: {
-    GameCard
+    GameCard,
   },
   data() {
     return {
@@ -56,8 +48,11 @@ export default {
 @import './../style/variables';
 
 .gameBoard {
+  position: relative;
   flex: 1 0 100%;
-
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
   // border: 1px solid $accent;
   padding: 0em 1em;
 

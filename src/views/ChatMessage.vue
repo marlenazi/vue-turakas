@@ -1,11 +1,18 @@
 <template>
   <div 
     class="message"
-    :class="[{'your-message': message.senderId === hero.id}, 
+    :class="[{'your-message': message.senderId === hero.id},
              {'screened': visible},
-             {'incoming': !visible && !inited},]"
+             {'incoming': !visible && !inited},
+             {'game-msg': message.sender === 'Game'},
+            ]"
   >
-    {{ message.body }}
+    <div class="message-author">
+      {{ message.sender }}
+    </div>
+    <div class="message-body">
+      {{ message.body }}
+    </div>
     <!-- {{ visible }} -->
   </div>
 </template>
@@ -35,7 +42,8 @@ export default {
 
 .message {
   opacity: 0;
-  display: inline-block;
+  display: flex;
+  flex-flow: column;
   flex: 0 0 auto;
 
   margin: 0.2rem 0;
@@ -52,13 +60,24 @@ export default {
   overflow: hidden;
   transition: opacity .2s ease-in-out;
 }
+.game-msg {
+  background: $gameChatMessage;
+}
 .your-message {
-
+  align-items: flex-end;
   margin-left: auto;
   margin-right: .1rem;
   border-radius: .5rem 0.5rem 0;
   background: $yourChatMessage;
 }
+.message-author {
+  font-size: .8rem;
+  font-weight: bold;
+  line-height: 1;
+
+  color: $titleLight;
+}
+
 .screened {
   opacity: 1;
 }
@@ -68,11 +87,14 @@ export default {
   animation-name: incoming;
   animation-duration: 5s;
 }
+.incoming-game {
+  z-index: 12;
+  animation-name: incoming;
+  animation-duration: 2s;
+}
+
 @keyframes incoming {
   0%   { opacity: 1 }
-  20%  { opacity: 1 }
-  40%  { opacity: 1 }
-  60%  { opacity: 1 }
   80%  { opacity: 1 }
   100% { opacity: 0 }
 }

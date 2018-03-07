@@ -9,8 +9,9 @@
       <form action="" autocomplete="off">
         <!-- container for not to interfere with other elements on focus -->
         <div class=inputContainer>
-          <input 
-            id="nameField" 
+          <input
+            @keyup.enter="$refs.loginButton.click()"
+            id="nameField"
             class="height-1"
             type="text"
             maxlength="15" 
@@ -20,7 +21,8 @@
         </div>
 
         <button 
-          class="loginBtn" 
+          class="loginBtn"
+          ref="loginButton"
           @click.prevent="login" 
           :disabled="name.length < 3">
           Enter

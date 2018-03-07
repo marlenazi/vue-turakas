@@ -71,7 +71,6 @@ export default {
         console.log("Sending message");
 
         this.$socket.emit("sendChat", {
-          id: this.messages.length + 1,
           sender: this.hero.name,
           senderId: this.hero.id,
           gameId: this.gameId,
@@ -97,6 +96,7 @@ export default {
   sockets: {
     getChat(chat) {
       console.log(chat);
+      chat.id = this.messages.length + 1
       this.messages.unshift(chat);
     }
   }

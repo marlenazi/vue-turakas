@@ -84,10 +84,9 @@ export default {
     serverError(err = "something happened") {
       console.log("==== SERVER ERROR ====");
       console.log(err);
-
-      if (confirm(err + " -- Back to Welcome screen?")) {
-        this.game = {};
-        this.appView = "Welcome";
+      alert('Sorry, I made an oopsie :( Try again!')
+      if (this.hero.name) {
+        this.$socket.emit('login', this.hero.name)
       }
     }
   }

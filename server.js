@@ -23,10 +23,10 @@ const watermark = fs.readFileSync(
     return file;
   }
 );
-const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
-  if (err) throw err;
-  return file;
-});
+// const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
+//   if (err) throw err;
+//   return file;
+// });
 
 const zzz = require("./turakas/modules/emitter");
 const clientStore = require("./turakas/modules/clientStore");
@@ -60,10 +60,11 @@ const io = socket(
       ) {
         res.writeHead(200, { "Content-Type": "image/svg+xml" });
         res.end(watermark);
-      } else if (req.url === "/dist/build.js.map") {
-        res.writeHead(200, { "Content-Type": "text/javascript" });
-        res.end(map);
-      }
+      } 
+      // else if (req.url === "/dist/build.js.map") {
+      //   res.writeHead(200, { "Content-Type": "text/javascript" });
+      //   res.end(map);
+      // }
     })
     .listen(port)
 );
@@ -129,7 +130,10 @@ io.on("connection", socket => {
       let client = clients.get(clientId);
 
       if (client.game) {
-        io.to(clientId).emit("serverMessage", 'Already part of a game');
+        io.to(clientId).emit(
+          "serverMessage", 
+          'Already part of a game. It is the glowing one!'
+        );
         return
       }
 
@@ -140,7 +144,7 @@ io.on("connection", socket => {
       switch (response.msg) {
       case "Closed":
         io.to(clientId)
-          .emit("serverMessage", "Tried to join a closed game");
+          .emit("serverMessage", "Sorry. Try again.");
         break
       case 'Joined':
         console.log("Created game: " + game.id + " and joined " + clientId);
@@ -175,11 +179,12 @@ io.on("connection", socket => {
       let client = clients.get(clientId);
       let game = games.get(gameId);
       let response = game.join(client);
+      
       console.log(response.msg)
       switch (response.msg) {
       case "Closed":
         io.to(clientId)
-          .emit("serverMessage", "Game closed");
+          .emit("serverMessage", "Tried to join a closed game. Pick another one.");
         break
       case 'Joined':
       case 'Resumed':
@@ -259,10 +264,12 @@ io.on("connection", socket => {
       let client = clients.get(clientId)
       console.log(client)
       let game = games.get(client.game);
+      let prevActive = game.state().active
       let state = game.move(card)
       console.log(state.pagunidPossible)
 
       io.to(game.id).emit("updateGame", state);
+      
 
     } catch (error) {
       console.log(error);
@@ -277,7 +284,6 @@ io.on("connection", socket => {
       console.log(state.pagunidPossible)
 
       io.to(game.id).emit("updateGame", state);
-      
     } catch (error) {
       console.log(error);
       socket.emit("serverError", error);
@@ -292,7 +298,6 @@ io.on("connection", socket => {
       console.log(state.pagunidPossible)
 
       io.to(game.id).emit("updateGame", state);
-      
     } catch (error) {
       console.log(error);
       socket.emit("serverError", error)
@@ -396,6 +401,8 @@ io.on("connection", socket => {
               });
   
             }
+
+            clients.updateStore()
           }
 
 

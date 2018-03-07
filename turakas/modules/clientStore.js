@@ -53,14 +53,13 @@ const fs = require("fs");
 
 module.exports = () => {
   // read the store
-  const clients = []
-  
-  // JSON.parse(
-  //   fs.readFileSync(
-  //     `./turakas/stores/clients.json`,
-  //     (err, store) => (err ? err : store)
-  //   )
-  // );
+  const clients = 
+    JSON.parse(
+      fs.readFileSync(
+        `./turakas/stores/clients.json`,
+        (err, store) => (err ? err : store)
+      )
+    );
 
   function addClient(client) {
     if (!client) throw new Error("No parameters provided");
@@ -128,11 +127,10 @@ module.exports = () => {
     fs.writeFileSync(
       `./turakas/stores/clients.json`,
       JSON.stringify(
-        clients.slice().map(client => {
+        clients.map(client => {
   
           return Object.assign({}, client, {
             game: null,
-
           });
         })
       ),
@@ -149,6 +147,7 @@ module.exports = () => {
     remove: removeClient,
     get: getClient,
     getAll: getAllClients,
-    match: matchClient
+    match: matchClient,
+    updateStore: _saveStore,
   };
 };

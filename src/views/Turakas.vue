@@ -49,6 +49,9 @@ export default {
       console.log('Left the game. Switching turakasView to Lobby')
       this.turakasView = 'TurakasLobby'
     },
+    loggedIn() {
+      this.turakasView = 'TurakasLobby'
+    }
   }
 }
 </script>
