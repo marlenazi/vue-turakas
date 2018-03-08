@@ -86,6 +86,10 @@ export default {
 
   z-index: 5;
 }
+// .turakasGameCard:hover {
+//   // position: absolute;
+//   // font-size: 17px;
+// }
 
 .smallRankSuit {
   position: absolute;

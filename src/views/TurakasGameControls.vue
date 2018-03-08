@@ -2,38 +2,45 @@
 <div class="gameControls">
 
 <transition name="fade" mode="out-in">
+
   <button
     v-if="$_moves === 'hero' && addingRound"
     @click="$_finishAdding">
     <span>DONE</span>
   </button>
+
   <button
     v-else-if="$_moves === 'hero' && $_heroIx() === defending && board"
     @click="$_pickUp">
     <span>PICK<br>UP</span> 
   </button>
+
   <button
     v-else-if="$_moves === 'hero' && $_heroIx() === attacking && board"
     @click="$_muck">
     <span>DONE</span> 
   </button>
+
   <button
     v-else-if="pagunidPossible && $_moves ==='hero'"
     @click="$_doPagunid">
     <span>RANK 'EM!</span> 
   </button>
+
   <button
     disabled
     class="your-turn"
     v-else-if="$_moves === 'hero'">
     <span>YOUR TURN</span> 
   </button>
+
   <button
     disabled
     class="other-turn"
     v-else>
     <span>WAIT</span> 
   </button>
+
 </transition>
 
 </div>
@@ -44,7 +51,8 @@
 export default {
   name: 'GameControlButton',
   props: {
-    heroId: String,
+    hero: Object,
+    gameId: String,
     active: Number,
     players: Array,
     board: Number,
@@ -61,21 +69,34 @@ export default {
   methods: {
     $_pickUp() {
       console.log('Picking up')
-      this.$socket.emit('pickUp', this.heroId)
+
+      this.$socket.emit('pickUp', this.hero.id)
+      this.$socket.emit("sendChat", {
+        sender: this.hero.name,
+        senderId: this.hero.id,
+        gameId: this.gameId,
+        body: 'I pick up. Got more?'
+      });
     },
     $_finishAdding() {
       console.log('Finished adding')
-      this.$socket.emit('finishAdding', this.heroId)
+      this.$socket.emit('finishAdding', this.hero.id)
     },
     $_muck() {
       console.log('Mucking')
-      this.$socket.emit('muck', this.heroId)
+      this.$socket.emit('muck', this.hero.id)
+      this.$socket.emit("sendChat", {
+        sender: this.hero.name,
+        senderId: this.hero.id,
+        gameId: this.gameId,
+        body: "Your turn"
+      });
     },
     $_doPagunid() {
-      this.$socket.emit('move', this.heroId, 'pagunid')
+      this.$socket.emit('move', this.hero.id, 'pagunid')
     },
     $_heroIx() {
-      return this.players.findIndex(player => player.id === this.heroId)
+      return this.players.findIndex(player => player.id === this.hero.id)
     },
   },
   computed: {

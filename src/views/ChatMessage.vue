@@ -85,7 +85,7 @@ export default {
 .incoming {
   z-index: 12;
   animation-name: incoming;
-  animation-duration: 5s;
+  animation-duration: 3s;
 }
 .incoming-game {
   z-index: 12;

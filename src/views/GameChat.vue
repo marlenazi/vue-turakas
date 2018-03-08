@@ -95,6 +95,7 @@ export default {
   },
   sockets: {
     getChat(chat) {
+      console.log('Chat received')
       console.log(chat);
       chat.id = this.messages.length + 1
       this.messages.unshift(chat);

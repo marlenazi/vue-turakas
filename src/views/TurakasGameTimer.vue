@@ -34,6 +34,7 @@ export default {
   width: 100%;
   height: .15em;
   background: $action;
+  z-index: -1;
 }
 .time {
   background: $accent;

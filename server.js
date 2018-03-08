@@ -23,10 +23,14 @@ const watermark = fs.readFileSync(
     return file;
   }
 );
-// const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
-//   if (err) throw err;
-//   return file;
-// });
+const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
+  if (err) throw err;
+  return file;
+});
+const chat = fs.readFileSync("./dist/chat1.svg", (err, file) => {
+  if (err) throw err;
+  return file;
+});
 
 const zzz = require("./turakas/modules/emitter");
 const clientStore = require("./turakas/modules/clientStore");
@@ -60,11 +64,15 @@ const io = socket(
       ) {
         res.writeHead(200, { "Content-Type": "image/svg+xml" });
         res.end(watermark);
-      } 
-      // else if (req.url === "/dist/build.js.map") {
-      //   res.writeHead(200, { "Content-Type": "text/javascript" });
-      //   res.end(map);
-      // }
+      } else if (
+        req.url === "/dist/chat1.svg?a45c15a56749114e0c96fbd525c36742"
+      ) {
+        res.writeHead(200, { "Content-Type": "image/svg+xml" });
+        res.end(chat);
+      } else if (req.url === "/dist/build.js.map") {
+        res.writeHead(200, { "Content-Type": "text/javascript" });
+        res.end(map);
+      }
     })
     .listen(port)
 );
@@ -75,7 +83,7 @@ io.on("connection", socket => {
   console.log(`Socket ${socket.id} connected`);
 
   socket.on("login", name => {
-    console.log('Logging in ' + name)
+    console.log("Logging in " + name);
     /**
      * we get connection ip and compare both name and ip to existing clients
      * if we have a match, we return that client obj to the client,
@@ -88,39 +96,38 @@ io.on("connection", socket => {
     try {
       let ip = socket.request.connection.remoteAddress;
       let client = clients.match({ name, ip }) || clients.add({ name, ip });
-  
+
       socket.join(client.id);
       // remember the client, so on disconnect we have access
-      socket.$_client = client.id
-  
+      socket.$_client = client.id;
+
       io.to(client.id).emit("loggedIn", {
         id: client.id,
         name: client.name
       });
-      io.to(client.id).emit('updateHero', client)
+      io.to(client.id).emit("updateHero", client);
 
       if (client.game) {
-        let game = games.get(client.game)
-        socket.join(game.id)
+        let game = games.get(client.game);
+        socket.join(game.id);
         // remember the game so on disconnect we have access
-        socket._rooms.push(game.id)
+        socket._rooms.push(game.id);
 
         io.to(client.id).emit("joinedGame");
         io.to(client.id).emit("updateGame", game.state());
       }
-      
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error.message)
+      socket.emit("serverError", error.message);
     }
   });
   socket.on("getGameList", clientId => {
     try {
-      let availableGames = games.getAvailable(clientId)
+      let availableGames = games.getAvailable(clientId);
       io.to(clientId).emit("gameList", availableGames);
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error.message)
+      socket.emit("serverError", error.message);
     }
   });
   socket.on("newGame", clientId => {
@@ -130,48 +137,47 @@ io.on("connection", socket => {
       let client = clients.get(clientId);
 
       if (client.game) {
-        io.to(clientId).emit(
-          "serverMessage", 
-          'Already part of a game. It is the glowing one!'
-        );
-        return
+        io
+          .to(clientId)
+          .emit(
+            "serverMessage",
+            "Already part of a game. It is the glowing one!"
+          );
+        return;
       }
 
-      let game = games.create()
+      let game = games.create();
       let response = game.join(client);
-      console.log(response.msg)
+      console.log(response.msg);
 
       switch (response.msg) {
-      case "Closed":
-        io.to(clientId)
-          .emit("serverMessage", "Sorry. Try again.");
-        break
-      case 'Joined':
-        console.log("Created game: " + game.id + " and joined " + clientId);
-       
-        client.game = game.id
-        socket.join(game.id);
-        socket._rooms.push(game.id)
-        
-        io.to(client.id).emit("joinedGame");
-        io.to(client.id).emit('updateHero', client)
-        io.to(client.id).emit("updateGame", response.state);
-        io.emit("updateGameList", {
-          id: response.state.id,
-          size: response.state.size,
-          status: response.state.status,
-          players: response.state.players
-        });
-        break
-      }
+        case "Closed":
+          io.to(clientId).emit("serverMessage", "Sorry. Try again.");
+          break;
+        case "Joined":
+          console.log("Created game: " + game.id + " and joined " + clientId);
 
-    
+          client.game = game.id;
+          socket.join(game.id);
+          socket._rooms.push(game.id);
+
+          io.to(client.id).emit("joinedGame");
+          io.to(client.id).emit("updateHero", client);
+          io.to(client.id).emit("updateGame", response.state);
+          io.emit("updateGameList", {
+            id: response.state.id,
+            size: response.state.size,
+            status: response.state.status,
+            players: response.state.players
+          });
+          break;
+      }
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error.message)
+      socket.emit("serverError", error.message);
     }
   });
-  
+
   socket.on("joinGame", (clientId, gameId) => {
     console.log(`Joining ${clientId} to game ${gameId}`);
 
@@ -179,109 +185,113 @@ io.on("connection", socket => {
       let client = clients.get(clientId);
       let game = games.get(gameId);
       let response = game.join(client);
-      
-      console.log(response.msg)
+
+      console.log(response.msg);
       switch (response.msg) {
-      case "Closed":
-        io.to(clientId)
-          .emit("serverMessage", "Tried to join a closed game. Pick another one.");
-        break
-      case 'Joined':
-      case 'Resumed':
-        console.log(`${client.id} ${client.name} ${response.msg} game ${game.id}`);
-        
-        client.game = gameId
-        socket.join(game.id);
-        socket._rooms.push(game.id)
-        
-        io.to(client.id).emit("joinedGame");
-        io.to(client.id).emit('updateHero', client)
-        io.to(game.id).emit("updateGame", response.state);
+        case "Closed":
+          io
+            .to(clientId)
+            .emit(
+              "serverMessage",
+              "Tried to join a closed game. Pick another one."
+            );
+          break;
+        case "Joined":
+        case "Resumed":
+          console.log(
+            `${client.id} ${client.name} ${response.msg} game ${game.id}`
+          );
 
-        io.emit("updateGameList", {
-          id: response.state.id,
-          size: response.state.size,
-          status: response.state.status,
-          players: response.state.players
-        });
-        break
-      case 'Viewed':
-        console.log(`${client.id} ${client.name} ${response.msg} game ${game.id}`);
-        
-        io.to(client.id).emit("joinedGame");
-        io.to(client.id).emit("updateGame", response.state);
-      } 
+          client.game = gameId;
+          socket.join(game.id);
+          socket._rooms.push(game.id);
 
+          io.to(client.id).emit("joinedGame");
+          io.to(client.id).emit("updateHero", client);
+          io.to(game.id).emit("updateGame", response.state);
+
+          io.emit("updateGameList", {
+            id: response.state.id,
+            size: response.state.size,
+            status: response.state.status,
+            players: response.state.players
+          });
+          break;
+        case "Viewed":
+          console.log(
+            `${client.id} ${client.name} ${response.msg} game ${game.id}`
+          );
+
+          io.to(client.id).emit("joinedGame");
+          io.to(client.id).emit("updateGame", response.state);
+      }
     } catch (error) {
       console.log(error);
       socket.emit("serverError", error.message);
     }
   });
   socket.on("leaveGame", clientId => {
-    console.log(`leaving game for ${clientId}`)
+    console.log(`leaving game for ${clientId}`);
 
     try {
-      let client = clients.get(clientId)
+      let client = clients.get(clientId);
 
       if (client.game) {
-        let game = games.get(client.game)
-        let response = game.leave(client)
+        let game = games.get(client.game);
+        let response = game.leave(client);
 
         socket.leave(game.id);
-        io.to(client.id).emit('updateHero', client)
-        
-        if (response.state.status === 'Closed') {
-          console.log(`Client: ${clientId} left game: ${game.id}`)
-          io.emit('updateGameList', response.state)
+        io.to(client.id).emit("updateHero", client);
+
+        if (response.state.status === "Closed") {
+          console.log(`Client: ${clientId} left game: ${game.id}`);
+          io.emit("updateGameList", response.state);
         }
       }
-  
-      io.to(clientId).emit("leftGame");
 
+      io.to(clientId).emit("leftGame");
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error.message)
+      socket.emit("serverError", error.message);
     }
   });
   socket.on("getHand", clientId => {
-    console.log(`returning hand to player ${clientId}`)
+    console.log(`returning hand to player ${clientId}`);
 
     try {
       let client = clients.get(clientId);
       let game = games.get(client.game);
-      let hand = game.hand(client)
+      let hand = game.hand(client);
 
       io.to(clientId).emit("hand", hand);
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error.message)
+      socket.emit("serverError", error.message);
     }
   });
 
   // game actions
   socket.on("move", (clientId, card) => {
     try {
-      let client = clients.get(clientId)
-      console.log(client)
+      let client = clients.get(clientId);
+      console.log(client);
       let game = games.get(client.game);
-      let prevActive = game.state().active
-      let state = game.move(card)
-      console.log(state.pagunidPossible)
+      let prevActive = game.state().active;
+      let state = game.move(card);
+      console.log(state.pagunidPossible);
 
       io.to(game.id).emit("updateGame", state);
-      
-
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error.message)
+      socket.emit("serverError", error.message);
     }
   });
   socket.on("pickUp", clientId => {
     try {
       let client = clients.get(clientId);
       let game = games.get(client.game);
-      let state = game.pickUp(client)
-      console.log(state.pagunidPossible)
+      let state = game.pickUp(client);
+      console.log(state.pagunidPossible);
 
       io.to(game.id).emit("updateGame", state);
     } catch (error) {
@@ -293,36 +303,35 @@ io.on("connection", socket => {
     try {
       let client = clients.get(clientId);
       let game = games.get(client.game);
-      let state = game.muck(client)
+      let state = game.muck(client);
 
-      console.log(state.pagunidPossible)
+      console.log(state.pagunidPossible);
 
       io.to(game.id).emit("updateGame", state);
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error)
+      socket.emit("serverError", error);
     }
   });
-  socket.on('finishAdding', clientId => {
+  socket.on("finishAdding", clientId => {
     try {
       let client = clients.get(clientId);
       let game = games.get(client.game);
-      let state = game.finishAdding(client)
+      let state = game.finishAdding(client);
 
-      console.log(state.pagunidPossible)
+      console.log(state.pagunidPossible);
 
       io.to(game.id).emit("updateGame", state);
-      
     } catch (error) {
       console.log(error);
-      socket.emit("serverError", error)
+      socket.emit("serverError", error);
     }
-  })
+  });
 
-  socket.on('sendChat', chat => {
-    console.log(chat.body)
-    io.to(chat.gameId).emit('getChat', chat)
-  })
+  socket.on("sendChat", chat => {
+    console.log(chat.body);
+    io.to(chat.gameId).emit("getChat", chat);
+  });
 
   /**
    * When socket disconnects, remove it from the player
@@ -330,16 +339,15 @@ io.on("connection", socket => {
   socket.on("disconnect", () => {
     console.log(`Socket ${socket.id} disconnected`);
     try {
-      let client = clients.get(socket.$_client)
+      let client = clients.get(socket.$_client);
 
       socket._rooms.map(id => {
-        let response = games.get(id).leave(client)
-        io.emit('updateGameList', response.state)
-      })
+        let response = games.get(id).leave(client);
+        io.emit("updateGameList", response.state);
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    
   });
 
   // ==========================
@@ -380,45 +388,40 @@ io.on("connection", socket => {
     if (!zzz.listeners("gameFinished").length) {
       zzz.on("gameFinished", state => {
         try {
-
           if (state.winner) {
+            let winner = clients.get(state.winner.id);
+            let turakas = clients.get(state.turakas.id);
 
-            let winner = clients.get(state.winner.id)
-            let turakas = clients.get(state.turakas.id)
-  
-            winner.rank++
-            turakas.turakas++
-            
+            winner.rank++;
+            turakas.turakas++;
+
             if (state.pagunid.length) {
-  
               winner.madePagunid.push({
                 to: turakas.id,
                 cards: state.pagunid
-              });    
+              });
               turakas.pagunid.push({
                 from: winner.id,
                 cards: state.pagunid
               });
-  
             }
 
-            clients.updateStore()
+            clients.updateStore();
           }
 
-
           state.players.map(player => {
-            let client = clients.get(player.id)
+            let client = clients.get(player.id);
             if (state.id === client.game) {
-              client.game = null
+              client.game = null;
             }
-            io.to(client.id).emit('updateHero', client)
-          })
-          
+            io.to(client.id).emit("updateHero", client);
+          });
+
           io.to(state.id).emit("updateGame", state);
-          io.emit('updateGameList', state)
+          io.emit("updateGameList", state);
         } catch (error) {
-          console.log(error)
-          socket.emit('serverError', error.message)
+          console.log(error);
+          socket.emit("serverError", error.message);
         }
       });
     }
@@ -432,21 +435,21 @@ io.on("connection", socket => {
 
       zzz.on("closeGame", state => {
         try {
-          console.log(`Server: closing game ${state.id}`);     
+          console.log(`Server: closing game ${state.id}`);
 
           state.players.map(player => {
-            let client = clients.get(player.id)
-            // if client has not started a new game, they might still be lingering 
+            let client = clients.get(player.id);
+            // if client has not started a new game, they might still be lingering
             // in the closing game. So lets throw them out.
             if (!client.game) {
-              io.to(client.id).emit("leftGame")
+              io.to(client.id).emit("leftGame");
             }
-          })
+          });
 
           io.emit("updateGameList", state);
         } catch (error) {
           console.log(error);
-          socket.emit(error.message)
+          socket.emit(error.message);
         }
       });
     }

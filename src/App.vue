@@ -43,8 +43,8 @@ export default {
       this.hero = client;
     },
     updateGame(state) {
-      console.log("Updating game");
-      console.log(state);
+      // console.log("Updating game");
+      // console.log(state);
       this.game = state;
     },
     gameList(newGames) {

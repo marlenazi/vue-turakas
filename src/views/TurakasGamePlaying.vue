@@ -25,7 +25,8 @@
       :pagunidPossible="game.pagunidPossible"
       :addingRound="game.addingRound"
       :players="game.players"
-      :heroId="hero.id">
+      :hero="hero"
+      :gameId="game.id">
     </game-controls>
     
     <game-hand
@@ -89,13 +90,13 @@ export default {
   },
   sockets: {
     hand(hand) {
-      console.log('Got hand?')
+      // console.log('Got hand?')
       // hand is actually a player object with {id, name, hand}
       this.player = hand
     },
     updateGame(game) {
       if (game.status === 'Playing') {
-        console.log('asking for a hand')
+        // console.log('asking for a hand')
         this.$socket.emit('getHand', this.hero.id)
       }
     },

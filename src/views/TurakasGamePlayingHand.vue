@@ -61,7 +61,7 @@ export default {
         else return false;
       }
       function isValidAdd(card) {
-        console.log('Valid add ----------------------');
+        // console.log('Valid add ----------------------');
         
         if ( board.some(boardCard => boardCard.rank === card.rank) 
         &&  (board.length - 1) / 2 + 1 + added.length < 6 ) {
