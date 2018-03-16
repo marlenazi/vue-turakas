@@ -1,18 +1,18 @@
 <template>
-  <div class="gameHand"
-    :style="$_style().hand">
+  <div class="gameHand">
 
       <game-card
         id="playingCard"
         tabindex="1"
-        v-for="card in player.hand"
+        v-for="card in $_hand"
         :class="[{ active: active }, {validMove: $_filterValid(card) && active}]"
-        :style="$_style(card).card"
+
         :key="card.rank + card.suit"
         :rank="card.rank"
         :suit="card.suit"
         :bigRank="card.rank"
-        v-on:mouseenter="$_style(card, 1.2).card"
+        :styleProps="card.styleProps"
+
         @click.native="$_move(card)"
         >
       </game-card>
@@ -72,8 +72,7 @@ export default {
       return this.game.addingRound ? isValidAdd(card) : isValid(card)
     },
     $_style(card, scale = 1) {
-      // console.log(this.player)
-      // console.log(this.player.hand.length)
+
       let cards = this.player.hand.length
       let cardIx = this.player.hand.findIndex(el => el === card)
       let middle = cards / 2 - .5
@@ -81,24 +80,35 @@ export default {
       let ang = 185 / cards
       
       let rad = ang * pos * Math.PI / 180
-      let x = (2.8 * Math.cos(rad))
-      let y = (2.6 * Math.sin(rad))
-      // console.log(x, y, rad)
-      // console.log('scale: ' + scale)
+      let x = (2.5 * Math.cos(rad) + 2.7 )
+      let y = (2.5 * Math.sin(rad) + 7.5 )
+
       return {
+        x,
+        y,
+        angle: pos * -ang,
+        scale: 1,
         card: {
-          position: 'relative',
+          position: 'absolute',
           bottom: x + 'em',
           right: y + 'em',
           transform: `rotate(${ pos * -ang }deg) scale(${scale})`,
-          margin: `0 -4em 0 0`
         },
-        hand: {
-          paddingRight: `4em`
-        }
       }
     },
   },
+  computed: {
+    $_hand() {
+      return this.player.hand.map(card => {
+        console.log(card);
+        
+        card.styleProps = this.$_style(card)
+        console.log(card);
+        
+        return card
+      })
+    }
+  }
 }
 
 </script>
@@ -111,8 +121,8 @@ export default {
 
   position: relative;
   height: 12em;
-  padding: 3.5em 0;
-  overflow: hidden;
+  // padding: 3.5em 0;
+  overflow: visible;
   font-size: 16px;
   text-align: center;
   white-space: nowrap;

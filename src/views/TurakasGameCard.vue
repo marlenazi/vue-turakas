@@ -2,6 +2,9 @@
   <div
     class="turakasGameCard height-1"
     :class="cardSuit[suit]"
+    :style="$_style"
+    @mouseenter="scale = 1.1"
+    @mouseleave="scale = 1.0"
   >
       <div class="smallRankSuit">
         {{ cardRank[rank] }}
@@ -25,10 +28,12 @@ export default {
     rank: String,
     suit: String,
     bigRank: String,
+    styleProps: Object,
   },
   data() {
     return {
-      msg: "Looks like this is over",
+
+      scale: 1,
       cardSuit: {
         h: 'hearts',
         d: 'diamonds',
@@ -58,7 +63,17 @@ export default {
     }
   },
   computed: {
-
+    $_style() {
+      console.log(this.styleProps)
+      if (!this.styleProps) return {}
+      const st = this.styleProps
+      return {
+        position: 'absolute',
+        bottom: st.x + 'em',
+        right: st.y + 'em',
+        transform: `rotate(${st.angle}deg) scale(${this.scale})`,
+      }
+    }
   }
 }
 
