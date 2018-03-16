@@ -4,14 +4,15 @@
       <game-card
         id="playingCard"
         tabindex="1"
+
         v-for="card in $_hand"
-        :class="[{ active: active }, {validMove: $_filterValid(card) && active}]"
 
         :key="card.rank + card.suit"
         :rank="card.rank"
         :suit="card.suit"
         :bigRank="card.rank"
         :styleProps="card.styleProps"
+        :validMove="active && $_filterValid(card) ? true : false"
 
         @click.native="$_move(card)"
         >
@@ -73,38 +74,29 @@ export default {
     },
     $_style(card, scale = 1) {
 
-      let cards = this.player.hand.length
-      let cardIx = this.player.hand.findIndex(el => el === card)
-      let middle = cards / 2 - .5
-      let pos = middle - cardIx
-      let ang = 185 / cards
+      const cards = this.player.hand.length
+      const cardIx = this.player.hand.findIndex(el => el === card)
+      const middle = cards / 2 - .5
+      const pos = middle - cardIx
+      const ang = 185 / cards
       
-      let rad = ang * pos * Math.PI / 180
-      let x = (2.5 * Math.cos(rad) + 2.7 )
-      let y = (2.5 * Math.sin(rad) + 7.5 )
+      const rad = ang * pos * Math.PI / 180
+      const x = (2.5 * Math.cos(rad) + 2.7 )
+      const y = (2.5 * Math.sin(rad) + 7.5 )
 
       return {
         x,
         y,
-        angle: pos * -ang,
         scale: 1,
-        card: {
-          position: 'absolute',
-          bottom: x + 'em',
-          right: y + 'em',
-          transform: `rotate(${ pos * -ang }deg) scale(${scale})`,
-        },
+        angle: pos * -ang,
       }
     },
   },
   computed: {
     $_hand() {
       return this.player.hand.map(card => {
-        console.log(card);
-        
+
         card.styleProps = this.$_style(card)
-        console.log(card);
-        
         return card
       })
     }
@@ -121,25 +113,14 @@ export default {
 
   position: relative;
   height: 12em;
-  // padding: 3.5em 0;
   overflow: visible;
   font-size: 16px;
   text-align: center;
   white-space: nowrap;
 }
 
-#playingCard:hover {
-  z-index: 7;
-  // box-shadow: 0px 0px 10px 4px $action;
-}
 
-.active {
-  box-shadow: 0px 0px 8px 3px $shadow;
-        // inset 0px 0px 1px 1px $shadow;
-
-}
 .validMove {
-  // z-index: 6;
   animation-name: your-move;
   animation-duration: .6s;
   animation-iteration-count: infinite;

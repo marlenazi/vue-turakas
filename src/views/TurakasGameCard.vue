@@ -4,7 +4,7 @@
     :class="cardSuit[suit]"
     :style="$_style"
     @mouseenter="scale = 1.1"
-    @mouseleave="scale = 1.0"
+    @mouseleave="scale = 1.0 "
   >
       <div class="smallRankSuit">
         {{ cardRank[rank] }}
@@ -16,7 +16,14 @@
       </div>
       <div class="bigRank">
         {{ cardRank[bigRank]}}
+        <!-- {{ validMove }} -->
       </div>
+
+    <div
+      v-if="styleProps !== undefined"
+      class="shadow"
+      :class="{glow: validMove}">
+    </div>
   </div>
 </template>
 
@@ -25,10 +32,12 @@
 export default {
   name: 'TurakasGameCard',
   props: {
+    type: String,
     rank: String,
     suit: String,
     bigRank: String,
     styleProps: Object,
+    validMove: Boolean,
   },
   data() {
     return {
@@ -64,8 +73,8 @@ export default {
   },
   computed: {
     $_style() {
-      console.log(this.styleProps)
       if (!this.styleProps) return {}
+      
       const st = this.styleProps
       return {
         position: 'absolute',
@@ -85,7 +94,6 @@ export default {
 .turakasGameCard {
 
   display: inline-block;
-
   padding: .3em;
   height: 6em;
   width: 4em;
@@ -98,13 +106,30 @@ export default {
   cursor: pointer;
   transition: all .2s ease-in-out;
   transform-origin: 50% bottom;
+  // fix blurriness on scale
+  backface-visibility: hidden;
 
   z-index: 5;
 }
-// .turakasGameCard:hover {
-//   // position: absolute;
-//   // font-size: 17px;
-// }
+.turakasGameCard:hover {
+  z-index: 6;
+}
+
+.shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // border: 1px solid blue;
+  border-radius: .2rem;
+  height: 100%;
+  width: 100%;
+  z-index: 19;
+}
+.shadow.glow {
+  box-shadow: 0px 0px 15px 5px rgb(89, 255, 47),
+              0px 0px 5px 3px rgb(89, 255, 47);
+  animation: glow .8s alternate-reverse infinite;
+}
 
 .smallRankSuit {
   position: absolute;
@@ -135,5 +160,15 @@ export default {
 }
 .back {
   background: $cardBack;
+}
+
+
+@keyframes glow {
+  from {
+    opacity: .5;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

@@ -6,7 +6,7 @@
   <button
     v-if="$_moves === 'hero' && addingRound"
     @click="$_finishAdding">
-    <span>DONE</span>
+    <span>NO<br>MORE</span>
   </button>
 
   <button

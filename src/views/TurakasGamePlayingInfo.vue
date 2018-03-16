@@ -7,6 +7,7 @@
       <div class="villainName">
         {{ villain.name }}
       </div>
+
       <transition-group
         class="villainHand"
         name="fade" 
@@ -21,6 +22,7 @@
             :bigRank="'blank'">
           </game-card>
       </transition-group>
+
     </div>
 
     <div class="trumpAndDeck">
@@ -172,6 +174,9 @@ export default {
   box-shadow: 0 2px 1px rgb(218, 218, 218), 
               0 0px 1px rgba(255, 255, 255, 0.22);
   
+}
+#villainCard:hover {
+  z-index: 5;
 }
 .active {
   box-shadow: 0px 0px 6px 1px $shadow;
