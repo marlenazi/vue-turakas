@@ -36,10 +36,10 @@
       :game="game">
     </game-hand>
 
-  <!--  <game-chat
+   <game-chat
       :hero="hero"
       :gameId="game.id">
-    </game-chat> -->
+    </game-chat>
     <!-- {{ game.addingRound }} -->
     <!-- {{game.added}} -->
   </div>

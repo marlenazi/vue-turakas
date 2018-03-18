@@ -10,6 +10,9 @@
         v-bind:style="{fontSize: $_fontSize + 'rem'}"
       >
         {{ hero.name }}
+        <!-- <button class="change-name">
+          Edit
+        </button> -->
       </div>
     </div>
   </nav>
@@ -57,4 +60,9 @@ nav img {
   font-size: 1rem;
 }
 
+.change-name {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+}
 </style>

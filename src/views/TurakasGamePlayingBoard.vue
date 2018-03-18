@@ -5,6 +5,7 @@
       <game-card
         id="boardCard"
         v-for="card in board"
+        :type="'card'"
         :key="card.rank + card.suit"
         :rank="card.rank"
         :suit="card.suit"
@@ -12,18 +13,20 @@
       </game-card>
       <game-card
         id="addedCard"
+        class="addedCard"
         v-for="card in added"
         :key="card.rank + card.suit"
+        :type="'addedCard'"
         :rank="card.rank"
         :suit="card.suit"
         :bigRank="card.rank">
       </game-card>
 
     </transition-group>
-
-      <game-card
-        id="cardSlot"
-        v-show="addingRound"
+    <!-- <div class="slots">
+      <div
+        class="cardSlot"
+        
         v-for="card in $_addedSlots"
         :key="card"
         :type="'slot'"
@@ -31,7 +34,9 @@
         :suit="'blank'"
         :bigRank="'blank'"
       >
-      </game-card>
+      </div>
+    </div> -->
+
   <!-- {{ $_addedSlots }}
   {{ board.length }}
   {{ added.length }} -->
@@ -40,6 +45,7 @@
 
 <script>
 import GameCard from './TurakasGameCard'
+import CardSlot from './CardSlot'
 
 export default {
   name: 'GameBoard',
@@ -49,25 +55,24 @@ export default {
     addingRound: Boolean,
   },
   components: {
-    GameCard,
+    GameCard, CardSlot
   },
   data() {
     return {
     }
   },
-  computed: {
-    $_addedSlots() {
-      const onBoard = 
-      this.board.length % 2 === 0 
-        ? this.board.length 
-        : this.board.length + 1
-      const onAdded = this.added.length 
-      // console.log(this.board.length)
-      // console.log(this.added.length)
+  // computed: {
+  //   $_addedSlots() {
+  //     const onBoard = 
+  //       this.board.length % 2 === 0 
+  //         ? this.board.length 
+  //         : this.board.length + 1
+  //     const onAdded = this.added.length 
 
-      return 6 - (onBoard) / 2 - onAdded || 6
-    }
-  }
+
+  //     return 6 //- (onBoard) / 2 - onAdded || 6
+  //   }
+  // }
 }
 
 </script>
@@ -83,7 +88,7 @@ export default {
   justify-content: center;
   // align-items: flex-start;
   // border: 1px solid $accent;
-  padding: 0em 1em;
+  padding: 0em 0em;
 
   text-align: center;
   min-width: 280px;
@@ -104,42 +109,79 @@ export default {
 
 
 #boardCard {
-  margin-top: 1em;
-  font-size: 15px;
+  margin-top: .6em;
+  font-size: 16px;
 }
 #boardCard, #addedCard {
   z-index: 1;
 }
 
 #boardCard:nth-child(odd) {
-  margin-left: .35em;
+  margin-left: .5em;
 }
 #boardCard:nth-child(even) {
   position: relative;
   top: .5rem;
   margin-left: -2.5em;
 }
+#boardCard:first-child {
+  margin-left: 0em;
+}
 
-#addedCard {
+#boardCard:nth-child(odd):last-of-type {
+  // border: 2px solid lightgreen;
+  margin-left: 0.75em;
+  margin-right: .75em;
+}
+
+.addedCard {
   // border: 2px solid orangered;
   position: relative;
   // top: -.8rem;
-  margin: 1em .5em .5em .5em;
+  margin: .6em 0.75em 0em .75em;
   // margin-left: -2.8em;
-  font-size: 15px;
+  font-size: 16px;
 }
+// .slots {
+//   position: absolute;
 
-#cardSlot {
-  border: 2px solid orangered;
-  position: relative;
-  top: 0rem;
-  margin: 1em 0.1em 0em 1.1em;
-  font-size: 15px;
-  background: none;
-}
+// }
+// .cardSlot {
+//   // border: 2px solid orangered;
+//   position: relative;
+//   top: 0rem;
+//   margin: .6em 0.75em 0em .75em;
+//   font-size: 16px;
+//   background: none;
+// }
+// .cardSlot {
+//   // position: absolute;
+//   // border: 2px solid black;
+//   opacity: .5;
+//   display: inline-block;
+//   height: 6em;
+//   width: 4em;
+//   border-radius: .2em;
+//   color: $action;
+//   opacity: .5;
+//   box-shadow: 0 0 .5rem .1rem rgba(100, 100, 100, .5);
+  
+//   user-select: none;
+//   cursor: pointer;
+//   transition: all .1s ease-in-out;
 
-// #cardSlot:first-child {
-//   // margin-left: 2.1rem;
+//   z-index: 5;
 // }
 
+// .addedCard:first-of-type {
+//   margin-left: .75em;
+//   // border: 2px solid coral;
+// }
+// .cardSlot:nth-of-type(2) {
+//   margin-left: .75em;
+//   // border: 2px solid yellow;
+// }
+// .visible {
+//   opacity: 1;
+// }
 </style>

@@ -1,5 +1,27 @@
 <template>
-  <div
+  <article v-if="type === 'addedCard'"
+    class="turakasGameCard height-1"
+    :class="cardSuit[suit]"
+  >
+      <div class="smallRankSuit">
+        {{ cardRank[rank] }}
+        <span
+          class="smallSuit"
+          v-html="symbol[suit]"
+        > {{type}}
+        </span> 
+      </div>
+      <div class="bigRank">
+        {{ cardRank[bigRank]}}
+        <!-- {{ validMove }} -->
+      </div>
+    <div
+      v-if="styleProps !== undefined"
+      class="shadow"
+      :class="{glow: validMove}">
+    </div>
+  </article>
+  <div v-else
     class="turakasGameCard height-1"
     :class="cardSuit[suit]"
     :style="$_style"
@@ -11,7 +33,7 @@
         <span
           class="smallSuit"
           v-html="symbol[suit]"
-        >
+        > {{type}}
         </span> 
       </div>
       <div class="bigRank">

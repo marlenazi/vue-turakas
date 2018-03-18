@@ -4,7 +4,9 @@
     <leave-button :heroId="heroId"></leave-button>
 
     <div class="villain">
-      <div class="villainName">
+      <div 
+        class="villainName"
+        :class="{shortName: villain.name.length > 10}">
         {{ villain.name }}
       </div>
 
@@ -153,11 +155,15 @@ export default {
   text-align: center;
 }
 .villainName {
-  margin: .4rem;
+  margin: .4rem 0;
   font-weight: bold;
   font-size: 1.2em;
   white-space: nowrap;
   color: $accent;
+  // text-align: left;
+}
+.shortName {
+  font-size: 1em;
 }
 .villainHand {
 
@@ -173,7 +179,6 @@ export default {
   overflow: hidden;
   box-shadow: 0 2px 1px rgb(218, 218, 218), 
               0 0px 1px rgba(255, 255, 255, 0.22);
-  
 }
 #villainCard:hover {
   z-index: 5;

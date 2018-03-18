@@ -3,6 +3,7 @@
 
       <header>
         <h1>{{ title }}</h1>
+        <p>A PRE NUCLEAR CARD GAME</p>
         <img src="../assets/theFool.svg" alt="the fool" srcset="">
       </header>
 
@@ -44,7 +45,7 @@ export default {
   data () {
     return {
       title: 'Turakas',
-      name: this.hero.name || '',//'Ar' + parseInt(Math.random() * 10) + 'o',
+      name: this.hero.name || 'Nameless',//'Ar' + parseInt(Math.random() * 10) + 'o',
     }
   },
   methods: {
@@ -77,6 +78,10 @@ h1 {
   font-size: 3rem;
   text-align: center;
   font-variant: small-caps;
+}
+header p {
+  font-size: .8rem;
+  text-align: center;
 }
 form {
   flex: 0 0 9.5rem;

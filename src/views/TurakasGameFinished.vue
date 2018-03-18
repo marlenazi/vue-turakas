@@ -1,24 +1,14 @@
 <template>
   <div class="turakasGameFinished">
 
-  
     <leave-button 
       class="leaveButton"
       :heroId="hero.id">
     </leave-button>
 
-    <h2>
-      Turakas
-    </h2> 
     
     <div class="info">
-      <img src="../assets/theFool.svg" alt="the fool" srcset="">
-      <h2 class="loserName"> 
-        {{ game.turakas.name }} 
-      </h2>
-      <!-- <p>All hail the dummy!</p> -->
-      <br><br>
-      <strong>Winner</strong>
+
       <div class="winnerCards">
         <game-card
           id="lastCards"
@@ -29,6 +19,18 @@
           :bigRank="card.rank"
         />
       </div>
+      <h3>
+        Winner
+      </h3>
+
+      <h2 class="loserName"> 
+        {{ game.turakas.name }} 
+      </h2>
+      <!-- <p>All hail the dummy!</p> -->
+      <br><br>
+      
+      <img src="../assets/theFool.svg" alt="the fool" srcset="">
+      <strong>Loser</strong>
 
 
       <strong class="winnerName">{{ game.winner.name }}</strong>
@@ -75,7 +77,7 @@ h1 {
   font-size: 2rem;
 }
 img {
-  height: 10rem;
+  height: 7rem;
 }
 .message {
   padding: 2rem;

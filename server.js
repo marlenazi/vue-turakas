@@ -235,11 +235,14 @@ io.on("connection", socket => {
 
     try {
       let client = clients.get(clientId);
-
+      // console.log(client)
+      console.log(socket.rooms);
+      
       if (client.game) {
         let game = games.get(client.game);
         let response = game.leave(client);
 
+        // console.log(response)
         socket.leave(game.id);
         io.to(client.id).emit("updateHero", client);
 
@@ -465,7 +468,7 @@ io.on("connection", socket => {
  *    =================================================
  *
  * -- File serving must be handled. Express?
- * -- Clicking on board cards should pick them up
+ * -- Clicking on board cards should pick them up ?!
  * ++ Error handling is rudimentary and uses a bad pattern
  * ++ Client validation should be handled smarter
  * ++ When client gets stuck, send back error event that resets the game
