@@ -68,7 +68,7 @@ export default {
   methods: {
     $_sendMessage() {
       if (this.chatOpen && this.chatMessage.length) {
-        console.log("Sending message");
+        // console.log("Sending message");
 
         this.$socket.emit("sendChat", {
           sender: this.hero.name,
@@ -82,12 +82,12 @@ export default {
     },
     $_openChat() {
       if (this.chatOpen) {
-        console.log('on -> off')
+        // console.log('on -> off')
         this.$_sendMessage()
         this.chatOpen = false
         
       } else {
-        console.log("off -> on");
+        // console.log("off -> on");
         this.chatOpen = true
         this.$refs.chatField.focus()
       }
@@ -95,8 +95,8 @@ export default {
   },
   sockets: {
     getChat(chat) {
-      console.log('Chat received')
-      console.log(chat);
+      // console.log('Chat received')
+      // console.log(chat);
       chat.id = this.messages.length + 1
       this.messages.unshift(chat);
     }

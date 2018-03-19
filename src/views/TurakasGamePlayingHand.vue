@@ -35,8 +35,8 @@ export default {
   },
   methods: {
     $_move(card) {
-      // console.log(card)
-      // console.log(this.player.id)
+      // // console.log(card)
+      // // console.log(this.player.id)
       this.$socket.emit('move', this.player.id, card)
     },
     $_filterValid(card) {
@@ -62,7 +62,7 @@ export default {
         else return false;
       }
       function isValidAdd(card) {
-        // console.log('Valid add ----------------------');
+        // // console.log('Valid add ----------------------');
         
         if ( board.some(boardCard => boardCard.rank === card.rank) 
         &&  (board.length - 1) / 2 + 1 + added.length < 6 ) {

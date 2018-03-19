@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     $_pickUp() {
-      console.log('Picking up')
+      // console.log('Picking up')
 
       this.$socket.emit('pickUp', this.hero.id)
       this.$socket.emit("sendChat", {
@@ -79,11 +79,11 @@ export default {
       });
     },
     $_finishAdding() {
-      console.log('Finished adding')
+      // console.log('Finished adding')
       this.$socket.emit('finishAdding', this.hero.id)
     },
     $_muck() {
-      console.log('Mucking')
+      // console.log('Mucking')
       this.$socket.emit('muck', this.hero.id)
       this.$socket.emit("sendChat", {
         sender: this.hero.name,

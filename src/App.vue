@@ -32,37 +32,37 @@ export default {
   },
   sockets: {
     loggedIn(client) {
-      console.log(`Logged in ${client.name}`);
-      console.log(client);
+      // console.log(`Logged in ${client.name}`);
+      // console.log(client);
 
       this.appView = "Turakas";
     },
     updateHero(client) {
-      console.log("Got fresh hero state");
-      console.log(client);
+      // console.log("Got fresh hero state");
+      // console.log(client);
       this.hero = client;
     },
     updateGame(state) {
-      // console.log("Updating game");
-      // console.log(state);
+      // // console.log("Updating game");
+      // // console.log(state);
       this.game = state;
     },
     gameList(newGames) {
-      console.log("Received an array of games");
-      console.log(newGames);
+      // console.log("Received an array of games");
+      // console.log(newGames);
       // reverse it so newer are first
       this.games = newGames.reverse();
     },
     updateGameList(state) {
-      console.log("Update game list");
+      // console.log("Update game list");
 
       let game = this.games.find(game => game.id === state.id);
 
       if (game) {
-        console.log("updating game: " + game.id);
-        console.log(state.status)
+        // console.log("updating game: " + game.id);
+        // console.log(state.status)
         if (state.status === "Closed") {
-          console.log("splicing");
+          // console.log("splicing");
           let ix = this.games.findIndex(game => game.id === state.id);
 
           this.games.splice(ix, 1);
@@ -73,17 +73,17 @@ export default {
           });
         }
       } else {
-        console.log("add new game to list");
+        // console.log("add new game to list");
         this.games.unshift(state);
       }
     },
     serverMessage(msg) {
-      console.log(msg);
+      // console.log(msg);
       alert(msg);
     },
     serverError(err = "something happened") {
-      console.log("==== SERVER ERROR ====");
-      console.log(err);
+      // console.log("==== SERVER ERROR ====");
+      // console.log(err);
       alert('Sorry, I made an oopsie :( Try again!')
       if (this.hero.name) {
         this.$socket.emit('login', this.hero.name)

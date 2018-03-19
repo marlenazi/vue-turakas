@@ -27,8 +27,8 @@ export default {
   },
   methods: {
     $_leaveGame() {
-      console.log('Leaving game')
-      console.log(this.hero)
+      // console.log('Leaving game')
+      // console.log(this.hero)
       this.$socket.emit('leaveGame', this.hero.id)
     }
   },

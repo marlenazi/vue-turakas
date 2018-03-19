@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     $_newGame() {
-      console.log('Starting a new game')
+      // console.log('Starting a new game')
       this.$socket.emit('newGame', this.heroId)
     },
   }

@@ -36,17 +36,17 @@ export default {
   },
   created() {
     if (this.game.status === 'playing') {
-      console.log('Found ongoing game: ' + this.game.id)
+      // console.log('Found ongoing game: ' + this.game.id)
       this.turakasView = 'TurakasGame'
     }
   },
   sockets: {
     joinedGame() {
-      console.log('Joined a game. Switching turakasView to Game')
+      // console.log('Joined a game. Switching turakasView to Game')
       this.turakasView = 'TurakasGame'
     },
     leftGame() {
-      console.log('Left the game. Switching turakasView to Lobby')
+      // console.log('Left the game. Switching turakasView to Lobby')
       this.turakasView = 'TurakasLobby'
     },
     loggedIn() {

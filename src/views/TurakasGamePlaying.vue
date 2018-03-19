@@ -91,26 +91,26 @@ export default {
   },
   sockets: {
     hand(hand) {
-      // console.log('Got hand?')
+      // // console.log('Got hand?')
       // hand is actually a player object with {id, name, hand}
       this.player = hand
     },
     updateGame(game) {
       if (game.status === 'Playing') {
-        // console.log('asking for a hand')
+        // // console.log('asking for a hand')
         this.$socket.emit('getHand', this.hero.id)
       }
     },
     time(timeUpdate) {
-      // console.log('time passed: ' + timeUpdate.passed + 
+      // // console.log('time passed: ' + timeUpdate.passed + 
       //                  ' limit: ' + timeUpdate.limit   )
 
       this.time.passed = timeUpdate.passed
       this.time.limit = timeUpdate.limit
     },
     gameOver(state) {
-      console.log('Winner: ' + state.winner.name)
-      console.log('Turakas: ' + state.turakas.name)
+      // console.log('Winner: ' + state.winner.name)
+      // console.log('Turakas: ' + state.turakas.name)
     }
   }
 }

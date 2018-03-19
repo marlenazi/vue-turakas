@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     login() {
-      console.log('Login ' + this.name)
+      // console.log('Login ' + this.name)
       this.$socket.emit('login', this.name)
     }
   }
