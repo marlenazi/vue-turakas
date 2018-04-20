@@ -51,7 +51,10 @@ export default {
   methods: {
     login() {
       // console.log('Login ' + this.name)
-      this.$socket.emit('login', this.nameModel)
+      this.$socket.emit('login', this.nameModel.length ?
+
+                                 this.nameModel 
+                                 : this.name           )
     }
   },
   computed: {
