@@ -17,15 +17,15 @@
             type="text"
             maxlength="15" 
             name="nameField" 
-            placeholder="Your Name"
-            v-model="name"/>
+            placeholder="Anonymous"
+            v-model="nameModel"/>
         </div>
 
         <button 
           class="loginBtn"
           ref="loginButton"
           @click.prevent="login" 
-          :disabled="name.length < 3">
+          :disabled="name.length < 1">
           Enter
         </button>
 
@@ -45,13 +45,18 @@ export default {
   data () {
     return {
       title: 'Turakas',
-      name: this.hero.name || 'Nameless',//'Ar' + parseInt(Math.random() * 10) + 'o',
+      nameModel: '',
     }
   },
   methods: {
     login() {
       // console.log('Login ' + this.name)
-      this.$socket.emit('login', this.name)
+      this.$socket.emit('login', this.nameModel)
+    }
+  },
+  computed: {
+    name() {
+      return this.hero.name || 'Anon'
     }
   }
 }
