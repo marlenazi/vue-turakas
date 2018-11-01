@@ -45,7 +45,7 @@
 
 <script>
 import GameCard from './TurakasGameCard'
-import CardSlot from './CardSlot'
+// import CardSlot from './CardSlot'
 
 export default {
   name: 'GameBoard',
@@ -55,7 +55,7 @@ export default {
     addingRound: Boolean,
   },
   components: {
-    GameCard, CardSlot
+    GameCard,// CardSlot
   },
   data() {
     return {

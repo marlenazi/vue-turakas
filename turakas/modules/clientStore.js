@@ -53,13 +53,13 @@ const fs = require("fs");
 
 module.exports = () => {
   // read the store
-  const clients = 
-    JSON.parse(
-      fs.readFileSync(
-        `./turakas/stores/clients.json`,
-        (err, store) => (err ? err : store)
-      )
-    );
+  const clients = []
+    // JSON.parse(
+    //   fs.readFileSync(
+    //     `./turakas/stores/clients.json`,
+    //     (err, store) => (err ? err : store)
+    //   )
+    // );
 
   function addClient(client) {
     if (!client) throw new Error("No parameters provided");

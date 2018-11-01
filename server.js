@@ -4,33 +4,33 @@ const fs = require("fs");
 
 const port = 2000;
 
-const index = fs.readFileSync("./index.html", (err, file) => {
-  if (err) throw err;
-  return file;
-});
-const bundle = fs.readFileSync("./dist/build.js", (err, file) => {
-  if (err) throw err;
-  return file;
-});
-const logo = fs.readFileSync("./dist/theFool.svg", (err, file) => {
-  if (err) throw err;
-  return file;
-});
-const watermark = fs.readFileSync(
-  "./dist/theFoolWatermark.svg",
-  (err, file) => {
-    if (err) throw err;
-    return file;
-  }
-);
-const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
-  if (err) throw err;
-  return file;
-});
-const chat = fs.readFileSync("./dist/chat1.svg", (err, file) => {
-  if (err) throw err;
-  return file;
-});
+// const index = fs.readFileSync("./index.html", (err, file) => {
+//   if (err) throw err;
+//   return file;
+// });
+// const bundle = fs.readFileSync("./dist/build.js", (err, file) => {
+//   if (err) throw err;
+//   return file;
+// });
+// const logo = fs.readFileSync("./dist/theFool.svg", (err, file) => {
+//   if (err) throw err;
+//   return file;
+// });
+// const watermark = fs.readFileSync(
+//   "./dist/theFoolWatermark.svg",
+//   (err, file) => {
+//     if (err) throw err;
+//     return file;
+//   }
+// );
+// const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
+//   if (err) throw err;
+//   return file;
+// });
+// const chat = fs.readFileSync("./dist/chat1.svg", (err, file) => {
+//   if (err) throw err;
+//   return file;
+// });
 
 const zzz = require("./turakas/modules/emitter");
 const clientStore = require("./turakas/modules/clientStore");
