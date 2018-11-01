@@ -2,35 +2,35 @@ const socket = require("socket.io");
 const http = require("http");
 const fs = require("fs");
 
-const port = 2000;
+const port = 5000;
 
-// const index = fs.readFileSync("./index.html", (err, file) => {
-//   if (err) throw err;
-//   return file;
-// });
-// const bundle = fs.readFileSync("./dist/build.js", (err, file) => {
-//   if (err) throw err;
-//   return file;
-// });
-// const logo = fs.readFileSync("./dist/theFool.svg", (err, file) => {
-//   if (err) throw err;
-//   return file;
-// });
-// const watermark = fs.readFileSync(
-//   "./dist/theFoolWatermark.svg",
-//   (err, file) => {
-//     if (err) throw err;
-//     return file;
-//   }
-// );
-// const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
-//   if (err) throw err;
-//   return file;
-// });
-// const chat = fs.readFileSync("./dist/chat1.svg", (err, file) => {
-//   if (err) throw err;
-//   return file;
-// });
+const index = fs.readFileSync("./index.html", (err, file) => {
+   if (err) throw err;
+   return file;
+ });
+ const bundle = fs.readFileSync("./dist/build.js", (err, file) => {
+   if (err) throw err;
+   return file;
+ });
+ const logo = fs.readFileSync("./dist/theFool.svg", (err, file) => {
+   if (err) throw err;
+   return file;
+ });
+ const watermark = fs.readFileSync(
+   "./dist/theFoolWatermark.svg",
+   (err, file) => {
+     if (err) throw err;
+     return file;
+   }
+ );
+ const map = fs.readFileSync("./dist/build.js.map", (err, file) => {
+   if (err) throw err;
+   return file;
+ });
+ const chat = fs.readFileSync("./dist/chat1.svg", (err, file) => {
+   if (err) throw err;
+   return file;
+ });
 
 const zzz = require("./turakas/modules/emitter");
 const clientStore = require("./turakas/modules/clientStore");
@@ -54,18 +54,17 @@ const io = socket(
         res.writeHead(200, { "Content-Type": "text/javascript" });
         res.end(bundle);
       } else if (
-        req.url === "/dist/theFool.svg?5861719d7334e93a1ca838dae1b6236f"
+        req.url.includes("/dist/theFool.svg?")
       ) {
         res.writeHead(200, { "Content-Type": "image/svg+xml" });
         res.end(logo);
       } else if (
-        req.url ===
-        "/dist/theFoolWatermark.svg?5f7d429da9a9bf6132aa70328b2c1804"
+        req.url.includes("/dist/theFoolWatermark.svg")
       ) {
         res.writeHead(200, { "Content-Type": "image/svg+xml" });
         res.end(watermark);
       } else if (
-        req.url === "/dist/chat1.svg?a45c15a56749114e0c96fbd525c36742"
+        req.url.includes("/dist/chat1.svg")
       ) {
         res.writeHead(200, { "Content-Type": "image/svg+xml" });
         res.end(chat);
